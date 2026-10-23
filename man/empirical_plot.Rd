@@ -37,6 +37,7 @@ If NULL then empirical test plots will be constructed instead}
      specified then item-level conditional proportions are instead plotted
      against the reduced total scores}
    \item{'hist'}{histogram of total scores}
+   \item{'bar'}{barplot of total scores}
    \item{'freq'}{item response frequencies (supports \code{which.item})}
    \item{'discrim'}{reduced item-total correlations to visualize discrimination effects}
    \item{'difficulty'}{mean/proportion of each item}
@@ -99,6 +100,7 @@ empirical_plot(data)
 empirical_plot(data, type = 'hist')
 empirical_plot(data, type = 'hist', ts_fun=rowMeans)
 empirical_plot(data, type = 'hist', breaks=20)
+empirical_plot(data, type = 'bar')
 empirical_plot(data, type = 'discrim')
 empirical_plot(data, type = 'discrim', sort=TRUE)
 empirical_plot(data, type = 'difficulty')

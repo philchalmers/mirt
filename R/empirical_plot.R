@@ -29,6 +29,7 @@
 #'      specified then item-level conditional proportions are instead plotted
 #'      against the reduced total scores}
 #'    \item{'hist'}{histogram of total scores}
+#'    \item{'bar'}{barplot of total scores}
 #'    \item{'freq'}{item response frequencies (supports \code{which.item})}
 #'    \item{'discrim'}{reduced item-total correlations to visualize discrimination effects}
 #'    \item{'difficulty'}{mean/proportion of each item}
@@ -69,6 +70,7 @@
 #' empirical_plot(data, type = 'hist')
 #' empirical_plot(data, type = 'hist', ts_fun=rowMeans)
 #' empirical_plot(data, type = 'hist', breaks=20)
+#' empirical_plot(data, type = 'bar')
 #' empirical_plot(data, type = 'discrim')
 #' empirical_plot(data, type = 'discrim', sort=TRUE)
 #' empirical_plot(data, type = 'difficulty')
@@ -148,11 +150,11 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
     stopifnot(is.matrix(data) || is.data.frame(data))
     if(is.null(which.items) && type %in% c("freq", 'boxplot'))
         which.items <- 1:ncol(data)
-    stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble', 'alpha_rm',
+    stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble', 'alpha_rm', 'bar',
                           'discrim', 'difficulty', 'discrim_diff', 'freq'))
     if(is.null(which.items))
         stopifnot("Must specify which.items"=type %in%
-                      c('prop', 'hist', 'alpha_rm', 'discrim', 'difficulty', 'discrim_diff'))
+                      c('prop', 'hist', 'alpha_rm', 'discrim', 'difficulty', 'discrim_diff', 'bar'))
     if(type %in% c('boxplot', 'bubble')) smooth <- FALSE
     if(!(type %in% c('freq')))
         data <- na.omit(as.matrix(data))
@@ -286,10 +288,13 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                    xlab = 'Composite Score', ylab = 'Cumulative Proportion',
                                    ylim = c(-.1, 1.1), ...)
         } else if(type == 'hist'){
-            df <- data.frame(TS=as.integer(names(tab)), freq=as.integer(tab))
             plt <- lattice::histogram(TS,
                                       main = if(is.null(main)) 'Composite Scores' else main,
-                                      xlab = 'Composite Score', ylab = 'Frequency', ...)
+                                      xlab = 'Composite Score', ylab = 'Frequency', type = 'count', ...)
+        } else if(type == 'bar'){
+            plt <- lattice::barchart(table(TS), horizontal = FALSE,
+                                     main = if(is.null(main)) 'Composite Scores' else main,
+                                     xlab = 'Composite Score', ylab = 'Frequency', ...)
         }
     } else {
         stopifnot(all(which.items >= 1L & which.items <= ncol(data)))
