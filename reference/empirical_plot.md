@@ -56,6 +56,10 @@ empirical_plot(
 
   :   histogram of total scores
 
+  'bar'
+
+  :   barplot of total scores
+
   'freq'
 
   :   item response frequencies (supports `which.item`)
@@ -182,6 +186,8 @@ empirical_plot(data, type = 'hist')
 empirical_plot(data, type = 'hist', ts_fun=rowMeans)
 
 empirical_plot(data, type = 'hist', breaks=20)
+
+empirical_plot(data, type = 'bar')
 
 empirical_plot(data, type = 'discrim')
 
