@@ -248,24 +248,6 @@ itemstats(dat)
 #> Item_14 2000 2 0.592 0.492     0.428 0.191       0.761
 #> Item_15 2000 2 0.490 0.500     0.336 0.122       0.769
 #> 
-#> $proportions
-#>             0     1
-#> Item_1  0.392 0.609
-#> Item_2  0.608 0.392
-#> Item_3  0.544 0.456
-#> Item_4  0.316 0.684
-#> Item_5  0.462 0.538
-#> Item_6  0.351 0.649
-#> Item_7  0.318 0.681
-#> Item_8  0.569 0.432
-#> Item_9  0.698 0.302
-#> Item_10 0.726 0.274
-#> Item_11 0.266 0.734
-#> Item_12 0.530 0.470
-#> Item_13 0.416 0.585
-#> Item_14 0.408 0.592
-#> Item_15 0.509 0.490
-#> 
 
 # conditional information
 itemstats(dat, group=group)
@@ -292,24 +274,6 @@ itemstats(dat, group=group)
 #> Item_14 1000 2 0.592 0.492     0.358 0.139       0.725
 #> Item_15 1000 2 0.487 0.500     0.321 0.124       0.729
 #> 
-#> $D1$proportions
-#>             0     1
-#> Item_1  0.395 0.605
-#> Item_2  0.632 0.368
-#> Item_3  0.539 0.461
-#> Item_4  0.327 0.673
-#> Item_5  0.474 0.526
-#> Item_6  0.346 0.654
-#> Item_7  0.317 0.683
-#> Item_8  0.569 0.431
-#> Item_9  0.713 0.287
-#> Item_10 0.726 0.274
-#> Item_11 0.261 0.739
-#> Item_12 0.544 0.456
-#> Item_13 0.416 0.584
-#> Item_14 0.408 0.592
-#> Item_15 0.513 0.487
-#> 
 #> 
 #> $D2
 #> $D2$overall
@@ -334,24 +298,6 @@ itemstats(dat, group=group)
 #> Item_14 1000 2 0.591 0.492     0.493 0.252       0.790
 #> Item_15 1000 2 0.494 0.500     0.351 0.131       0.801
 #> 
-#> $D2$proportions
-#>             0     1
-#> Item_1  0.388 0.612
-#> Item_2  0.583 0.417
-#> Item_3  0.550 0.450
-#> Item_4  0.305 0.695
-#> Item_5  0.449 0.551
-#> Item_6  0.356 0.644
-#> Item_7  0.320 0.680
-#> Item_8  0.568 0.432
-#> Item_9  0.683 0.317
-#> Item_10 0.725 0.275
-#> Item_11 0.271 0.729
-#> Item_12 0.517 0.483
-#> Item_13 0.415 0.585
-#> Item_14 0.409 0.591
-#> Item_15 0.506 0.494
-#> 
 #> 
 
 mod_configural <- multipleGroup(dat, 1, group = group) #completely separate analyses
@@ -371,7 +317,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group,
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.275  0.044  0.060  0.152  0.001  0.000 
+#>  0.254  0.036  0.053  0.150  0.000  0.000 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the
 #  M-step's, though occasionally less stable
@@ -379,7 +325,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group, optimizer = 'NR',
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.207  0.066  0.070  0.052  0.000  0.000 
+#>  0.144  0.036  0.059  0.036  0.000  0.001 
 
 summary(mod_scalar2)
 #> 
@@ -1666,24 +1612,6 @@ itemstats(dat)
 #> Item_14 3000 2 0.591 0.492     0.441 0.202       0.762
 #> Item_15 3000 2 0.488 0.500     0.330 0.115       0.772
 #> 
-#> $proportions
-#>             0     1
-#> Item_1  0.395 0.605
-#> Item_2  0.597 0.403
-#> Item_3  0.543 0.457
-#> Item_4  0.324 0.676
-#> Item_5  0.455 0.545
-#> Item_6  0.355 0.645
-#> Item_7  0.312 0.688
-#> Item_8  0.573 0.427
-#> Item_9  0.708 0.292
-#> Item_10 0.716 0.284
-#> Item_11 0.262 0.738
-#> Item_12 0.540 0.460
-#> Item_13 0.409 0.591
-#> Item_14 0.409 0.591
-#> Item_15 0.512 0.488
-#> 
 
 # conditional information
 itemstats(dat, group=group)
@@ -1710,24 +1638,6 @@ itemstats(dat, group=group)
 #> Item_14 1000 2 0.592 0.492     0.358 0.139       0.725
 #> Item_15 1000 2 0.487 0.500     0.321 0.124       0.729
 #> 
-#> $D1$proportions
-#>             0     1
-#> Item_1  0.395 0.605
-#> Item_2  0.632 0.368
-#> Item_3  0.539 0.461
-#> Item_4  0.327 0.673
-#> Item_5  0.474 0.526
-#> Item_6  0.346 0.654
-#> Item_7  0.317 0.683
-#> Item_8  0.569 0.431
-#> Item_9  0.713 0.287
-#> Item_10 0.726 0.274
-#> Item_11 0.261 0.739
-#> Item_12 0.544 0.456
-#> Item_13 0.416 0.584
-#> Item_14 0.408 0.592
-#> Item_15 0.513 0.487
-#> 
 #> 
 #> $D2
 #> $D2$overall
@@ -1752,24 +1662,6 @@ itemstats(dat, group=group)
 #> Item_14 1000 2 0.591 0.492     0.493 0.252       0.790
 #> Item_15 1000 2 0.494 0.500     0.351 0.131       0.801
 #> 
-#> $D2$proportions
-#>             0     1
-#> Item_1  0.388 0.612
-#> Item_2  0.583 0.417
-#> Item_3  0.550 0.450
-#> Item_4  0.305 0.695
-#> Item_5  0.449 0.551
-#> Item_6  0.356 0.644
-#> Item_7  0.320 0.680
-#> Item_8  0.568 0.432
-#> Item_9  0.683 0.317
-#> Item_10 0.725 0.275
-#> Item_11 0.271 0.729
-#> Item_12 0.517 0.483
-#> Item_13 0.415 0.585
-#> Item_14 0.409 0.591
-#> Item_15 0.506 0.494
-#> 
 #> 
 #> $D3
 #> $D3$overall
@@ -1793,24 +1685,6 @@ itemstats(dat, group=group)
 #> Item_13 1000 2 0.604 0.489     0.438 0.202       0.767
 #> Item_14 1000 2 0.589 0.492     0.465 0.242       0.765
 #> Item_15 1000 2 0.482 0.500     0.317 0.119       0.778
-#> 
-#> $D3$proportions
-#>             0     1
-#> Item_1  0.401 0.599
-#> Item_2  0.576 0.424
-#> Item_3  0.541 0.459
-#> Item_4  0.341 0.659
-#> Item_5  0.443 0.557
-#> Item_6  0.362 0.638
-#> Item_7  0.300 0.700
-#> Item_8  0.581 0.419
-#> Item_9  0.728 0.272
-#> Item_10 0.697 0.303
-#> Item_11 0.253 0.747
-#> Item_12 0.558 0.442
-#> Item_13 0.396 0.604
-#> Item_14 0.411 0.589
-#> Item_15 0.518 0.482
 #> 
 #> 
 

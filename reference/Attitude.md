@@ -73,17 +73,6 @@ itemstats(df)
 #> justified             54 2 0.352 0.482    -0.061 0.666      -0.959
 #> deserved              54 2 0.352 0.482    -0.061 0.769      -0.959
 #> 
-#> $proportions
-#>                           0     1
-#> hideous               0.556 0.444
-#> state_teaching        0.352 0.648
-#> deterrent             0.333 0.667
-#> believe_not.necessary 0.537 0.463
-#> necessary_wish.not    0.519 0.481
-#> must.have             0.556 0.444
-#> justified             0.648 0.352
-#> deserved              0.648 0.352
-#> 
 
 # \donttest{
 

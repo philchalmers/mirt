@@ -84,7 +84,7 @@ all possible response information.</p>
 <span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ts_fun <span class="op">=</span> <span class="va">rowSums</span>,</span>
 <span>  use_ts <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  itemfreq <span class="op">=</span> <span class="st">"proportions"</span>,</span>
+<span>  itemfreq <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>  ts.tables <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -118,7 +118,7 @@ meaningful total score?</p></dd>
 <dt id="arg-itemfreq">itemfreq<a class="anchor" aria-label="anchor" href="#arg-itemfreq"></a></dt>
 <dd><p>character vector indicting whether to
 include item response <code>"proportions"</code> or <code>"counts"</code>
-for each item. If set to <code>'none'</code> then this will be omitted</p></dd>
+for each item. If set to <code>'none'</code> (default) then this will be omitted</p></dd>
 
 
 <dt id="arg-ts-tables">ts.tables<a class="anchor" aria-label="anchor" href="#arg-ts-tables"></a></dt>
@@ -159,6 +159,19 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5      0      0      0      0      0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6      0      0      0      0      0</span>
 <span class="r-in"><span><span class="fu">itemstats</span><span class="op">(</span><span class="va">LSAT7full</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1000      3.707    1.199     0.456 0.453     0.886  0.143 0.052</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           N K  mean    sd cor_if_rm   smc alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 1000 2 0.828 0.378     0.246 0.063       0.396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 1000 2 0.658 0.475     0.247 0.081       0.394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 1000 2 0.772 0.420     0.313 0.106       0.345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 1000 2 0.606 0.489     0.223 0.053       0.415</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 1000 2 0.843 0.364     0.175 0.038       0.438</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="fu">itemstats</span><span class="op">(</span><span class="va">LSAT7full</span>, itemfreq<span class="op">=</span><span class="st">'proportions'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1000      3.707    1.199     0.456 0.453     0.886  0.143 0.052</span>
@@ -223,14 +236,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 1000 2 0.772 0.420     0.313 0.096       0.316</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 1000 2 0.606 0.489     0.223 0.048       0.384</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 1000 2 0.843 0.364     0.175 0.028       0.418</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            0     1  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 0.167 0.828 0.005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 0.342 0.658    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 0.228 0.772    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 0.394 0.606    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 0.157 0.843    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># data with no meaningful total score</span></span></span>
@@ -303,41 +308,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.31 600 6 3.788 0.899</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.32 600 6 3.023 1.303</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             1     2     3     4     5     8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1  0.283 0.203 0.267 0.232 0.013 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2  0.212 0.022 0.070 0.568 0.127 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3  0.165 0.183 0.260 0.098 0.280 0.013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4  0.165 0.378 0.148 0.172 0.128 0.008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5  0.093 0.143 0.620 0.093 0.048 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.6  0.160 0.582 0.107 0.043 0.108    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.7  0.025 0.760 0.007 0.190 0.017 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.8  0.202 0.205 0.207 0.250 0.133 0.003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.9  0.065 0.010 0.885 0.033 0.007    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.10 0.422 0.215 0.165 0.028 0.167 0.003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.11 0.003 0.983 0.008 0.003 0.002    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.12 0.072 0.082 0.218 0.415 0.205 0.008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.13 0.110 0.662 0.070 0.118 0.040    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.14 0.723 0.027 0.108 0.022 0.117 0.003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.15 0.035 0.062 0.060 0.025 0.817 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.16 0.070 0.105 0.413 0.215 0.195 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.17 0.008 0.005 0.010 0.963 0.013    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.18 0.303 0.033 0.165 0.352 0.142 0.005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.19 0.548 0.053 0.358 0.030 0.010    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.20 0.012 0.002 0.105 0.873 0.007 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.21 0.050 0.008 0.915 0.013 0.012 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.22 0.028 0.005 0.935 0.017 0.015    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.23 0.290 0.177 0.128 0.313 0.087 0.005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.24 0.728 0.162 0.042 0.022 0.045 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.25 0.240 0.170 0.375 0.065 0.142 0.008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.26 0.020 0.227 0.030 0.262 0.460 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.27 0.862 0.093 0.012 0.020 0.010 0.003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.28 0.082 0.010 0.530 0.337 0.037 0.005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.29 0.340 0.295 0.205 0.085 0.067 0.008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.30 0.150 0.110 0.107 0.183 0.440 0.010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.31 0.075 0.020 0.012 0.833 0.058 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.32 0.125 0.183 0.443 0.075 0.162 0.012</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># extra total scores tables</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="key2binary.html">key2binary</a></span><span class="op">(</span><span class="va">SAT12</span>,</span></span>
@@ -382,41 +352,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.30 600 2 0.440 0.497     0.159 0.092       0.799</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.31 600 2 0.833 0.373     0.419 0.271       0.788</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.32 600 2 0.162 0.368     0.037 0.053       0.802</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             0     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1  0.717 0.283</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2  0.432 0.568</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3  0.720 0.280</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4  0.622 0.378</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5  0.380 0.620</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.6  0.840 0.160</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.7  0.240 0.760</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.8  0.798 0.202</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.9  0.115 0.885</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.10 0.578 0.422</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.11 0.017 0.983</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.12 0.585 0.415</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.13 0.338 0.662</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.14 0.277 0.723</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.15 0.183 0.817</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.16 0.587 0.413</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.17 0.037 0.963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.18 0.648 0.352</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.19 0.452 0.548</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.20 0.127 0.873</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.21 0.085 0.915</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.22 0.065 0.935</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.23 0.687 0.313</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.24 0.272 0.728</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.25 0.625 0.375</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.26 0.540 0.460</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.27 0.138 0.862</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.28 0.470 0.530</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.29 0.660 0.340</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.30 0.560 0.440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.31 0.167 0.833</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.32 0.838 0.162</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $total.score_frequency</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30</span>
@@ -538,41 +473,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.31 300 2 0.810 0.393     0.457 0.346       0.784</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.32 300 2 0.180 0.385    -0.041 0.095       0.803</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $G1$proportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             0     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1  0.710 0.290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2  0.427 0.573</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3  0.710 0.290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4  0.647 0.353</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5  0.370 0.630</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.6  0.870 0.130</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.7  0.273 0.727</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.8  0.787 0.213</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.9  0.103 0.897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.10 0.597 0.403</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.11 0.007 0.993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.12 0.587 0.413</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.13 0.353 0.647</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.14 0.273 0.727</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.15 0.207 0.793</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.16 0.623 0.377</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.17 0.043 0.957</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.18 0.640 0.360</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.19 0.463 0.537</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.20 0.137 0.863</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.21 0.090 0.910</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.22 0.073 0.927</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.23 0.740 0.260</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.24 0.293 0.707</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.25 0.630 0.370</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.26 0.527 0.473</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.27 0.143 0.857</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.28 0.463 0.537</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.29 0.657 0.343</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.30 0.560 0.440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.31 0.190 0.810</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.32 0.820 0.180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G2$overall</span>
@@ -614,41 +514,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.31 300 2 0.857 0.351     0.376 0.267       0.792</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.32 300 2 0.143 0.351     0.128 0.090       0.800</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $G2$proportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             0     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1  0.723 0.277</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2  0.437 0.563</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3  0.730 0.270</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4  0.597 0.403</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5  0.390 0.610</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.6  0.810 0.190</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.7  0.207 0.793</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.8  0.810 0.190</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.9  0.127 0.873</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.10 0.560 0.440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.11 0.027 0.973</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.12 0.583 0.417</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.13 0.323 0.677</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.14 0.280 0.720</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.15 0.160 0.840</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.16 0.550 0.450</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.17 0.030 0.970</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.18 0.657 0.343</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.19 0.440 0.560</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.20 0.117 0.883</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.21 0.080 0.920</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.22 0.057 0.943</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.23 0.633 0.367</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.24 0.250 0.750</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.25 0.620 0.380</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.26 0.553 0.447</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.27 0.133 0.867</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.28 0.477 0.523</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.29 0.663 0.337</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.30 0.560 0.440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.31 0.143 0.857</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.32 0.857 0.143</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
@@ -666,13 +531,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Future  392 4 2.990 0.757     0.488 0.248       0.437</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Benefit 392 4 2.837 0.802     0.363 0.165       0.541</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             1     2     3     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Comfort 0.013 0.082 0.679 0.227</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Work    0.084 0.250 0.526 0.140</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Future  0.036 0.184 0.536 0.245</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Benefit 0.054 0.255 0.492 0.199</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># polytomous data with missing</span></span></span>
 <span class="r-in"><span><span class="va">newScience</span> <span class="op">&lt;-</span> <span class="va">Science</span></span></span>
@@ -689,13 +547,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Future  392 4 2.990 0.757     0.481 0.248       0.449</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Benefit 392 4 2.837 0.802     0.370 0.176       0.538</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             1     2     3     4  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Comfort 0.013 0.082 0.668 0.224 0.013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Work    0.084 0.250 0.526 0.140    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Future  0.036 0.184 0.536 0.245    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Benefit 0.054 0.255 0.492 0.199    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># unequal categories</span></span></span>
 <span class="r-in"><span><span class="va">newScience</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">Science</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="cn">NA</span>, <span class="va">Science</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
@@ -710,13 +561,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Work    392 4 2.722 0.807     0.325 0.162       0.517</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Future  392 4 2.990 0.757     0.490 0.223       0.409</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Benefit 392 4 2.837 0.802     0.370 0.133       0.525</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             1     2     3     4  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Comfort    NA 0.082 0.679 0.227 0.013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Work    0.084 0.250 0.526 0.140    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Future  0.036 0.184 0.536 0.245    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Benefit 0.054 0.255 0.492 0.199    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">LSAT7full</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">392</span>,<span class="op">]</span>, <span class="va">Science</span><span class="op">)</span></span></span>
@@ -736,18 +580,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Work    392 4 2.722 0.807     0.299 0.168       0.251</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Future  392 4 2.990 0.757     0.418 0.260       0.185</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Benefit 392 4 2.837 0.802     0.291 0.190       0.261</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             0     1     2     3     4  &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1  0.426 0.561    NA    NA    NA 0.013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2  0.768 0.232    NA    NA    NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3  0.395 0.605    NA    NA    NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4  0.533 0.467    NA    NA    NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5  0.240 0.760    NA    NA    NA    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Comfort    NA 0.013 0.082 0.679 0.227    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Work       NA 0.084 0.250 0.526 0.140    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Future     NA 0.036 0.184 0.536 0.245    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Benefit    NA 0.054 0.255 0.492 0.199    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

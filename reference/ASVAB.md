@@ -44,13 +44,6 @@ itemstats(dat, group=group)
 #> Item.3 145 2 0.283 0.452     0.064 0.022       0.164
 #> Item.4 145 2 0.255 0.437    -0.011 0.013       0.256
 #> 
-#> $`Female:Black`$proportions
-#>            0     1
-#> Item.1 0.497 0.503
-#> Item.2 0.579 0.421
-#> Item.3 0.717 0.283
-#> Item.4 0.745 0.255
-#> 
 #> 
 #> $`Female:White`
 #> $`Female:White`$overall
@@ -63,13 +56,6 @@ itemstats(dat, group=group)
 #> Item.2 228 2 0.605 0.490     0.312 0.100       0.432
 #> Item.3 228 2 0.487 0.501     0.284 0.085       0.458
 #> Item.4 228 2 0.408 0.493     0.339 0.117       0.408
-#> 
-#> $`Female:White`$proportions
-#>            0     1
-#> Item.1 0.382 0.618
-#> Item.2 0.395 0.605
-#> Item.3 0.513 0.487
-#> Item.4 0.592 0.408
 #> 
 #> 
 #> $`Male:Black`
@@ -84,13 +70,6 @@ itemstats(dat, group=group)
 #> Item.3 140 2 0.329 0.471    -0.037 0.017       0.304
 #> Item.4 140 2 0.271 0.446     0.100 0.055       0.123
 #> 
-#> $`Male:Black`$proportions
-#>            0     1
-#> Item.1 0.557 0.443
-#> Item.2 0.600 0.400
-#> Item.3 0.671 0.329
-#> Item.4 0.729 0.271
-#> 
 #> 
 #> $`Male:White`
 #> $`Male:White`$overall
@@ -103,13 +82,6 @@ itemstats(dat, group=group)
 #> Item.2 263 2 0.635 0.482     0.361 0.136       0.667
 #> Item.3 263 2 0.593 0.492     0.481 0.248       0.588
 #> Item.4 263 2 0.506 0.501     0.507 0.282       0.569
-#> 
-#> $`Male:White`$proportions
-#>            0     1
-#> Item.1 0.259 0.741
-#> Item.2 0.365 0.635
-#> Item.3 0.407 0.593
-#> Item.4 0.494 0.506
 #> 
 #> 
 ```

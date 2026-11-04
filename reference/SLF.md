@@ -70,14 +70,6 @@ itemstats(full)
 #> social4 1490 2 0.413 0.493     0.420 0.191       0.397
 #> social5 1490 2 0.282 0.450     0.281 0.088       0.493
 #> 
-#> $proportions
-#>             0     1
-#> social1 0.869 0.131
-#> social2 0.328 0.672
-#> social3 0.332 0.668
-#> social4 0.587 0.413
-#> social5 0.718 0.282
-#> 
 
 mod <- mirt(full)
 plot(mod, type = 'trace')

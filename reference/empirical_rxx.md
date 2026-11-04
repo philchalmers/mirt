@@ -60,14 +60,6 @@ itemstats(dat)
 #> Item.4 19601 2 0.427 0.495     0.405 0.171       0.529
 #> Item.5 19601 2 0.387 0.487     0.312 0.100       0.581
 #> 
-#> $proportions
-#>            0     1
-#> Item.1 0.113 0.887
-#> Item.2 0.356 0.644
-#> Item.3 0.434 0.566
-#> Item.4 0.573 0.427
-#> Item.5 0.613 0.387
-#> 
 mod <- mirt(dat)
 
 theta_se <- fscores(mod, full.scores.SE = TRUE)
