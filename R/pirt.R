@@ -277,7 +277,7 @@
 #' coef(pirt2, simplify=TRUE)
 #'
 #' ##################################
-#' # estimates using mirt()
+#' # simple structure estimates using mirt()
 #'
 #' set.seed(1234)
 #' a <- matrix(c(
@@ -302,7 +302,7 @@
 #' items <- rep('2PL', 16)
 #'
 #' sigma <- diag(3)
-#' sigma[1,2] <- sigma[2,1] <- .4
+#' sigma[1,2] <- sigma[2,1] <- .8
 #' dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
 #' itemstats(dataset)
 #'
@@ -312,8 +312,9 @@
 #' S3 = 12-16
 #' COV = S1*S2"
 #'
-#' # quadpts dropped for faster estimation, but not as precise
-#' simmod <- mirt(dataset, model)
+#' # quadrature increased to help with estimation stability (less stable due to
+#' # highly correlated traits)
+#' simmod <- mirt(dataset, model, quadpts=26)
 #' coef(simmod, simplify=TRUE)
 #' summary(simmod)
 #'
