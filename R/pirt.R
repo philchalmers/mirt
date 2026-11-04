@@ -335,7 +335,10 @@ pirt <- function(mod, model=1, project=1,
                  IRTpars = FALSE, shortform = NULL, ...){
 
     stopifnot(estimator %in% c('MML', "FA", 'LKA'))
-
+    if(estimator %in% c('LKA', "FA"))
+        stopifnot("All items must be from the *PL/graded response model family"=
+                      all(extract.mirt(mod, 'itemtype') %in%
+                              c('1PL', '2PL', '3PL', '3PLu', '4PL', 'graded')))
     if(estimator == 'LKA')
         return(Ip2010(mod=mod, IRTpars=IRTpars))
     if(estimator == 'FA'){
