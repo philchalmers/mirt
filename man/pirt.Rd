@@ -276,6 +276,56 @@ coef(simmod, simplify=TRUE)
 pirt2 <- pirt(simmod, model=model, project=1:2)
 coef(pirt2, simplify=TRUE)
 
+##################################
+# estimates using mirt()
+
+set.seed(1234)
+a <- matrix(c(
+    1.5,NA,NA,
+    1.5,NA,NA,
+    1.5,NA,NA,
+    1.5,NA,NA,
+    1.5,NA,NA,
+    NA,1,NA,
+    NA,1,NA,
+    NA,1,NA,
+    NA,1,NA,
+    NA,1,NA,
+    NA,1,NA,
+    NA,NA,1.75,
+    NA,NA,1.75,
+    NA,NA,1.75,
+    NA,NA,1.75,
+    NA,NA,1.75),ncol=3,byrow=TRUE)
+
+d <- matrix(rnorm(16))
+items <- rep('2PL', 16)
+
+sigma <- diag(3)
+sigma[1,2] <- sigma[2,1] <- .4
+dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
+itemstats(dataset)
+
+model <- "
+S1 = 1-5
+S2 = 6-11
+S3 = 12-16
+COV = S1*S2"
+
+# quadpts dropped for faster estimation, but not as precise
+simmod <- mirt(dataset, model)
+coef(simmod, simplify=TRUE)
+summary(simmod)
+
+# project to first dimension
+#  correlation structure makes it seem as though 2nd dimension
+#  could be measured by first dimension (but this is only partially true)
+pirt <- pirt(simmod, project=1)
+coef(pirt, simplify=TRUE)
+
+fscores(simmod, method = 'EAPsum', full.scores=FALSE)
+fscores(pirt, method = 'EAPsum', full.scores=FALSE)
+
 }
 
 }
