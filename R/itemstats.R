@@ -20,7 +20,7 @@
 #'   summary information
 #' @param itemfreq character vector indicting whether to
 #'   include item response \code{"proportions"} or \code{"counts"}
-#'   for each item. If set to \code{'none'} then this will be omitted
+#'   for each item. If set to \code{'none'} (default) then this will be omitted
 #' @param ts_fun function to use to build the linear composite score?
 #'   Recommend inputs are \code{\link{rowSums}} (default) and
 #'   \code{\link{rowMeans}}, and must include an argument \code{na.rm},
@@ -45,6 +45,7 @@
 #' LSAT7full <- expand.table(LSAT7)
 #' head(LSAT7full)
 #' itemstats(LSAT7full)
+#' itemstats(LSAT7full, itemfreq='proportions')
 #' itemstats(LSAT7full, itemfreq='counts')
 #'
 #' # composite score expressed as a mean
@@ -89,7 +90,7 @@
 itemstats <- function(data, group = NULL,
                       ts_fun = rowSums,
                       use_ts=TRUE,
-                      itemfreq="proportions",
+                      itemfreq="none",
                       ts.tables=FALSE){
     data <- as.matrix(data)
     if(!is.null(group) && !is.factor(group)) group <- factor(group)

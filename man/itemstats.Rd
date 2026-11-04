@@ -9,7 +9,7 @@ itemstats(
   group = NULL,
   ts_fun = rowSums,
   use_ts = TRUE,
-  itemfreq = "proportions",
+  itemfreq = "none",
   ts.tables = FALSE
 )
 }
@@ -30,7 +30,7 @@ meaningful total score?}
 
 \item{itemfreq}{character vector indicting whether to
 include item response \code{"proportions"} or \code{"counts"}
-for each item. If set to \code{'none'} then this will be omitted}
+for each item. If set to \code{'none'} (default) then this will be omitted}
 
 \item{ts.tables}{logical; include mean/sd summary information
 pertaining to the unweighted total score?}
@@ -59,6 +59,7 @@ all possible response information.
 LSAT7full <- expand.table(LSAT7)
 head(LSAT7full)
 itemstats(LSAT7full)
+itemstats(LSAT7full, itemfreq='proportions')
 itemstats(LSAT7full, itemfreq='counts')
 
 # composite score expressed as a mean
