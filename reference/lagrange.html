@@ -161,11 +161,11 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="st">                   FREE = (1, a1)'</span>, <span class="st">'Rasch'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod2</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              a1         d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 1.157956 1.9393358 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 1.000000 0.7850452 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 1.000000 1.4501952 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 1.000000 0.5175858 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 1.000000 1.9787464 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 1.158017 1.9393429 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 1.000000 0.7850362 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 1.000000 1.4501782 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 1.000000 0.5175801 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 1.000000 1.9787221 0 1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">mod2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           AIC    SABIC       HQ      BIC    logLik    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod  5341.802 5352.192 5352.994 5371.248 -2664.901               </span>
@@ -188,12 +188,12 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="st">'F = 1-5</span></span></span>
 <span class="r-in"><span><span class="st">                   FREE = (3, a1)'</span>, <span class="st">'Rasch'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod2</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              a1         d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 1.000000 1.8101732 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 1.000000 0.7649559 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 1.848252 1.7774916 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 1.000000 0.5042538 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 1.000000 1.9316244 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 1.0000 1.8101757 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 1.0000 0.7649552 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 1.8482 1.7774704 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 1.0000 0.5042513 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 1.0000 1.9316269 0 1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">mod2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           AIC    SABIC       HQ      BIC    logLik    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod  5341.802 5352.192 5352.994 5371.248 -2664.901               </span>

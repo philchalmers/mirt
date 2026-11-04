@@ -100,11 +100,11 @@ model <- "Theta = 1-4
 xp <- mirt(Science, model)
 anova(xp, x2)
 #>         AIC    SABIC       HQ      BIC    logLik   logPost df
-#> xp 3249.829 3262.602 3275.012 3313.369 -1608.914 -1622.881 NA
+#> xp 3249.829 3262.602 3275.012 3313.369 -1608.915 -1622.881 NA
 #> x2 3241.938 3257.106 3271.843 3317.392 -1601.969 -1601.969  3
 anova(xp)
 #>         AIC    SABIC       HQ      BIC    logLik   logPost
-#> xp 3249.829 3262.602 3275.012 3313.369 -1608.914 -1622.881
+#> xp 3249.829 3262.602 3275.012 3313.369 -1608.915 -1622.881
 
 # bounded parameter
 dat <- expand.table(LSAT7)

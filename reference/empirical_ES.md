@@ -284,7 +284,7 @@ empirical_ES(mod)
 #> Item_12 -0.003 0.023 -0.003 0.022 -0.012          1.229 -0.036       0.484
 #> Item_13 -0.012 0.015 -0.014 0.015 -0.045          0.618 -0.024       0.589
 #> Item_14 -0.012 0.027 -0.012 0.025 -0.048         -1.426 -0.056       0.595
-#> Item_15 -0.013 0.031 -0.013 0.028 -0.064          1.901 -0.057       0.494
+#> Item_15 -0.013 0.031 -0.013 0.028 -0.064          1.902 -0.057       0.494
 #>         mean.ES.ref
 #> Item_1        0.618
 #> Item_2        0.408
@@ -303,26 +303,26 @@ empirical_ES(mod)
 #> Item_15       0.507
 empirical_ES(mod, DIF=FALSE)
 #>           Effect Size       Value
-#> 1                STDS -0.12007524
-#> 2                UTDS  0.24122923
-#> 3              UETSDS  0.13068433
-#> 4               ETSSD -0.03693475
-#> 5         Starks.DTFR -0.12338715
-#> 6               UDTFR  0.22580510
-#> 7              UETSDN  0.12941066
-#> 8 theta.of.max.test.D  1.73546824
-#> 9           Test.Dmax -0.23002060
+#> 1                STDS -0.12008698
+#> 2                UTDS  0.24124666
+#> 3              UETSDS  0.13071051
+#> 4               ETSSD -0.03693813
+#> 5         Starks.DTFR -0.12340035
+#> 6               UDTFR  0.22581969
+#> 7              UETSDN  0.12943296
+#> 8 theta.of.max.test.D  1.73552145
+#> 9           Test.Dmax -0.23007473
 empirical_ES(mod, DIF=FALSE, focal_items = 10:15)
 #>           Effect Size       Value
-#> 1                STDS -0.07301229
-#> 2                UTDS  0.14449888
-#> 3              UETSDS  0.07301229
-#> 4               ETSSD -0.05523295
-#> 5         Starks.DTFR -0.06993679
-#> 6               UDTFR  0.13444167
-#> 7              UETSDN  0.06993679
-#> 8 theta.of.max.test.D  1.90144409
-#> 9           Test.Dmax -0.12250160
+#> 1                STDS -0.07301918
+#> 2                UTDS  0.14450626
+#> 3              UETSDS  0.07301918
+#> 4               ETSSD -0.05523777
+#> 5         Starks.DTFR -0.06994412
+#> 6               UDTFR  0.13444763
+#> 7              UETSDN  0.06994412
+#> 8 theta.of.max.test.D  1.90150129
+#> 9           Test.Dmax -0.12253170
 
 empirical_ES(mod, plot=TRUE)
 
@@ -437,16 +437,16 @@ empirical_ES(mod)
 #> Item_14       0.616
 #> Item_15       0.492
 empirical_ES(mod, DIF = FALSE)
-#>           Effect Size       Value
-#> 1                STDS -0.30204052
-#> 2                UTDS  0.55171554
-#> 3              UETSDS  0.30204052
-#> 4               ETSSD -0.08665251
-#> 5         Starks.DTFR -0.30918657
-#> 6               UDTFR  0.56373600
-#> 7              UETSDN  0.30918906
-#> 8 theta.of.max.test.D -1.05111220
-#> 9           Test.Dmax -0.54821795
+#>           Effect Size      Value
+#> 1                STDS -0.3020405
+#> 2                UTDS  0.5517155
+#> 3              UETSDS  0.3020405
+#> 4               ETSSD -0.0866525
+#> 5         Starks.DTFR -0.3091866
+#> 6               UDTFR  0.5637360
+#> 7              UETSDN  0.3091891
+#> 8 theta.of.max.test.D -1.0511122
+#> 9           Test.Dmax -0.5482180
 empirical_ES(mod, plot=TRUE)
 
 empirical_ES(mod, plot=TRUE, DIF=FALSE)
