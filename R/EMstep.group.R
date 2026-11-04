@@ -456,7 +456,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
            list$method != 'MCEM' && !dentype %in% c('EHW', 'Davidian')){
             diff <- c(-Inf, na.omit(collectLL)) - c(na.omit(collectLL), Inf)
             if(any(diff[length(diff):ceiling(length(diff)*.9)] > .001))
-                warning('Log-likelihood was decreasing near the ML solution. EM method may be unstable',
+                warning(c('Log-likelihood was decreasing near the ML solution. EM method may be unstable.\n',
+                          'If the number of quadrature are too low (quadpts) then increasing may help'),
                         call.=FALSE)
         }
     }

@@ -384,6 +384,21 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
         }
     }
     usefixed <- pars[[1L]][[1]]@nfixedeffects > 0
+    for(g in 1:ngroups){
+        gp <- ExtractGroupPars(pars[[g]][[J+1]])
+        chl <- try(chol(gp$gcov), silent=TRUE)
+        if(is(chl, 'try-error')){
+            if(keep_vcov_PD && all(is.finite(gp$gcov))){
+                sds <- diag(sqrt(diag(gp$gcov)))
+                smoothed <- cov2cor(smooth.cov(gp$gcov))
+                lower <- smoothed[lower.tri(smoothed)]
+                smoothed[lower.tri(smoothed)] <- lower
+                gp$gcov <- sds %*% smoothed %*% sds
+            }
+            pick <- grepl('COV_', names(pars[[g]][[J+1]]@est)) & pars[[g]][[J+1]]@est
+            pars[[g]][[J+1]]@par[pick] <- c(gp$gmeans, gp$gcov[lower.tri(gp$gcov, TRUE)])[pick]
+        }
+    }
     g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L,
                usefixed, 1L, TRUE)$grad
     if(length(SLOW.IND)){
