@@ -202,12 +202,12 @@ empirical_plot(data, type = 'discrim_diff')
 empirical_plot(data, type = 'alpha_rm')
 
 empirical_plot(data, type = 'freq')
-#> Error in d[, !(names(data) %in% all.varying), drop = FALSE]: incorrect number of dimensions
+
 
 
 # items 1, 2 and 5
 empirical_plot(data, c(1, 2, 5), type = 'freq')
-#> Error in d[, !(names(data) %in% all.varying), drop = FALSE]: incorrect number of dimensions
+
 empirical_plot(data, c(1, 2, 5))
 
 empirical_plot(data, c(1, 2, 5), smooth = TRUE)
@@ -260,7 +260,7 @@ empirical_plot(Science)
 empirical_plot(Science, type = 'hist', breaks=20)
 
 empirical_plot(Science, type = 'freq')
-#> Error in d[, !(names(data) %in% all.varying), drop = FALSE]: incorrect number of dimensions
+
 empirical_plot(Science, type = 'difficulty')
 
 empirical_plot(Science, type = 'discrim_diff')
@@ -288,7 +288,7 @@ plot(mod, type='trace')
 Science[1:3, 1] <- NA
 Science[6:8, 2] <- NA
 empirical_plot(Science, type = 'freq')
-#> Error in d[, !(names(data) %in% all.varying), drop = FALSE]: incorrect number of dimensions
+
 
 
 # }
