@@ -732,6 +732,10 @@
 #'       \code{'MCEM'} method. Must include one argument which indicates the iteration number of the
 #'       EM cycle. Default is \code{function(cycles) 500 + (cycles - 1)*2}, which starts the number of
 #'       draws at 500 and increases by 2 after each full EM iteration}
+#'     \item{QMC.type}{type of quasi-Monte Carlo sequence to use. Defaults to \code{'Halton'} sequence,
+#'       though can be \code{'shift'} for the Cranley-Patterson rotation, or \code{'scramble'}
+#'       to create a randomized-digit Halton set. The ladder two approaches are random and therefore
+#'       depend on the \code{.Random.seed} state}
 #'     \item{info_if_converged}{logical; compute the information matrix when using the MH-RM algorithm
 #'       only if the model converged within a suitable number of iterations? Default is \code{TRUE}}
 #'     \item{logLik_if_converged}{logical; compute the observed log-likelihood when using the MH-RM algorithm

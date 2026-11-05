@@ -39,6 +39,7 @@
 #'   (the upper triangle is filled with NA's)
 #' @param QMC logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
 #'   If \code{quadpts} not specified, 5000 nodes are used by default
+#' @param QMC.type see \code{\link{mirt}} for details
 #' @param suppress a numeric value indicating which parameter residual dependency combinations
 #'   to flag as being too high. Absolute values for the standardized residuals greater than
 #'   this value will be returned, while all values less than this value will be set to NA.
@@ -86,7 +87,7 @@
 #'
 #' }
 M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
-                CI = .9, residmat = FALSE, QMC = FALSE, suppress = 1, ...){
+                CI = .9, residmat = FALSE, QMC = FALSE, QMC.type = 'Halton', suppress = 1, ...){
     impute <- 0
     if(is(obj, 'MixtureModel'))
         stop('Mixture IRT models not yet supported', call.=FALSE)
@@ -158,7 +159,8 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
                     Prior <- Prior/sum(Prior)
                 } else {
                     if(QMC){
-                        Theta <- QMC_quad(npts=quadpts, nfact=obj@Model$nfact, lim=theta_lim)
+                        Theta <- QMC_quad(npts=quadpts, nfact=obj@Model$nfact, lim=theta_lim,
+                                          random.type=QMC.type)
                         Theta <- Theta_meanSigma_shift(Theta, gstructgrouppars$gmeans,
                                                        gstructgrouppars$gcov)
                         Prior <- rep(1/nrow(Theta), nrow(Theta))

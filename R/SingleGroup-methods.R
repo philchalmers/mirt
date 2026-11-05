@@ -663,6 +663,7 @@ setMethod(
 #'   or generated automatically if not available
 #' @param QMC logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 #'   default number of nodes is 5000
+#' @param QMC.type see \code{\link{mirt}} for details
 #' @param suppress a numeric value indicating which parameter local dependency combinations
 #'   to flag as being too high (for LD, LDG2, and Q3 the standardize correlations are used; for
 #'   JSI, the z-ratios are used). Absolute values for the standardized estimates greater than
@@ -760,7 +761,7 @@ setMethod(
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, type = 'LD', p.adjust = 'none',
                           df.p = FALSE, approx.z = FALSE,
-                          full.scores = FALSE, QMC = FALSE,
+                          full.scores = FALSE, QMC = FALSE, QMC.type = 'Halton',
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
                           suppress = NA, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE,
                           upper = TRUE, technical = list(), ...)
@@ -797,7 +798,7 @@ setMethod(
             theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
             if(type != 'Q3'){
                 Theta <- if(QMC)
-                    QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim)
+                    QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim, random.type=QMC.type)
                 else {
                     if(nfact > 3L)
                         warning('High-dimensional models should use QMC integration instead',

@@ -13,6 +13,7 @@ M2(
   CI = 0.9,
   residmat = FALSE,
   QMC = FALSE,
+  QMC.type = "Halton",
   suppress = 1,
   ...
 )
@@ -44,6 +45,8 @@ Only the lower triangle of the residual correlation matrix will be returned
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
 If \code{quadpts} not specified, 5000 nodes are used by default}
+
+\item{QMC.type}{see \code{\link{mirt}} for details}
 
 \item{suppress}{a numeric value indicating which parameter residual dependency combinations
 to flag as being too high. Absolute values for the standardized residuals greater than

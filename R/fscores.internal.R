@@ -8,7 +8,7 @@ setMethod(
 	                      theta_lim, MI, pis=NULL, mixture=FALSE, covdata,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
-                          QMC, custom_den = NULL, custom_theta = NULL,
+                          QMC, QMC.type, custom_den = NULL, custom_theta = NULL,
 	                      min_expected, plausible.type, start, EAPsum.scores,
 	                      use_dentype_estimate, leave_missing = FALSE, expected.info,
 	                      project = NULL, ...)
@@ -223,7 +223,7 @@ setMethod(
                           EAPsum.scores=EAPsum.scores,
                           item_weights=item_weights, return.acov=return.acov,
                           CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
-                          discrete=discrete, QMC=QMC, den_fun=den_fun,
+                          discrete=discrete, QMC=QMC, QMC.type=QMC.type,den_fun=den_fun,
                           min_expected=min_expected, pis=pis, mixture=mixture,
                           use_dentype_estimate=use_dentype_estimate,
                           leave_missing=leave_missing, nfact=nfact,
@@ -302,7 +302,8 @@ setMethod(
                     if(method != 'EAP_general'){
                         if(is.null(custom_theta)){
                             ThetaShort <- Theta <- if(QMC){
-                                tmp <- QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim)
+                                tmp <- QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim,
+                                                random.type=QMC.type)
                                 Theta_meanSigma_shift(tmp, gp$gmeans, gp$gcov)
                             } else thetaComb(theta,nfact)
                         } else {
@@ -776,7 +777,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist,
 
 EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                    quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND,
-                   theta_lim, discrete, mixture, QMC, den_fun, min_expected,
+                   theta_lim, discrete, mixture, QMC, QMC.type = 'Halton', den_fun, min_expected,
                    which.items = 2:length(x@ParObjects$pars)-1,
                    use_dentype_estimate = FALSE, pis, leave_missing,
                    item_weights = rep(1, extract.mirt(x, 'nitems')),
@@ -836,7 +837,8 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         } else {
             nfact <- x@Model$nfact
             ThetaShort <- Theta <- if(QMC){
-                tmp <- QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim)
+                tmp <- QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim,
+                                random.type=QMC.type)
                 Theta_meanSigma_shift(tmp, gp$gmeans, gp$gcov)
             } else {
                 theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)

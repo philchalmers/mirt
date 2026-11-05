@@ -124,6 +124,7 @@
 #' @param verbose logical; print verbose output messages?
 #' @param QMC logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 #'   default number of nodes is 5000
+#' @param QMC.type see \code{\link{mirt}} for details
 #' @param custom_den a function used to define the integration density (if required). The NULL default
 #'   assumes that the multivariate normal distribution with the 'GroupPars' hyper-parameters are
 #'   used. At the minimum must be of the form:
@@ -300,7 +301,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                     returnER = FALSE, T_as_X = FALSE, EAPsum.scores = FALSE,
                     return.acov = FALSE, mean = NULL, cov = NULL, covdata = NULL,
                     verbose = interactive(), full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
-                    use_dentype_estimate=FALSE, QMC = FALSE, custom_den = NULL,
+                    use_dentype_estimate=FALSE, QMC = FALSE, QMC.type = 'Halton', custom_den = NULL,
                     custom_theta = NULL, expected.info=FALSE,
                     min_expected = 1, max_theta = 20, start = NULL, ...)
 {
@@ -354,7 +355,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                   length(item_weights) != extract.mirt(object, 'nitems') ||
                   any(item_weights < 0))
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
-                            quadpts=quadpts, response.pattern=response.pattern, QMC=QMC,
+                            quadpts=quadpts, response.pattern=response.pattern, QMC=QMC, QMC.type=QMC.type,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
                             theta_lim=theta_lim, MI=MI, covdata=covdata,
                             item_weights=item_weights, T_as_X=T_as_X, EAPsum.scores=EAPsum.scores,

@@ -514,14 +514,14 @@ Theta_meanSigma_shift <- function(Theta, mean, sigma){
     t(t(Theta) + mean) %*% chol(sigma)
 }
 
-updateTheta <- function(npts, nfact, pars, QMC = FALSE){
+updateTheta <- function(npts, nfact, pars, QMC = FALSE, QMC.type = 'Halton'){
     ngroups <- length(pars)
     pick <- length(pars[[1L]])
     Theta <- vector('list', ngroups)
     for(g in seq_len(ngroups)){
         gp <- ExtractGroupPars(pars[[g]][[pick]])
         theta <- if(QMC){
-            QMC_quad(npts=npts, nfact=nfact, lim = c(0,1))
+            QMC_quad(npts=npts, nfact=nfact, lim = c(0,1), random.type=QMC.type)
         } else {
             MC_quad(npts=npts, nfact=nfact, lim = c(0,1))
         }
@@ -1707,7 +1707,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
                 'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder', 'MCEM_draws',
                 "zeroExtreme", 'mins', 'info_if_converged', 'logLik_if_converged', 'omp', 'nconstrain',
-                'standardize_ref', "storeEMhistory", 'fixedEtable', 'fixedTheta', "IGNOREWARNINGS")
+                'standardize_ref', "storeEMhistory", 'fixedEtable', 'fixedTheta', "IGNOREWARNINGS",
+                "QMC.type")
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1771,6 +1772,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$Etable <- ifelse(is.null(technical$Etable), TRUE, technical$Etable)
     opts$plausible.draws <- ifelse(is.null(technical$plausible.draws), 0, technical$plausible.draws)
     opts$storeEtable <- ifelse(is.null(technical$storeEtable), TRUE, technical$storeEtable)
+    opts$QMC.type <- ifelse(is.null(technical$QMC.type), 'Halton', technical$QMC.type)
     if(!is.null(TOL))
         if(is.nan(TOL) || is.na(TOL)) opts$calcNull <- opts$verbose <- FALSE
     opts$TOL <- ifelse(is.null(TOL),
@@ -2821,10 +2823,17 @@ toInternalItemtype <- function(itemtype){
 }
 
 # function borrowed and edited from the sfsmisc package, v1.1-1. Date: 18, Oct, 2017
-QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
+#
+#   @param random.type 'shift' Cranley-Patterson rotation: x -> (x + u) mod 1, u ~ U(0,1)^p
+#               'scramble' random digit permutation in each base/digit position
+#                          (+ uniform tail), i.e. a randomized-digit Halton set. When
+#                          'none' this is the usual Halton set
+QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE,
+                   random.type = c('Halton', 'shift', 'scramble'))
 {
-    digitsBase <- function (x, base = 2, ndigits = 1 + floor(1e-09 + log(max(x), base)))
-    {
+    random.type <- match.arg(random.type)
+    random <- random.type != 'Halton'
+    digitsBase <- function (x, base = 2, ndigits = 1 + floor(1e-09 + log(max(x), base))){
         if (any(x < 0))
             stop("'x' must be non-negative integers", call.=FALSE)
         if (any(x != trunc(x)))
@@ -2840,13 +2849,18 @@ QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
         attr(r, "base") <- base
         r
     }
-    sHalton <- function (n.max, n.min = 1, base = 2, leap = 1)
-    {
+    sHalton <- function (n.max, n.min = 1, base = 2, leap = 1, scramble = FALSE){
         stopifnot((leap <- as.integer(leap)) >= 1)
         nd <- as.integer(1 + log(n.max, base))
         dB <- digitsBase(if (leap == 1)
             n.min:n.max
             else seq(n.min, n.max, by = leap), base = base, ndigits = nd)
+        if(scramble){
+            dB <- unclass(dB)
+            for(i in seq_len(nd))
+                dB[i, ] <- (sample.int(base) - 1L)[dB[i, ] + 1L]
+            return(colSums(dB/base^(nd:1)) + runif(1L) / base^nd)
+        }
         colSums(dB/base^(nd:1))
     }
     stopifnot(1 <= (n <- as.integer(n)), length(n) == 1, 1 <=
@@ -2854,6 +2868,7 @@ QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
                   p || length(min) == 1, length(max) == p || length(max) ==
                   1, 1 <= (n.min <- as.integer(n.min)), 1 <= (leap <- as.integer(leap)),
               (n.max <- n.min + (n - 1:1) * leap) < .Machine$integer.max)
+    stopifnot(is.logical(random), length(random) == 1L)
     pr. <- c(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
              43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101,
              103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157,
@@ -2869,8 +2884,12 @@ QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
     min <- rep.int(min, p)
     dU <- max - min
     r <- matrix(0, n, p)
-    for (j in 1:p) r[, j] <- min[j] + dU[j] * sHalton(n.max,
-                                                      n.min, base = pr[j], leap = leap)
+    for (j in 1:p) r[, j] <- sHalton(n.max, n.min, base = pr[j], leap = leap,
+                                     scramble = random.type=='scramble')
+    if(random && random.type == 'shift')
+        r <- sweep(r, 2L, runif(p), `+`) %% 1   # Cranley-Patterson rotation
+    if(random) r <- pmin(pmax(r, .Machine$double.eps), 1 - .Machine$double.eps) # 0-1 guard
+    for (j in 1:p) r[, j] <- min[j] + dU[j] * r[, j]
     r
 }
 
@@ -2940,8 +2959,8 @@ hasConverged <- function(p0, p1, TOL){
     all(abs(p0 - p1) < TOL)
 }
 
-QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE){
-    qnorm(QUnif(npts, min=0, max=1, p=nfact, leap=leap))
+QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE, random.type = 'Halton'){
+    qnorm(QUnif(npts, min=0, max=1, p=nfact, leap=leap, random.type=random.type))
 }
 
 MC_quad <- function(npts, nfact, lim)

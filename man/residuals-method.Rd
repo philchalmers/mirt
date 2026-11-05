@@ -16,6 +16,7 @@
   approx.z = FALSE,
   full.scores = FALSE,
   QMC = FALSE,
+  QMC.type = "Halton",
   printvalue = NULL,
   tables = FALSE,
   verbose = TRUE,
@@ -56,6 +57,8 @@ for each subject in the original data?}
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 default number of nodes is 5000}
+
+\item{QMC.type}{see \code{\link{mirt}} for details}
 
 \item{printvalue}{a numeric value to be specified when using the \code{res='exp'}
 option. Only prints patterns that have standardized residuals greater than

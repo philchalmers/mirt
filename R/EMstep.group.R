@@ -34,6 +34,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     prodlist <- PrepList[[1L]]$prodlist
     MC <- list$method %in% c('QMCEM', 'MCEM')
     QMC <- list$method == 'QMCEM'
+    QMC.type <- list$QMC.type
     for(g in seq_len(ngroups)){
         for(i in seq_len(J+1L)){
             nfullpars <- nfullpars + length(pars[[g]][[i]]@par)
@@ -234,9 +235,11 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             #priors
             start <- proc.time()[3L]
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
-            if(MC)
-                gTheta <- updateTheta(npts=if(QMC) list$quadpts else list$MCEM_draws(cycles),
-                                      nfact=nfact, pars=pars, QMC=QMC)
+            if(MC){
+                if(!QMC || cycles == 1)
+                    gTheta <- updateTheta(npts=if(QMC) list$quadpts else list$MCEM_draws(cycles),
+                                          nfact=nfact, pars=pars, QMC=QMC, QMC.type=QMC.type)
+            }
             tmp <- updatePrior(pars=pars, gTheta=gTheta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=cycles,
@@ -416,7 +419,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
             if(MC)
                 gTheta <- updateTheta(npts=if(QMC) list$quadpts else list$MCEM_draws(cycles),
-                                      nfact=nfact, pars=pars, QMC=QMC)
+                                      nfact=nfact, pars=pars, QMC=QMC, QMC.type=QMC.type)
             tmp <- updatePrior(pars=pars, gTheta=gTheta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=2L,

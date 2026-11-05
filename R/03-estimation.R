@@ -685,7 +685,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                         if(is.null(opts$technical$customTheta))
                             Theta <- thetaComb(theta, nfact)
                     } else stop('Greater than ', opts$MAXQUAD, ' quadrature points.', call.=FALSE)
-                    if(opts$message && nfact > 3L && !(opts$odentype %in% c('custom', 'discrete')))
+                    if(is.null(is.null(opts$technical$customTheta)) &&
+                       opts$message && nfact > 3L && !(opts$odentype %in% c('custom', 'discrete')))
                         message('EM quadrature for high dimensional models are better handled
                                  \twith the \"QMCEM\" or \"MCEM\" method')
                 }
@@ -710,7 +711,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          lrPars=lrPars, SE=opts$SE && opts$SE.type == 'numerical', Etable=opts$Etable,
                                          NULL.MODEL=opts$NULL.MODEL, PLCI=opts$PLCI, Norder=opts$Norder,
                                          keep_vcov_PD=opts$keep_vcov_PD, symmetric=opts$technical$symmetric,
-                                         MCEM_draws=opts$MCEM_draws, omp_threads=opts$omp_threads),
+                                         MCEM_draws=opts$MCEM_draws, omp_threads=opts$omp_threads,
+                                         QMC.type=opts$QMC.type),
                              Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args, control=control,
                              nconstrain=opts$technical$nconstrain, fixedEtable=opts$technical$fixedEtable)
         if(opts$method == 'MCEM')
@@ -1143,7 +1145,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Internals$Theta <- Theta
         if(opts$method == 'QMCEM')
             Internals$Theta <- updateTheta(npts=opts$quadpts, nfact=nfact,
-                                           pars=pars, QMC=TRUE)[[1]]
+                                           pars=pars, QMC=TRUE, QMC.type=opts$QMC.type)[[1]]
     }
     if(opts$storeEMhistory)
         Internals$EMhistory <- ESTIMATE$EMhistory

@@ -30,6 +30,7 @@ fscores(
   MI = 0,
   use_dentype_estimate = FALSE,
   QMC = FALSE,
+  QMC.type = "Halton",
   custom_den = NULL,
   custom_theta = NULL,
   expected.info = FALSE,
@@ -149,6 +150,8 @@ the latent trait estimates? Only applicable for EAP-based estimates (EAP, EAPsum
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 default number of nodes is 5000}
+
+\item{QMC.type}{see \code{\link{mirt}} for details}
 
 \item{custom_den}{a function used to define the integration density (if required). The NULL default
   assumes that the multivariate normal distribution with the 'GroupPars' hyper-parameters are
