@@ -181,7 +181,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
     TS <- TS[ord]
     tab <- table(TS)
     if(type %in% c('discrim', 'difficulty', 'discrim_diff', 'freq', 'alpha_rm')){
-        isummary <- itemstats(data, ts_fun=ts_fun)
+        isummary <- itemstats(data, ts_fun=ts_fun, itemfreq = 'proportions')
         is <- isummary$itemstats
         is$item <- factor(rownames(is), levels=colnames(data))
         if(type == 'discrim'){
