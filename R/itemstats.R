@@ -205,11 +205,13 @@ itemstats <- function(data, group = NULL,
         tmp[rownames(ret$itemstats), ] <- ret$itemstats
         ret$itemstats <- tmp
 
-        tmp <- data.frame(matrix(NA, nrow=ncol(odata), ncol=ncol(ret$proportions)))
-        rownames(tmp) <- colnames(odata)
-        colnames(tmp) <- colnames(ret$proportions)
-        tmp[rownames(ret$proportions), ] <- ret$proportions
-        ret$proportions <- tmp
+        if(itemfreq != 'none'){
+            tmp <- data.frame(matrix(NA, nrow=ncol(odata), ncol=ncol(ret$proportions)))
+            rownames(tmp) <- colnames(odata)
+            colnames(tmp) <- colnames(ret$proportions)
+            tmp[rownames(ret$proportions), ] <- ret$proportions
+            ret$proportions <- tmp
+        }
     }
 
     ret

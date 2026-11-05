@@ -334,6 +334,8 @@ pirt <- function(mod, model=1, project=1,
                  SE=TRUE, estimator = 'MML', invariance='',
                  IRTpars = FALSE, shortform = NULL, ...){
 
+    if(estimator == 'MML' && extract.mirt(mod, 'method') != 'EM')
+        stop('Supplied model must have been calibrated using the EM method', call.=FALSE)
     stopifnot(estimator %in% c('MML', "FA", 'LKA'))
     if(estimator %in% c('LKA', "FA"))
         stopifnot("All items must be from the *PL/graded response model family"=
