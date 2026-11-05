@@ -18,6 +18,7 @@ residuals(
   approx.z = FALSE,
   full.scores = FALSE,
   QMC = FALSE,
+  QMC.type = "Halton",
   printvalue = NULL,
   tables = FALSE,
   verbose = TRUE,
@@ -77,6 +78,11 @@ residuals(
 
   logical; use quasi-Monte Carlo integration? If `quadpts` is omitted
   the default number of nodes is 5000
+
+- QMC.type:
+
+  see [`mirt`](https://philchalmers.github.io/mirt/reference/mirt.md)
+  for details
 
 - printvalue:
 

@@ -25,7 +25,7 @@ density components (where applicable)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.48.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.48.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,6 +79,7 @@ density components (where applicable).</p>
 <span>  CI <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  residmat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  QMC <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  QMC.type <span class="op">=</span> <span class="st">"Halton"</span>,</span>
 <span>  suppress <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -131,6 +132,10 @@ Only the lower triangle of the residual correlation matrix will be returned
 If <code>quadpts</code> not specified, 5000 nodes are used by default</p></dd>
 
 
+<dt id="arg-qmc-type">QMC.type<a class="anchor" aria-label="anchor" href="#arg-qmc-type"></a></dt>
+<dd><p>see <code><a href="mirt.html">mirt</a></code> for details</p></dd>
+
+
 <dt id="arg-suppress">suppress<a class="anchor" aria-label="anchor" href="#arg-suppress"></a></dt>
 <dd><p>a numeric value indicating which parameter residual dependency combinations
 to flag as being too high. Absolute values for the standardized residuals greater than
@@ -178,7 +183,7 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 1 factor(s).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 28 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.48.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.48.3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: BFGS </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 61</span>

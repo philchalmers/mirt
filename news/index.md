@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes in mirt 1.49
+
+- Added `QMC.type` argument to various supported functions to allow for
+  randomized Halton sequences for quasi-Monte Carlo integration
+
 ## Changes in mirt 1.48
 
 CRAN release: 2026-10-06

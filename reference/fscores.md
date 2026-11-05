@@ -45,6 +45,7 @@ fscores(
   MI = 0,
   use_dentype_estimate = FALSE,
   QMC = FALSE,
+  QMC.type = "Halton",
   custom_den = NULL,
   custom_theta = NULL,
   expected.info = FALSE,
@@ -239,6 +240,11 @@ fscores(
 
   logical; use quasi-Monte Carlo integration? If `quadpts` is omitted
   the default number of nodes is 5000
+
+- QMC.type:
+
+  see [`mirt`](https://philchalmers.github.io/mirt/reference/mirt.md)
+  for details
 
 - custom_den:
 
@@ -741,35 +747,35 @@ mod <- mirt(Science, 1, SE=TRUE)
 fs <- fscores(mod, MI = 30)
 head(fs)
 #>               F1
-#> [1,]  0.41731267
-#> [2,]  0.05991173
-#> [3,] -0.90819974
-#> [4,] -0.90819974
-#> [5,]  0.83596873
-#> [6,]  0.66353784
+#> [1,]  0.40849033
+#> [2,]  0.04945842
+#> [3,] -0.87335675
+#> [4,] -0.87335675
+#> [5,]  0.73139286
+#> [6,]  0.67587713
 
 # plausible values for future work
 pv <- fscores(mod, plausible.draws = 5)
 lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 #> [[1]]
-#>        mean         var         min         max 
-#>  0.02545847  0.96916379 -4.04708947  3.18247881 
+#>       mean        var        min        max 
+#> -0.0237398  0.9433548 -3.2304870  3.5290290 
 #> 
 #> [[2]]
 #>        mean         var         min         max 
-#>  0.01443935  1.02147533 -2.79904222  2.50505027 
+#> -0.01125971  0.99959064 -3.33805768  2.54361397 
 #> 
 #> [[3]]
-#>         mean          var          min          max 
-#> -0.004892689  1.017258592 -3.074419645  3.841343618 
+#>        mean         var         min         max 
+#>  0.01257164  1.02205330 -2.59315489  2.78690884 
 #> 
 #> [[4]]
-#>       mean        var        min        max 
-#> -0.0255654  0.9724526 -3.3318217  3.0576628 
+#>        mean         var         min         max 
+#> -0.03093429  0.94584420 -3.19082507  2.82042027 
 #> 
 #> [[5]]
-#>        mean         var         min         max 
-#> -0.02317817  0.97652781 -3.21538679  2.42115823 
+#>         mean          var          min          max 
+#>  0.009098927  0.970654845 -2.881347035  2.567662599 
 #> 
 
 ## define a custom_den function (*must* return a numeric vector).
