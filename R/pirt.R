@@ -552,3 +552,35 @@ Ip2010 <- function(mod, IRTpars=FALSE){
     rownames(ret) <- extract.mirt(mod, 'itemnames')
     ret
 }
+
+# TODO fix up for more interesting grid
+pirt_customTheta <- function(mod, project=1, quadpts=61, quadpts2 = NULL,
+                             theta_lim=c(-6,6), theta_lim2=c(-3,3),
+                             grid = c('rectangular', 'Halton', 'scramble', 'shift')){
+    grid <- match.arg(grid)
+    nproject <- length(project)
+    nfact <- extract.mirt(mod, 'nfact')
+    if(nproject == nfact)
+        stop('Projected dimensions is the same as the current model dimensions', call.=FALSE)
+    stopifnot("Projected dimensions must be less than total dimensions" = nproject < nfact)
+    nsfact <- nfact - nproject
+    if(grid == 'rectangular'){
+        if(is.null(quadpts2))
+            quadpts2 <- select_quadpts(nsfact)
+        theta1 <- seq(theta_lim[1], theta_lim[2], length.out=quadpts)
+        theta2 <- seq(theta_lim2[1], theta_lim2[2], length.out=quadpts2)
+        theta_lst <- vector('list', nfact)
+        for(i in 1:nproject)
+            theta_lst[[i]] <- theta1
+        for(i in (nproject+1):nfact)
+            theta_lst[[i]] <- theta2
+        tmp <- expand.grid(theta_lst)
+        browser()
+        Theta <- as.matrix(do.call(rbind, tmp))
+    } else {
+
+        Theta <- something
+
+    }
+    Theta
+}
