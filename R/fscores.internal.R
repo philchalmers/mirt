@@ -56,7 +56,8 @@ setMethod(
                 fs <- fscores(object, rotate=rotate, Target=Target, full.scores = TRUE, method=method,
                               quadpts = quadpts, item_weights=item_weights,
                               theta_lim=theta_lim, verbose=FALSE, cov=gcov,
-                              return.acov = FALSE, QMC=QMC, custom_den=custom_den, leave_missing=TRUE, ...)
+                              return.acov = FALSE, QMC=QMC, QMC.type=QMC.type,
+                              custom_den=custom_den, leave_missing=TRUE, ...)
                 if(any(is.na(fs)))
                     stop('Plausible values cannot be drawn for completely empty response patterns.
                          Please remove these from your analysis.', call.=FALSE)
@@ -64,7 +65,8 @@ setMethod(
                                    full.scores = TRUE, method=method, item_weights=item_weights,
                                    quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
                                    plausible.draws=0, full.scores.SE=FALSE, cov=gcov,
-                                   return.acov = TRUE, QMC=QMC, custom_den=custom_den, ...)
+                                   return.acov = TRUE, QMC=QMC, QMC.type=QMC.type,
+                                   custom_den=custom_den, ...)
                 jit <- suppressWarnings(myLapply(seq_len(nrow(fs)), function(i, mu, sig)
                     mirt_rmvnorm(plausible.draws, mean = mu[i,], sigma = sig[[i]]),
                     mu=fs, sig=fs_acov))
@@ -131,7 +133,7 @@ setMethod(
                 ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE, mixture=mixture,
                                method=method, quadpts=quadpts, verbose=verbose, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
-                               MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
+                               MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC, QMC.type=QMC.type,
                                custom_theta=custom_theta, plausible.draws=plausible.draws,
                                plausible.type=plausible.type, start=start, pis=pis,
                                use_dentype_estimate=use_dentype_estimate,
@@ -172,7 +174,7 @@ setMethod(
                 ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE, mixture=mixture,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
-                               MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
+                               MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC, QMC.type=QMC.type,
                                custom_theta=custom_theta, pis=pis, item_weights=item_weights[pick],
                                start=start, use_dentype_estimate=use_dentype_estimate, ...)
                 if(return.acov) return(ret)
@@ -223,7 +225,7 @@ setMethod(
                           EAPsum.scores=EAPsum.scores,
                           item_weights=item_weights, return.acov=return.acov,
                           CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
-                          discrete=discrete, QMC=QMC, QMC.type=QMC.type,den_fun=den_fun,
+                          discrete=discrete, QMC=QMC, QMC.type=QMC.type, den_fun=den_fun,
                           min_expected=min_expected, pis=pis, mixture=mixture,
                           use_dentype_estimate=use_dentype_estimate,
                           leave_missing=leave_missing, nfact=nfact,
@@ -302,9 +304,8 @@ setMethod(
                     if(method != 'EAP_general'){
                         if(is.null(custom_theta)){
                             ThetaShort <- Theta <- if(QMC){
-                                tmp <- QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim,
+                                QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim,
                                                 random.type=QMC.type)
-                                Theta_meanSigma_shift(tmp, gp$gmeans, gp$gcov)
                             } else thetaComb(theta,nfact)
                         } else {
                             if(ncol(custom_theta) != object@Model$nfact)

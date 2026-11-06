@@ -514,18 +514,22 @@ Theta_meanSigma_shift <- function(Theta, mean, sigma){
     t(t(Theta) + mean) %*% chol(sigma)
 }
 
-updateTheta <- function(npts, nfact, pars, QMC = FALSE, QMC.type = 'Halton'){
+updateTheta <- function(npts, nfact, pars, Theta0=NULL, draw=TRUE, rescale=FALSE,
+                        method, QMC.type = 'Halton'){
     ngroups <- length(pars)
     pick <- length(pars[[1L]])
     Theta <- vector('list', ngroups)
     for(g in seq_len(ngroups)){
         gp <- ExtractGroupPars(pars[[g]][[pick]])
-        theta <- if(QMC){
-            QMC_quad(npts=npts, nfact=nfact, lim = c(0,1), random.type=QMC.type)
-        } else {
-            MC_quad(npts=npts, nfact=nfact, lim = c(0,1))
-        }
-        Theta[[g]] <- Theta_meanSigma_shift(theta, gp$gmeans, gp$gcov)
+        theta <- if(draw && method %in% c('QMCEM', 'MCEM')){
+            if(method == 'QMCEM'){
+                QMC_quad(npts=npts, nfact=nfact, lim = c(0,1), random.type=QMC.type)
+            } else if(method == 'MCEM') {
+                MC_quad(npts=npts, nfact=nfact, lim = c(0,1))
+            }
+        } else Theta0[[g]]
+        Theta[[g]] <- if(rescale)
+            Theta_meanSigma_shift(theta, gp$gmeans, gp$gcov) else theta
     }
     Theta
 }

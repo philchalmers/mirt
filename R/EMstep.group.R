@@ -32,9 +32,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     nfullpars <- 0L
     estpars <- c()
     prodlist <- PrepList[[1L]]$prodlist
-    MC <- list$method %in% c('QMCEM', 'MCEM')
-    QMC <- list$method == 'QMCEM'
+    method <- list$method
     QMC.type <- list$QMC.type
+    MC <- method == 'MCEM' || (method == 'QMCEM' && QMC.type != 'Halton')
     for(g in seq_len(ngroups)){
         for(i in seq_len(J+1L)){
             nfullpars <- nfullpars + length(pars[[g]][[i]]@par)
@@ -162,6 +162,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         ANY.PRIOR[g] <- any(sapply(pars[[g]], function(x) x@any.prior))
         gTheta[[g]] <- Theta
     }
+    gTheta <- updateTheta(npts=if(method != 'MCEM') list$quadpts else list$MCEM_draws(1),
+                          Theta0=gTheta, method=method, nfact=nfact, pars=pars,
+                          QMC.type=QMC.type, rescale=FALSE)
+    gTheta0 <- gTheta
     preMstep.longpars2 <- preMstep.longpars <- longpars
     is_SEM <- list$SE.type == 'SEM'
     accel <- 0; Mrate <- ifelse(is_SEM, 1, .4)
@@ -235,11 +239,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             #priors
             start <- proc.time()[3L]
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
-            if(MC){
-                if(!QMC || cycles == 1)
-                    gTheta <- updateTheta(npts=if(QMC) list$quadpts else list$MCEM_draws(cycles),
-                                          nfact=nfact, pars=pars, QMC=QMC, QMC.type=QMC.type)
-            }
+            gTheta <- updateTheta(npts=if(method != 'MCEM') list$quadpts else list$MCEM_draws(cycles),
+                                  Theta0=gTheta0, draw=MC, method=method, nfact=nfact,
+                                  pars=pars, QMC.type=QMC.type)
             tmp <- updatePrior(pars=pars, gTheta=gTheta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=cycles,
@@ -417,9 +419,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         if(verbose && !list$SE) cat('\n')
         if(is.nan(TOL) || is.numeric(TOL)){
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
-            if(MC)
-                gTheta <- updateTheta(npts=if(QMC) list$quadpts else list$MCEM_draws(cycles),
-                                      nfact=nfact, pars=pars, QMC=QMC, QMC.type=QMC.type)
+            gTheta <- updateTheta(npts=if(method != 'MCEM') list$quadpts else list$MCEM_draws(cycles),
+                                  Theta0=gTheta0, draw=MC, method=method,
+                                  nfact=nfact, pars=pars, QMC.type=QMC.type)
             tmp <- updatePrior(pars=pars, gTheta=gTheta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=2L,
@@ -593,7 +595,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     collectLL=collectLL, shortpars=longpars[estpars & !redun_constr],
                     lrPars=lrPars, logPrior=LP, fail_invert_info=FALSE, Etable=Elist$rlist,
-                    start.time.SE=start.time.SE, Theta=gTheta[[1L]], sitems=sitems)
+                    start.time.SE=start.time.SE, Theta=gTheta0[[1L]], sitems=sitems)
     } else {
         ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, Moptim=Moptim,
@@ -601,7 +603,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     prior=prior, Priorbetween=Priorbetween, sitems=sitems, collectLL=collectLL,
                     shortpars=longpars[estpars & !redun_constr], lrPars=lrPars, EMhistory=na.omit(EMhistory),
-                    logPrior=LP, fail_invert_info=FALSE, Etable=Elist$rlist, Theta=gTheta[[1L]])
+                    logPrior=LP, fail_invert_info=FALSE, Etable=Elist$rlist, Theta=gTheta0[[1L]])
     }
     attr(ret$EMhistory, "na.action") <- NULL
     for(g in seq_len(ngroups))
