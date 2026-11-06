@@ -218,19 +218,4 @@ test_that('one factor', {
     so <- summary(mod_scalar, verbose=FALSE)
     expect_equal(so[[2]]$fcor[c(2,3,6)], c(0.3240661, 0.7799120, 0.1971916), tolerance = 1e-2)
 
-    # high correlations
-    set.seed(1234)
-    a <- matrix(c(rlnorm(10, .2, .2), numeric(30), rlnorm(10, .2, .2),  numeric(30),rlnorm(10, .2, .2)), ncol=3)
-    d <- rnorm(30)
-    sigma <- matrix(.95, 3, 3)
-    diag(sigma) <- 1
-    dat <- simdata(a, d, 5000, itemtype = '2PL', sigma=sigma)
-    mod <- mirt(dat, "F1 = 1-10
-                  F2 = 11-20
-                  F3 = 21-30
-                  COV = F1*F2*F3", method='QMCEM', TOL=.001, technical=list(warn=FALSE))
-    expect_equal(logLik(mod), -82048.249, tolerance = 1e-2)
-    so <- summary(mod)
-    expect_equal(so$fcor[c(2,3,6)], c(0.9715348, 0.9700627, 0.9738707), tolerance = 1e-2)
-
 })

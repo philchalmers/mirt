@@ -523,9 +523,11 @@ updateTheta <- function(npts, nfact, pars, Theta0=NULL, draw=TRUE,
         gp <- ExtractGroupPars(pars[[g]][[pick]])
         theta <- if(draw && method %in% c('QMCEM', 'MCEM')){
             if(method == 'QMCEM'){
-                QMC_quad(npts=npts, nfact=nfact, random.type=QMC.type)
+                tmp <- QMC_quad(npts=npts, nfact=nfact, random.type=QMC.type)
+                Theta_meanSigma_shift(tmp, gp$gmeans, gp$gcov)
             } else if(method == 'MCEM') {
-                MC_quad(npts=npts, nfact=nfact, lim = c(0,1))
+                tmp <- MC_quad(npts=npts, nfact=nfact, lim = c(0,1))
+                Theta_meanSigma_shift(tmp, gp$gmeans, gp$gcov)
             }
         } else Theta0[[g]]
         Theta[[g]] <- theta
