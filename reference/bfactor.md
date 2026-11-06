@@ -812,88 +812,85 @@ summary(simmod)
 #> S2 0.000  0  0  1   
 #> S3 0.000  0  0  0  1
 itemfit(simmod, QMC=TRUE)
-#> Warning: NaNs produced
-#>       item S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
-#> 1   Item_1  NaN       0        NaN    NaN
-#> 2   Item_2  NaN       0        NaN    NaN
-#> 3   Item_3  NaN       0        NaN    NaN
-#> 4   Item_4  NaN       0        NaN    NaN
-#> 5   Item_5  NaN       0        NaN    NaN
-#> 6   Item_6  NaN       0        NaN    NaN
-#> 7   Item_7  NaN       0        NaN    NaN
-#> 8   Item_8  NaN       0        NaN    NaN
-#> 9   Item_9  NaN       0        NaN    NaN
-#> 10 Item_10  NaN       0        NaN    NaN
-#> 11 Item_11  NaN       0        NaN    NaN
-#> 12 Item_12  NaN       0        NaN    NaN
-#> 13 Item_13  NaN       0        NaN    NaN
-#> 14 Item_14  NaN       0        NaN    NaN
-#> 15 Item_15  NaN       0        NaN    NaN
-#> 16 Item_16  NaN       0        NaN    NaN
+#>       item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
+#> 1   Item_1 14.270       9      0.017  0.113
+#> 2   Item_2  7.004      10      0.000  0.725
+#> 3   Item_3 13.697       9      0.016  0.134
+#> 4   Item_4 11.930      10      0.010  0.290
+#> 5   Item_5 22.962      10      0.025  0.011
+#> 6   Item_6 16.035      10      0.017  0.099
+#> 7   Item_7  7.401       9      0.000  0.595
+#> 8   Item_8 10.845      10      0.007  0.370
+#> 9   Item_9 18.119      10      0.020  0.053
+#> 10 Item_10 13.087      10      0.012  0.219
+#> 11 Item_11 13.155      10      0.013  0.215
+#> 12 Item_12 15.821       9      0.019  0.071
+#> 13 Item_13 19.170      10      0.021  0.038
+#> 14 Item_14 15.028      10      0.016  0.131
+#> 15 Item_15 22.121       9      0.027  0.009
+#> 16 Item_16  6.090      10      0.000  0.808
 M2(simmod, QMC=TRUE)
-#> Warning: NaNs produced
-#> Warning: diag(V) had non-positive or NA entries; the non-finite result may be dubious
-#> Error in qr.default(delta): NA/NaN/Inf in foreign function call (arg 1)
+#>           M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI CFI
+#> stats 73.523 87 0.848     0       0    0.007 0.016 1.005   1
 residuals(simmod, QMC=TRUE)
-#> Warning: NaNs produced
 #> LD matrix (lower triangle) and standardized residual correlations (upper triangle)
 #> 
 #> Upper triangle summary:
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
-#>      NA      NA      NA     NaN      NA      NA     120 
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>  -0.048  -0.010   0.001   0.000   0.010   0.041 
 #> 
 #>         Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
-#> Item_1            NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN     NaN
-#> Item_2     NaN           NaN    NaN    NaN    NaN    NaN    NaN    NaN     NaN
-#> Item_3     NaN    NaN           NaN    NaN    NaN    NaN    NaN    NaN     NaN
-#> Item_4     NaN    NaN    NaN           NaN    NaN    NaN    NaN    NaN     NaN
-#> Item_5     NaN    NaN    NaN    NaN           NaN    NaN    NaN    NaN     NaN
-#> Item_6     NaN    NaN    NaN    NaN    NaN           NaN    NaN    NaN     NaN
-#> Item_7     NaN    NaN    NaN    NaN    NaN    NaN           NaN    NaN     NaN
-#> Item_8     NaN    NaN    NaN    NaN    NaN    NaN    NaN           NaN     NaN
-#> Item_9     NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN            NaN
-#> Item_10    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN        
-#> Item_11    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN     NaN
-#> Item_12    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN     NaN
-#> Item_13    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN     NaN
-#> Item_14    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN     NaN
-#> Item_15    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN     NaN
-#> Item_16    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN     NaN
+#> Item_1         -0.003  0.003 -0.003  0.000 -0.002 -0.016  0.003  0.004   0.019
+#> Item_2   0.017        -0.015  0.015  0.008  0.012 -0.010  0.015 -0.030   0.020
+#> Item_3   0.018  0.473         0.004 -0.002  0.029  0.006 -0.029  0.010   0.005
+#> Item_4   0.013  0.478  0.030        -0.004 -0.027  0.009  0.027 -0.014   0.009
+#> Item_5   0.000  0.135  0.008  0.026        -0.029  0.017  0.006 -0.039  -0.001
+#> Item_6   0.005  0.267  1.703  1.510  1.686         0.007 -0.001  0.002   0.005
+#> Item_7   0.486  0.203  0.082  0.151  0.607  0.097        -0.010 -0.014   0.004
+#> Item_8   0.014  0.435  1.666  1.446  0.072  0.002  0.203        -0.021   0.017
+#> Item_9   0.031  1.841  0.203  0.382  3.044  0.005  0.368  0.853         -0.001
+#> Item_10  0.708  0.800  0.043  0.148  0.002  0.056  0.026  0.602  0.002        
+#> Item_11  3.398  0.026  0.001  0.032  0.279  0.166  0.838  0.071  0.359   0.137
+#> Item_12  0.051  1.006  0.000  0.391  0.249  0.087  0.477  0.286  0.004   0.032
+#> Item_13  0.927  2.865  0.198  0.024  0.218  0.002  3.025  0.924  0.585   0.103
+#> Item_14  0.158  0.180  0.088  1.854  0.181  0.440  0.457  0.229  0.206   0.065
+#> Item_15  0.275  0.701  0.004  4.564  1.125  0.122  3.620  0.122  0.172   0.006
+#> Item_16  0.101  0.001  0.500  0.426  0.766  0.018  0.024  0.848  0.774   0.255
 #>         Item_11 Item_12 Item_13 Item_14 Item_15 Item_16
-#> Item_1      NaN     NaN     NaN     NaN     NaN     NaN
-#> Item_2      NaN     NaN     NaN     NaN     NaN     NaN
-#> Item_3      NaN     NaN     NaN     NaN     NaN     NaN
-#> Item_4      NaN     NaN     NaN     NaN     NaN     NaN
-#> Item_5      NaN     NaN     NaN     NaN     NaN     NaN
-#> Item_6      NaN     NaN     NaN     NaN     NaN     NaN
-#> Item_7      NaN     NaN     NaN     NaN     NaN     NaN
-#> Item_8      NaN     NaN     NaN     NaN     NaN     NaN
-#> Item_9      NaN     NaN     NaN     NaN     NaN     NaN
-#> Item_10     NaN     NaN     NaN     NaN     NaN     NaN
-#> Item_11             NaN     NaN     NaN     NaN     NaN
-#> Item_12     NaN             NaN     NaN     NaN     NaN
-#> Item_13     NaN     NaN             NaN     NaN     NaN
-#> Item_14     NaN     NaN     NaN             NaN     NaN
-#> Item_15     NaN     NaN     NaN     NaN             NaN
-#> Item_16     NaN     NaN     NaN     NaN     NaN        
+#> Item_1    0.041   0.005   0.022   0.009   0.012  -0.007
+#> Item_2    0.004   0.022  -0.038  -0.009  -0.019   0.001
+#> Item_3   -0.001   0.000   0.010   0.007   0.001   0.016
+#> Item_4    0.004  -0.014  -0.003  -0.030  -0.048  -0.015
+#> Item_5    0.012   0.011  -0.010  -0.010   0.024   0.020
+#> Item_6   -0.009   0.007  -0.001   0.015  -0.008   0.003
+#> Item_7    0.020   0.015   0.039  -0.015  -0.043   0.003
+#> Item_8    0.006  -0.012  -0.021  -0.011   0.008   0.021
+#> Item_9    0.013  -0.001  -0.017   0.010  -0.009   0.020
+#> Item_10  -0.008  -0.004   0.007  -0.006   0.002  -0.011
+#> Item_11          -0.008  -0.003  -0.024   0.029  -0.014
+#> Item_12   0.124          -0.014   0.012  -0.003  -0.001
+#> Item_13   0.015   0.381           0.019  -0.007   0.006
+#> Item_14   1.200   0.284   0.718           0.001  -0.010
+#> Item_15   1.664   0.014   0.090   0.003           0.002
+#> Item_16   0.398   0.004   0.080   0.203   0.005        
 
 # EAP predictions for all factors (high dimensional)
 eaps_all <- fscores(simmod, QMC=TRUE, quadpts=50000)
 head(eaps_all)
-#>              G1         G2         S1          S2         S3
-#> [1,]  0.5756865 -0.1604902 -0.2487831  0.42843960  0.0117641
-#> [2,] -0.5846173 -0.8781866 -0.2836997 -0.14868413 -0.4402063
-#> [3,] -0.9516381  1.4190066 -0.3883651 -0.45593947  0.3883970
-#> [4,]  0.8779963  0.4632802 -0.2380896  1.02820061 -0.2086100
-#> [5,]  0.4229899  1.2639277  0.7142629  0.05644362  0.3883451
-#> [6,] -0.5559506 -0.9504543 -0.4879782  0.13820742 -0.4992458
+#>              G1          G2         S1           S2          S3
+#> [1,]  0.5191147 -0.05812303 -0.2298246  0.421019053 -0.02374122
+#> [2,] -0.7348744 -0.95615920 -0.2423637 -0.101862792 -0.41703218
+#> [3,] -0.6147126  1.19712303 -0.4783205 -0.472646037  0.44121560
+#> [4,]  0.9284838  0.59274153 -0.2548899  0.986259541 -0.25352275
+#> [5,]  0.6460876  1.29373519  0.6411221 -0.005344923  0.38031801
+#> [6,] -0.7212222 -1.02053207 -0.4440952  0.189161622 -0.47899054
 maps <- fscores(simmod, method = 'MAP')
 head(maps)
 #>              G1          G2         S1           S2          S3
-#> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322964 -0.02778408
-#> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330675 -0.39920301
-#> [3,] -0.5799759  1.15757308 -0.4439183 -0.448083235  0.41194310
-#> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136241
+#> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322965 -0.02778409
+#> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330672 -0.39920301
+#> [3,] -0.5799759  1.15757307 -0.4439183 -0.448083235  0.41194310
+#> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136242
 #> [5,]  0.6156947  1.23660200  0.6409160 -0.005859276  0.35081023
 #> [6,] -0.6658814 -0.93907518 -0.4207128  0.209132981 -0.45956922
 
