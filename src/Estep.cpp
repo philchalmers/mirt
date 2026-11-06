@@ -12,10 +12,65 @@
 
 const double ABSMIN = std::numeric_limits<double>::min();
 
+// Underflow protection for long tests. The per-pattern likelihood is a product
+// over all items at each quadrature node; with many items (e.g., ~700+ CDI items)
+// it can underflow to 0 at every node, giving 0/0 = NaN. Patterns whose largest
+// nodal value falls below RESCALE_TRIGGER are recomputed with running rescaling,
+// tracking the scale on the log metric so log(expected) stays exact.
+const double RESCALE_TRIGGER = 1e-250;
+const double RESCALE_LIMIT = 1e-100;
+
+// posterior must enter holding the prior for this pattern; returns log scale factor
+static inline double _rescaled_product(vector<double> &posterior, const IntegerMatrix &data,
+    const NumericMatrix &itemtrace, const int &pat)
+{
+    const int nquad = posterior.size();
+    const int nitems = data.ncol();
+    double logscale = 0.0;
+    for (int item = 0; item < nitems; ++item){
+        if(!data(pat,item)) continue;
+        double m = 0.0;
+        for(int q = 0; q < nquad; ++q){
+            posterior[q] *= itemtrace(q,item);
+            if(posterior[q] > m) m = posterior[q];
+        }
+        if(m < RESCALE_LIMIT && m > 0.0){
+            for(int q = 0; q < nquad; ++q)
+                posterior[q] /= m;
+            logscale += std::log(m);
+        }
+    }
+    return logscale;
+}
+
+// sum of (possibly rescaled) posterior, then the floored expected value and its log
+static inline double _sum_posterior(const vector<double> &posterior, const double &logscale,
+    double &expd, double &logexpd)
+{
+    const double maxp = *std::max_element(posterior.begin(), posterior.end());
+    double sum = 0.0;
+    if(maxp > 0.0){
+        for(size_t i = 0; i < posterior.size(); ++i)
+            sum += posterior[i]/maxp;
+        sum *= maxp;
+    } else sum = maxp; // 0 (true zero likelihood) or NaN propagates
+    if(sum > 0.0){
+        logexpd = std::log(sum) + logscale;
+        expd = std::exp(logexpd);
+        if(expd < ABSMIN) expd = ABSMIN;
+    } else if(sum == 0.0){
+        expd = ABSMIN;
+        logexpd = std::log(ABSMIN);
+    } else {
+        expd = logexpd = sum;
+    }
+    return sum;
+}
+
 void _Estep(vector<double> &expected, vector<double> &r1vec, vector<double> &r1g,
     const vector<double> &prior, const vector<double> &r, 
     const IntegerMatrix &data, const NumericMatrix &itemtrace,
-    const vector<double> &wmiss, const bool &Etable)
+    const vector<double> &wmiss, const bool &Etable, vector<double> *logexpected)
 {
     const int nquad = prior.size();
     const int nitems = data.ncol();
@@ -33,17 +88,20 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, vector<double> &r1g
                 if(data(pat,item))
                     for(int q = 0; q < nquad; ++q)
                         posterior[q] *= itemtrace(q,item);
-            const double maxp = *std::max_element(posterior.begin(), posterior.end());
-            double expd = 0.0;
-            for(int i = 0; i < nquad; ++i)
-                expd += posterior[i]/maxp;
-            expd *= maxp;
-            if(expd < ABSMIN) expd = ABSMIN;
+            double logscale = 0.0;
+            if(!(*std::max_element(posterior.begin(), posterior.end()) >= RESCALE_TRIGGER)){
+                for(int q = 0; q < nquad; ++q)
+                    posterior[q] = prior[q];
+                logscale = _rescaled_product(posterior, data, itemtrace, pat);
+            }
+            double expd, logexpd;
+            const double sum = _sum_posterior(posterior, logscale, expd, logexpd);
             expected[pat] = expd;
+            if(logexpected) (*logexpected)[pat] = logexpd;
             if(Etable){
-                if(expd > ABSMIN){
+                if(sum > 0.0){
                     for(int q = 0; q < nquad; ++q)
-                        posterior[q] = r[pat] * posterior[q] / expd;
+                        posterior[q] = r[pat] * posterior[q] / sum;
                 }
                 for (int item = 0; item < nitems; ++item){
                     if (data(pat,item)){
@@ -76,15 +134,17 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr,
     const int nitems = data.ncol();
     const int npat = r.size();
     vector<double> expected(npat, 0.0);
+    vector<double> logexpected(npat, 0.0);
     vector<double> r1vec(nquad*nitems, 0.0);
     vector<double> r1g(nquad, 0.0);
     List ret;
 
-    _Estep(expected, r1vec, r1g, prior, r, data, itemtrace, wmiss, Etable);
+    _Estep(expected, r1vec, r1g, prior, r, data, itemtrace, wmiss, Etable, &logexpected);
     NumericMatrix r1 = vec2mat(r1vec, nquad, nitems);
     ret["r1"] = r1;
     ret["r1g"] = wrap(r1g);
     ret["expected"] = wrap(expected);
+    ret["logexpected"] = wrap(logexpected);
     return(ret);
 
     END_RCPP
@@ -92,7 +152,8 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr,
 
 void _Estep2(vector<double> &expected, vector<double> &r1vec, vector<double> &r1g,
     const NumericMatrix &prior, const IntegerMatrix &data, 
-    const NumericMatrix &itemtrace, const vector<double> &wmiss, const bool &Etable)
+    const NumericMatrix &itemtrace, const vector<double> &wmiss, const bool &Etable,
+    vector<double> &logexpected)
 {
     const int nquad = prior.ncol();
     const int nitems = data.ncol();
@@ -109,16 +170,20 @@ void _Estep2(vector<double> &expected, vector<double> &r1vec, vector<double> &r1
                 if(data(pat,item))
                     for(int q = 0; q < nquad; ++q)
                         posterior[q] *= itemtrace(q,item);
-            const double maxp = *std::max_element(posterior.begin(), posterior.end());
-            double expd = 0.0;
-            for(int i = 0; i < nquad; ++i)
-                expd += posterior[i]/maxp;
-            expd *= maxp;
-            if(expd < ABSMIN) expd = ABSMIN;
-            expected[pat] = expd;
-            if(Etable){
+            double logscale = 0.0;
+            if(!(*std::max_element(posterior.begin(), posterior.end()) >= RESCALE_TRIGGER)){
                 for(int q = 0; q < nquad; ++q)
-                     posterior[q] = posterior[q] / expd;
+                    posterior[q] = prior(pat,q);
+                logscale = _rescaled_product(posterior, data, itemtrace, pat);
+            }
+            double expd, logexpd;
+            const double sum = _sum_posterior(posterior, logscale, expd, logexpd);
+            expected[pat] = expd;
+            logexpected[pat] = logexpd;
+            if(Etable){
+                const double denom = sum > 0.0 ? sum : expd;
+                for(int q = 0; q < nquad; ++q)
+                     posterior[q] = posterior[q] / denom;
                  for (int item = 0; item < nitems; ++item){
                      if (data(pat,item)){
                          for(int q = 0; q < nquad; ++q){
@@ -149,15 +214,17 @@ RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX,
     const int nitems = data.ncol();
     const int npat = data.nrow();
     vector<double> expected(npat, 0.0);
+    vector<double> logexpected(npat, 0.0);
     vector<double> r1vec(nquad*nitems, 0.0);
     vector<double> r1g(nquad, 0.0);
     List ret;
 
-    _Estep2(expected, r1vec, r1g, prior, data, itemtrace, wmiss, Etable);
+    _Estep2(expected, r1vec, r1g, prior, data, itemtrace, wmiss, Etable, logexpected);
     NumericMatrix r1 = vec2mat(r1vec, nquad, nitems);
     ret["r1"] = r1;
     ret["r1g"] = wrap(r1g);
     ret["expected"] = wrap(expected);
+    ret["logexpected"] = wrap(logexpected);
     return(ret);
 
     END_RCPP

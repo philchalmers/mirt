@@ -44,7 +44,7 @@ EML2 <- function(x, Theta, pars, tabdata, freq, itemloc, CUSTOM.IND, bfactor_inf
                             Theta=Theta, prior=prior, itemloc=itemloc,
                             CUSTOM.IND=CUSTOM.IND, full=FALSE, omp_threads=1L)
     }
-    tmp <- log(rlist$expected)
+    tmp <- logExpected(rlist)
     pick <- is.finite(tmp)
     LL <- sum(freq[pick]*tmp[pick])
     LL <- LL.Priors(x=obj, LL=LL)

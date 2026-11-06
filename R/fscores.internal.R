@@ -1120,17 +1120,31 @@ WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
     return(c(estimate$estimate, SEest, estimate$code))
 }
 
+# log(sum(exp(x))) without underflow
+log_sum_exp <- function(x){
+    m <- max(x)
+    if(!is.finite(m)) return(m)
+    m + log(sum(exp(x - m)))
+}
+
+# exp(LW) / sum(exp(LW)) without underflow; NULL if no finite weight exists
+normalized_post_weights <- function(LW){
+    maxLW <- max(LW)
+    if(!is.finite(maxLW)) return(NULL)
+    w <- exp(LW - maxLW)
+    w / sum(w)
+}
+
 EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
                 return.acov = FALSE, return_zeros = FALSE, classify = FALSE){
     if(any(is.na(scores[ID, ])))
         return(c(scores[ID, ], rep(NA, ncol(scores))))
     nfact <- ncol(ThetaShort)
     L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
-    expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
     LW <- if(is.matrix(W)) L + log(W[ID, ]) else L + log(W)
-    maxLW <- max(LW)
-    nc <- sum(exp(LW - maxLW)) * exp(maxLW)
-    if(nc == 0){
+    # normalised posterior weights on the log scale (avoids underflow for long tests)
+    post <- normalized_post_weights(LW)
+    if(is.null(post)){
         if(return_zeros){
             if(return.acov) return(matrix(NA, nfact, nfact))
             return(numeric(nfact*2L + 1L))
@@ -1141,8 +1155,8 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
         return(c(rep(NaN, nfact*2), 0))
     }
     thetas <- if(!classify)
-        colSums(ThetaShort * expLW / nc)
-    else expLW / nc
+        colSums(ThetaShort * post)
+    else post
     if(hessian && !classify){
         thetadif <- t((t(ThetaShort) - thetas))
         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
@@ -1157,7 +1171,7 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
         }
         vcov <- matrix(0, nfact, nfact)
         if(!classify){
-            vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
+            vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * post)
             if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
         }
         if(return.acov) return(vcov)
@@ -1182,19 +1196,17 @@ EAP_general <- function(ID, theta, Theta, sprior, prior, blist, log_itemtrace,
         if(i == 1) pick & rowSums(blist$sitems == 0)
         log_itrace <- log_itemtrace[,pick]
         log_likelihood <- rowSums(log_itrace)
-        likelihood <- exp(log_likelihood)
         for(j in 1:nrow(theta)){
             pick2 <- colSums(theta[j, ] == t(Theta[,1:ngen, drop=FALSE])) == ncol(theta)
-            Plk[j, i] <- sum(likelihood[pick2] * sprior)
+            Plk[j, i] <- log_sum_exp(log_likelihood[pick2] + log(sprior))
         }
     }
-    L <- rowSums(log(Plk))
+    L <- rowSums(Plk)  # Plk holds log-likelihoods
     W <- prior
-    expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
     LW <- if(is.matrix(W)) L + log(W[ID, ]) else L + log(W)
-    maxLW <- max(LW)
-    nc <- sum(exp(LW - maxLW)) * exp(maxLW)
-    if(nc == 0){
+    # normalised posterior weights on the log scale (avoids underflow for long tests)
+    post <- normalized_post_weights(LW)
+    if(is.null(post)){
         if(return_zeros){
             if(return.acov) return(matrix(NA, ngen, ngen))
             return(numeric(ngen*2L + 1L))
@@ -1204,7 +1216,7 @@ EAP_general <- function(ID, theta, Theta, sprior, prior, blist, log_itemtrace,
                 call.=FALSE)
         return(c(rep(NaN, ngen*2), 0))
     }
-    thetas <- colSums(theta * expLW / nc)
+    thetas <- colSums(theta * post)
     if(hessian && !classify){
         thetadif <- t((t(theta) - thetas))
         Thetaprod <- matrix(0, nrow(theta), ngen * (ngen + 1L)/2L)
@@ -1219,7 +1231,7 @@ EAP_general <- function(ID, theta, Theta, sprior, prior, blist, log_itemtrace,
         }
         vcov <- matrix(0, ngen, ngen)
         if(!classify){
-            vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
+            vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * post)
             if(ngen > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
         }
         if(return.acov) return(vcov)
@@ -1231,15 +1243,14 @@ EAP_general <- function(ID, theta, Theta, sprior, prior, blist, log_itemtrace,
 
 EAP_classify <- function(ID, log_itemtrace, tabdata, W, nclass){
     L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
-    expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
     LW <- if(is.matrix(W)) L + log(W[ID, ]) else L + log(W)
-    maxLW <- max(LW)
-    nc <- sum(exp(LW - maxLW)) * exp(maxLW)
-    if(nc == 0){
+    # normalised posterior weights on the log scale (avoids underflow for long tests)
+    post <- normalized_post_weights(LW)
+    if(is.null(post)){
         warning('Unable to compute normalization constant for classification estimates',
                 call.=FALSE)
         return(rep(NaN, nclass))
     }
-    probs <- matrix(expLW / nc, ncol=nclass)
+    probs <- matrix(post, ncol=nclass)
     colSums(probs)
 }
