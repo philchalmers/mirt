@@ -25,7 +25,8 @@
 #'
 #' @param mod fitted model from \code{mirt}
 #'
-#' @param model type of PIRT model to fit to marginalized table
+#' @param model type of PIRT model to fit to marginalized table (only applicable
+#'  when \code{estimator == 'MML'})
 #'
 #' @param itemtype type of model to fit to the projected marginalized factor.
 #'   Defaults to the same type as the parent object \code{mod}.
@@ -33,6 +34,9 @@
 #'
 #' @param SE logical; compute the ACOV matrix to obtain standard errors
 #'   (SE)?
+#'
+#' @param SE.type type of ACOV estimator (defaults to sandwich as this is generally the
+#'   most appropriate)
 #'
 #' @param project which dimension to project to in the stored E-table. Default
 #'   projects all dimensions to the first dimension (\code{project = 1}),
@@ -331,7 +335,8 @@
 #'
 pirt <- function(mod, model=1, project=1,
                  itemtype = extract.mirt(mod, 'itemtype'),
-                 SE=TRUE, estimator = 'MML', invariance='',
+                 estimator = 'MML', invariance='',
+                 SE=TRUE, SE.type = 'sandwich',
                  IRTpars = FALSE, shortform = NULL, ...){
 
     if(estimator == 'MML' && extract.mirt(mod, 'method') != 'EM')
@@ -386,9 +391,10 @@ pirt <- function(mod, model=1, project=1,
                 customTheta <- customTheta[nrow(customTheta):1, ,drop=FALSE]
         }
         if(ngroups == 1){
-            ret <- mirt(dat, model=model, itemtype=itemtype, optimizer='nlminb', SE=SE,
-                      technical=list(customTheta=customTheta,
-                                     fixedEtable=fixedEtable), verbose=FALSE, ...)
+            ret <- mirt(dat, model=model, itemtype=itemtype, optimizer='nlminb',
+                        SE=SE, SE.type=SE.type,
+                        technical=list(customTheta=customTheta,
+                                       fixedEtable=fixedEtable), verbose=FALSE, ...)
         } else {
             old_invariance <- invariance
             if(any(c('free_means', 'free_mean') %in% invariance))
@@ -406,12 +412,14 @@ pirt <- function(mod, model=1, project=1,
                                                    fixedEtable=fixedEtable), verbose=FALSE, ...)
                 sv$value <- mod2values(tmpmod)$value
                 ret <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'), pars=sv,
-                                     itemtype=itemtype, optimizer='nlminb', SE=SE, invariance=old_invariance,
+                                     itemtype=itemtype, optimizer='nlminb', SE=SE, SE.type=SE.type,
+                                     invariance=old_invariance,
                                      technical=list(customTheta=customTheta,
                                                     fixedEtable=fixedEtable), verbose=FALSE, ...)
             } else {
                 ret <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'),
-                                     itemtype=itemtype, optimizer='nlminb', SE=SE, invariance=invariance,
+                                     itemtype=itemtype, optimizer='nlminb', SE=SE, SE.type=SE.type,
+                                     invariance=invariance,
                                      technical=list(customTheta=customTheta,
                                                     fixedEtable=fixedEtable), verbose=FALSE, ...)
             }
@@ -553,10 +561,40 @@ Ip2010 <- function(mod, IRTpars=FALSE){
     ret
 }
 
-# TODO fix up for more interesting grid
-pirt_customTheta <- function(mod, project=1, quadpts=61, quadpts2 = NULL,
+#' @param quadpts number of quadrature points for the projected dimension(s). Follows the
+#'   same quadrature logic found in \code{\link{mirt}}
+#' @param quadpts2 number of quadrature points for the nuisance dimension(s). If omitted
+#'   defaults to either quadrature logic found in \code{\link{mirt}} for the nuisance dimensions,
+#'   or to 200 for the quasi-Monte Carlo grids
+#' @param theta_lim range for projected dimensions integration grid
+#' @param theta_lim2 range for nuisance dimensions integration grid
+#' @param grid type of integration grid to use
+#' @rdname pirt
+#' @export
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # randomized Halton sequence
+#' theta <- pirt_customTheta(mod, quadpts2=50)
+#' head(theta)
+#' pairs(theta)
+#'
+#' # Fixed Halton sequence for nuisance dimensions
+#' theta <- pirt_customTheta(mod, grid='Halton')
+#' head(theta)
+#' pairs(theta)
+#'
+#' # rectangular
+#' theta <- pirt_customTheta(mod, grid='rectangular', quadpts=61, quadpts2=5)
+#' head(theta)
+#' pairs(theta)
+#'
+#'
+#' }
+pirt_customTheta <- function(mod, project=1, quadpts=NULL, quadpts2 = NULL,
                              theta_lim=c(-6,6), theta_lim2=c(-3,3),
-                             grid = c('rectangular', 'Halton', 'scramble', 'shift')){
+                             grid = c('scramble', 'rectangular', 'Halton', 'shift')){
     grid <- match.arg(grid)
     nproject <- length(project)
     nfact <- extract.mirt(mod, 'nfact')
@@ -564,6 +602,8 @@ pirt_customTheta <- function(mod, project=1, quadpts=61, quadpts2 = NULL,
         stop('Projected dimensions is the same as the current model dimensions', call.=FALSE)
     stopifnot("Projected dimensions must be less than total dimensions" = nproject < nfact)
     nsfact <- nfact - nproject
+    if(is.null(quadpts))
+        quadpts <- select_quadpts(nproject)
     if(grid == 'rectangular'){
         if(is.null(quadpts2))
             quadpts2 <- select_quadpts(nsfact)
@@ -574,13 +614,23 @@ pirt_customTheta <- function(mod, project=1, quadpts=61, quadpts2 = NULL,
             theta_lst[[i]] <- theta1
         for(i in (nproject+1):nfact)
             theta_lst[[i]] <- theta2
-        tmp <- expand.grid(theta_lst)
-        browser()
-        Theta <- as.matrix(do.call(rbind, tmp))
+        Theta <- as.matrix(expand.grid(theta_lst))
     } else {
-
-        Theta <- something
-
+        if(is.null(quadpts2)) quadpts2 <- 200
+        theta1 <- seq(theta_lim[1], theta_lim[2], length.out=quadpts)
+        theta_lst <- vector('list', nproject)
+        for(i in 1:nproject)
+            theta_lst[[i]] <- theta1
+        Theta1 <- as.matrix(expand.grid(theta_lst))
+        Theta <- vector('list', nrow(Theta1))
+        for(i in 1:quadpts)
+            Theta[[i]] <- cbind(matrix(Theta1[i, ], nrow=quadpts2, ncol=ncol(Theta1), byrow=TRUE),
+                                QMC_quad(npts=quadpts2, nfact= nsfact, lim=theta_lim2,
+                                    random.type=grid, quantile=FALSE))
+        Theta <- do.call(rbind, Theta)
     }
-    Theta
+    ret <- matrix(0, nrow(Theta), ncol(Theta))
+    ret[,project] <- Theta[,1:nproject]
+    ret[,-project] <- Theta[,-c(1:nproject)]
+    ret
 }

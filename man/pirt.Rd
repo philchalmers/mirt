@@ -2,6 +2,7 @@
 % Please edit documentation in R/pirt.R
 \name{pirt}
 \alias{pirt}
+\alias{pirt_customTheta}
 \title{Projective IRT (PIRT) models}
 \usage{
 pirt(
@@ -9,18 +10,30 @@ pirt(
   model = 1,
   project = 1,
   itemtype = extract.mirt(mod, "itemtype"),
-  SE = TRUE,
   estimator = "MML",
   invariance = "",
+  SE = TRUE,
+  SE.type = "sandwich",
   IRTpars = FALSE,
   shortform = NULL,
   ...
+)
+
+pirt_customTheta(
+  mod,
+  project = 1,
+  quadpts = NULL,
+  quadpts2 = NULL,
+  theta_lim = c(-6, 6),
+  theta_lim2 = c(-3, 3),
+  grid = c("scramble", "rectangular", "Halton", "shift")
 )
 }
 \arguments{
 \item{mod}{fitted model from \code{mirt}}
 
-\item{model}{type of PIRT model to fit to marginalized table}
+\item{model}{type of PIRT model to fit to marginalized table (only applicable
+when \code{estimator == 'MML'})}
 
 \item{project}{which dimension to project to in the stored E-table. Default
 projects all dimensions to the first dimension (\code{project = 1}),
@@ -29,9 +42,6 @@ as this is the assumed primary dimension in, for instance, \code{bfactor()}}
 \item{itemtype}{type of model to fit to the projected marginalized factor.
 Defaults to the same type as the parent object \code{mod}.
 See \code{\link{mirt}} for details}
-
-\item{SE}{logical; compute the ACOV matrix to obtain standard errors
-(SE)?}
 
 \item{estimator}{type of PIRT estimator to use. Default is \code{'MML'} to fit and
   return the MML-PIRT variable described by Chalmers et al. (in review).
@@ -53,6 +63,12 @@ Included here as the multiple-group PIRT approach needs to also calibrate the
 scale and location of the reference group, which is done silently internally whenever
 \code{'free_means'} or \code{'free_vars'} are specified}
 
+\item{SE}{logical; compute the ACOV matrix to obtain standard errors
+(SE)?}
+
+\item{SE.type}{type of ACOV estimator (defaults to sandwich as this is generally the
+most appropriate)}
+
 \item{IRTpars}{logical; report classical IRT parameterization and SEs?
 Only used when \code{FAapprox = TRUE}}
 
@@ -64,6 +80,19 @@ factor has the property of identical marginal and conditional bifactors
 approach as this returns the associated model object}
 
 \item{...}{extra information passed to the estimation engine}
+
+\item{quadpts}{number of quadrature points for the projected dimension(s). Follows the
+same quadrature logic found in \code{\link{mirt}}}
+
+\item{quadpts2}{number of quadrature points for the nuisance dimension(s). If omitted
+defaults to either quadrature logic found in \code{\link{mirt}} for the nuisance dimensions,
+or to 200 for the quasi-Monte Carlo grids}
+
+\item{theta_lim}{range for projected dimensions integration grid}
+
+\item{theta_lim2}{range for nuisance dimensions integration grid}
+
+\item{grid}{type of integration grid to use}
 }
 \description{
 Computes the projective IRT model parameters either using the
@@ -329,6 +358,26 @@ fscores(pirt, method = 'EAPsum', full.scores=FALSE)
 
 }
 
+
+\dontrun{
+
+# randomized Halton sequence
+theta <- pirt_customTheta(mod, quadpts2=50)
+head(theta)
+pairs(theta)
+
+# Fixed Halton sequence for nuisance dimensions
+theta <- pirt_customTheta(mod, grid='Halton')
+head(theta)
+pairs(theta)
+
+# rectangular
+theta <- pirt_customTheta(mod, grid='rectangular', quadpts=61, quadpts2=5)
+head(theta)
+pairs(theta)
+
+
+}
 }
 \references{
 Chalmers, R. P., Falk, C. F., and Reise, S. P. (2026).
