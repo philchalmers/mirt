@@ -21,9 +21,10 @@
 
 - The `'Ramsay'` (default) and `'squarem'` EM acceleration steps now
   step back toward the plain EM update when the extrapolated parameters
-  give an invalid model (non-finite log-likelihood). Previously, graded
-  items with closely spaced intercepts could be pushed out of order,
-  causing EM to stop early with a `NaN` log-likelihood
+  give an invalid model (a response pattern with zero or undefined
+  likelihood). Previously, graded items with closely spaced intercepts
+  could be pushed out of order, causing EM to stop early with a `NaN`
+  log-likelihood
 
 ## Changes in mirt 1.48
 
