@@ -331,8 +331,9 @@ Google group. Cheers!
 - [`personfit()`](https://philchalmers.github.io/mirt/reference/personfit.md)
   : Person fit statistics
 
-- [`pirt()`](https://philchalmers.github.io/mirt/reference/pirt.md) :
-  Projective IRT (PIRT) models
+- [`pirt()`](https://philchalmers.github.io/mirt/reference/pirt.md)
+  [`pirt_customTheta()`](https://philchalmers.github.io/mirt/reference/pirt.md)
+  : Projective IRT (PIRT) models
 
 - [`pirt_DIF`](https://philchalmers.github.io/mirt/reference/pirt_DIF.md)
   : Simulated datasets for PIRT-DIF
