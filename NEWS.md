@@ -8,6 +8,12 @@
   (all versions). The likelihood is now rescaled on the log metric for such
   patterns
 
+- `fscores(method = 'EAP')` (including bifactor/two-tier models and latent
+  class classification) now normalises the posterior weights on the log
+  scale, so respondents whose likelihood underflows on long tests receive
+  valid EAP estimates instead of `NaN` with the warning "Unable to compute
+  normalization constant"
+
 - Added `QMC.type` argument to various supported functions to allow for 
   randomized Halton sequences for quasi-Monte Carlo integration
 

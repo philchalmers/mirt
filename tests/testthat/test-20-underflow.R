@@ -33,6 +33,16 @@ test_that('E-step likelihood underflow (long tests)', {
     expect_true(is.finite(extract.mirt(mod, 'G2')))
     expect_true(is.finite(extract.mirt(mod, 'AIC')))
 
+    # EAP factor scores for the same pattern (normalising constant also underflows)
+    Theta <- matrix(seq(-6, 6, length.out=61))
+    lp <- log(dnorm(Theta[,1]))
+    lw <- as.vector(log(probtrace(mod, Theta)) %*% mod@Data$fulldata[[1L]][1L, ]) + lp
+    w <- exp(lw - max(lw)); w <- w / sum(w)
+    eap <- sum(w * Theta[,1]); se <- sqrt(sum(w * (Theta[,1] - eap)^2))
+    fs <- fscores(mod, method='EAP', full.scores.SE=TRUE, quadpts=61, theta_lim=c(-6, 6))
+    expect_true(all(is.finite(fs[1L, ])))
+    expect_equal(unname(fs[1L, ]), c(eap, se), tolerance=1e-6)
+
     # full-data E-step (latent regression path)
     covdata <- data.frame(X=rep(0:1, 50))
     sv2 <- mirt(dat, 1, pars='values', covdata=covdata, formula=~X)
