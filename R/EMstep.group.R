@@ -34,7 +34,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     prodlist <- PrepList[[1L]]$prodlist
     method <- list$method
     QMC.type <- list$QMC.type
-    MC <- method == 'MCEM' || (method == 'QMCEM' && QMC.type != 'Halton')
+    MC <- method == 'MCEM'
     for(g in seq_len(ngroups)){
         for(i in seq_len(J+1L)){
             nfullpars <- nfullpars + length(pars[[g]][[i]]@par)
@@ -449,7 +449,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                " likely indicates a problem in the M-step. \nCheck with the more stable ",
                                "optimizer = \'nlminb\', or supply better starting values"), call.=FALSE)
         }
-        if(list$warn && cycles > 3){
+        if(list$warn && cycles > 3 && method != 'MCEM'){
             pickLLs <- collectLL[(cycles-2):cycles]
             AACdiff <- AAC(pickLLs)
             if(abs(AACdiff) > 1e-3 && abs(pickLLs[3] - pickLLs[2]) > 1e-3)
