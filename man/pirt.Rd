@@ -342,7 +342,7 @@ S3 = 12-16
 COV = S1*S2"
 
 # quadrature increased to help with estimation stability (less stable due to
-# highly correlated traits)
+# higher trait correlations)
 simmod <- mirt(dataset, model, quadpts=26)
 coef(simmod, simplify=TRUE)
 summary(simmod)
@@ -355,6 +355,31 @@ coef(pirt, simplify=TRUE)
 
 fscores(simmod, method = 'EAPsum', full.scores=FALSE)
 fscores(pirt, method = 'EAPsum', full.scores=FALSE)
+
+#####################
+## Using non-quadrature estimators
+
+simmod.MHRM <- mirt(dataset, model, method='MHRM')
+simmod.MHRM
+summary(simmod.MHRM)
+anova(simmod, simmod.MHRM) # similar
+
+# 1) Must build a suitable grid to integrate over, with focus on the
+# projected dimensions
+customTheta <- pirt_customTheta(simmod.MHRM, project=1)
+head(customTheta)
+pairs(customTheta)
+
+# 2) compute model with filled-in E-table, using previous parameter estimates
+simmod.fill <- mirt(dataset, model, TOL=NaN,
+  pars=mod2values(simmod.MHRM),
+  technical=list(customTheta=customTheta))
+simmod.fill
+
+# 3) Use model with filled-in E-table
+pirt2 <- pirt(simmod.fill, project=1)
+coef(pirt2, simplify=TRUE)$items
+coef(pirt, simplify=TRUE)$items
 
 }
 
