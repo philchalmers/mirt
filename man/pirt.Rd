@@ -86,7 +86,7 @@ same quadrature logic found in \code{\link{mirt}}}
 
 \item{quadpts2}{number of quadrature points for the nuisance dimension(s). If omitted
 defaults to either quadrature logic found in \code{\link{mirt}} for the nuisance dimensions,
-or to 200 for the quasi-Monte Carlo grids}
+or to 500 for the quasi-Monte Carlo grids}
 
 \item{theta_lim}{range for projected dimensions integration grid}
 

@@ -590,7 +590,7 @@ Ip2010 <- function(mod, IRTpars=FALSE){
 #'   same quadrature logic found in \code{\link{mirt}}
 #' @param quadpts2 number of quadrature points for the nuisance dimension(s). If omitted
 #'   defaults to either quadrature logic found in \code{\link{mirt}} for the nuisance dimensions,
-#'   or to 200 for the quasi-Monte Carlo grids
+#'   or to 500 for the quasi-Monte Carlo grids
 #' @param theta_lim range for projected dimensions integration grid
 #' @param theta_lim2 range for nuisance dimensions integration grid
 #' @param grid type of integration grid to use
@@ -641,7 +641,7 @@ pirt_customTheta <- function(mod, project=1, quadpts=NULL, quadpts2 = NULL,
             theta_lst[[i]] <- theta2
         Theta <- as.matrix(expand.grid(theta_lst))
     } else {
-        if(is.null(quadpts2)) quadpts2 <- 200
+        if(is.null(quadpts2)) quadpts2 <- 500
         theta1 <- seq(theta_lim[1], theta_lim[2], length.out=quadpts)
         theta_lst <- vector('list', nproject)
         for(i in 1:nproject)
