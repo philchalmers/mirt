@@ -514,7 +514,7 @@ Theta_meanSigma_shift <- function(Theta, mean, sigma){
     t(t(Theta) + mean) %*% chol(sigma)
 }
 
-updateTheta <- function(npts, nfact, pars, Theta0=NULL, draw=TRUE, rescale=FALSE,
+updateTheta <- function(npts, nfact, pars, Theta0=NULL, draw=TRUE,
                         method, QMC.type = 'Halton'){
     ngroups <- length(pars)
     pick <- length(pars[[1L]])
@@ -528,8 +528,7 @@ updateTheta <- function(npts, nfact, pars, Theta0=NULL, draw=TRUE, rescale=FALSE
                 MC_quad(npts=npts, nfact=nfact, lim = c(0,1))
             }
         } else Theta0[[g]]
-        Theta[[g]] <- if(rescale)
-            Theta_meanSigma_shift(theta, gp$gmeans, gp$gcov) else theta
+        Theta[[g]] <- theta
     }
     Theta
 }

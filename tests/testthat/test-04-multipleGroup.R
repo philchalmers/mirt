@@ -31,9 +31,9 @@ test_that('one factor', {
     pffit <- c(as.numeric(as.matrix(head(pf))), as.numeric(as.matrix(tail(pf))))
     expect_equal(pffit, c(0.950921,1.142593,0.5986253,0.4390725,0.8847643,0.6006911,-0.1580319,0.4765587,-1.366033,-1.688994,-0.1716739,-1.356961,0.9657947,0.9039326,0.6798182,0.5300499,0.820473,0.6796108,-0.12207,-0.2349138,-1.365052,-1.825028,-0.5448986,-1.366125,0.1942611,0.1375458,1.282308,1.543602,0.5053975,1.280061,0.9206344,1.182217,1.033595,1.287318,0.4910474,0.365361,-0.2859851,0.6103204,0.2228756,0.8827224,-1.29217,-0.998842,0.9182596,1.20314,1.062435,1.285586,0.6090764,0.5207685,-0.37187,0.8019668,0.4074629,1.176899,-1.291869,-1.025544,0.4027076,-0.6934658,-0.2963764,-1.118536,1.201121,0.9925202),
                  tolerance = 1e-3)
-    # mod_QMCEM <- multipleGroup(dat, models, group=group, method = 'QMCEM', verbose=FALSE,
-    #                            optimizer='NR')
-    # expect_equal(extract.mirt(mod_QMCEM, 'logLik'), -17849.64, tolerance=1e-2)
+    mod_QMCEM <- multipleGroup(dat, models, group=group, method = 'QMCEM', verbose=FALSE,
+                               optimizer='NR')
+    expect_equal(extract.mirt(mod_QMCEM, 'logLik'), -17903.76, tolerance=1e-2)
     mod_configural <- multipleGroup(dat, models, SE=TRUE, SE.type = 'crossprod', optimizer='NR',
                                     group = group, verbose = FALSE, method = 'EM')
     expect_class(mod_configural, 'MultipleGroupClass')
@@ -210,12 +210,27 @@ test_that('one factor', {
 
     mod_scalar <- multipleGroup(dat, MGmodelg2, group = group,
                                 invariance=c(colnames(dat), 'free_means', 'free_var'),
-                                verbose = FALSE, method='QMCEM', TOL=.01, technical=list(warn=FALSE))
-    expect_equal(logLik(mod_scalar), -18296.06, tolerance = 1e-2)
+                                quadpts=26, TOL=.01, technical=list(warn=FALSE))
+    expect_equal(logLik(mod_scalar), -18249.273, tolerance = 1e-2)
     cfs <- coef(mod_scalar, simplify=TRUE)
     gmeans <- sapply(cfs, \(x) x$means) |> t()
-    expect_equal(unname(gmeans[2,]), c(-0.1730826, -0.5265039, -0.2807707), tolerance = 1e-2)
+    expect_equal(unname(gmeans[2,]), c(-0.46614210, -0.65088349, 0.06840406), tolerance = 1e-2)
     so <- summary(mod_scalar, verbose=FALSE)
-    expect_equal(so[[2]]$fcor[c(2,3,6)], c(0.3191958, 0.7896032, 0.1829613), tolerance = 1e-2)
+    expect_equal(so[[2]]$fcor[c(2,3,6)], c(0.3240661, 0.7799120, 0.1971916), tolerance = 1e-2)
+
+    # high correlations
+    set.seed(1234)
+    a <- matrix(c(rlnorm(10, .2, .2), numeric(30), rlnorm(10, .2, .2),  numeric(30),rlnorm(10, .2, .2)), ncol=3)
+    d <- rnorm(30)
+    sigma <- matrix(.95, 3, 3)
+    diag(sigma) <- 1
+    dat <- simdata(a, d, 5000, itemtype = '2PL', sigma=sigma)
+    mod <- mirt(dat, "F1 = 1-10
+                  F2 = 11-20
+                  F3 = 21-30
+                  COV = F1*F2*F3", method='QMCEM', TOL=.001, technical=list(warn=FALSE))
+    expect_equal(logLik(mod), -82048.249, tolerance = 1e-2)
+    so <- summary(mod)
+    expect_equal(so$fcor[c(2,3,6)], c(0.9715348, 0.9700627, 0.9738707), tolerance = 1e-2)
 
 })

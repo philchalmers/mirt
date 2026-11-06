@@ -164,7 +164,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     }
     gTheta <- updateTheta(npts=if(method != 'MCEM') list$quadpts else list$MCEM_draws(1),
                           Theta0=gTheta, method=method, nfact=nfact, pars=pars,
-                          QMC.type=QMC.type, rescale=FALSE)
+                          QMC.type=QMC.type)
     gTheta0 <- gTheta
     preMstep.longpars2 <- preMstep.longpars <- longpars
     is_SEM <- list$SE.type == 'SEM'
