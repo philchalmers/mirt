@@ -38,7 +38,10 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.49" id="changes-in-mirt-149">Changes in mirt 1.49<a class="anchor" aria-label="anchor" href="#changes-in-mirt-149"></a></h2>
-<ul><li>Added <code>QMC.type</code> argument to various supported functions to allow for randomized Halton sequences for quasi-Monte Carlo integration</li>
+<ul><li><p>Fixed numerical underflow in the E-step for very long tests (e.g., several hundred to 1000+ items). Response patterns whose marginal likelihood underflowed to 0 at every quadrature node produced <code>NaN</code> values for <code>logLik</code>, <code>AIC</code>, <code>BIC</code>, <code>G2</code>, and related fit statistics (since 1.42), and were silently excluded from the expected tables used for parameter estimation (all versions). The likelihood is now rescaled on the log metric for such patterns</p></li>
+<li><p><code>fscores(method = 'EAP')</code> (including bifactor/two-tier models and latent class classification) now normalises the posterior weights on the log scale, so respondents whose likelihood underflows on long tests receive valid EAP estimates instead of <code>NaN</code> with the warning “Unable to compute normalization constant”</p></li>
+<li><p>Added <code>QMC.type</code> argument to various supported functions to allow for randomized Halton sequences for quasi-Monte Carlo integration</p></li>
+<li><p>The <code>'Ramsay'</code> (default) and <code>'squarem'</code> EM acceleration steps now step back toward the plain EM update when the extrapolated parameters give an invalid model (non-finite log-likelihood). Previously, graded items with closely spaced intercepts could be pushed out of order, causing EM to stop early with a <code>NaN</code> log-likelihood</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.48" id="changes-in-mirt-148">Changes in mirt 1.48<a class="anchor" aria-label="anchor" href="#changes-in-mirt-148"></a></h2><p class="text-muted">CRAN release: 2026-10-06</p>
