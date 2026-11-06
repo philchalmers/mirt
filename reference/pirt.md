@@ -126,7 +126,7 @@ pirt_customTheta(
   number of quadrature points for the nuisance dimension(s). If omitted
   defaults to either quadrature logic found in
   [`mirt`](https://philchalmers.github.io/mirt/reference/mirt.md) for
-  the nuisance dimensions, or to 200 for the quasi-Monte Carlo grids
+  the nuisance dimensions, or to 500 for the quasi-Monte Carlo grids
 
 - theta_lim:
 
@@ -993,18 +993,18 @@ coef(pmod, simplify=TRUE)$items
 #>               a1         d1          d2          d3         d4
 #> Item_1  1.280008  0.1732170 -0.07002767 -0.53417980 -0.9409135
 #> Item_2  1.315191  0.5998649  0.13587842 -0.32671495 -0.6391106
-#> Item_3  1.303869  0.6185420  0.15973878 -0.19881025 -0.6559757
+#> Item_3  1.303869  0.6185420  0.15973877 -0.19881025 -0.6559757
 #> Item_4  1.335326  0.8908705  0.57185737  0.11680519 -0.3175738
 #> Item_5  1.308973  0.3976045  0.01652285 -0.31250812 -0.7761254
-#> Item_6  1.181507  0.7863039  0.11927966 -0.25766747 -0.9651147
-#> Item_7  1.207576  0.1278581 -0.33703930 -0.84513155 -1.4977836
+#> Item_6  1.181507  0.7863039  0.11927966 -0.25766748 -0.9651147
+#> Item_7  1.207576  0.1278581 -0.33703930 -0.84513156 -1.4977836
 #> Item_8  1.273044 -0.8094754 -1.23520319 -1.67926675 -2.3882348
 #> Item_9  1.243136  0.8794215  0.44426741 -0.05298856 -0.5311225
-#> Item_10 1.236073  1.0076403  0.29762851 -0.38882876 -0.7632976
+#> Item_10 1.236073  1.0076403  0.29762851 -0.38882875 -0.7632976
 #> Item_11 1.259522  1.3305386  0.45062206 -0.37786140 -1.0024057
 #> Item_12 1.185618  1.2155620  0.39767975 -0.23771001 -1.0178430
 #> Item_13 1.253923  0.2774169 -0.33920361 -1.12554158 -1.8571556
-#> Item_14 1.288643 -0.8867206 -1.61378183 -2.29629709 -3.1447259
+#> Item_14 1.288643 -0.8867206 -1.61378184 -2.29629710 -3.1447259
 #> Item_15 1.261319  1.1567007  0.62571208 -0.13584032 -0.7784188
 
 # Logistic approximations (parameters only)
@@ -1369,7 +1369,7 @@ S3 = 12-16
 COV = S1*S2"
 
 # quadrature increased to help with estimation stability (less stable due to
-# highly correlated traits)
+# higher trait correlations)
 simmod <- mirt(dataset, model, quadpts=26)
 #> Warning: Observed log-likelihood/log-posterior may still be increasing.
 #>   Final values were: 
@@ -1504,6 +1504,139 @@ fscores(pirt, method = 'EAPsum', full.scores=FALSE)
 #> 14         14  1.788 0.668       26   11.049   4.498
 #> 15         15  1.950 0.653       10    2.403   4.901
 #> 16         16  2.072 0.634        2    0.240   3.596
+
+#####################
+## Using non-quadrature estimators
+
+simmod.MHRM <- mirt(dataset, model, method='MHRM')
+simmod.MHRM
+#> 
+#> Call:
+#> mirt(data = dataset, model = model, method = "MHRM")
+#> 
+#> Full-information item factor analysis with 3 factor(s).
+#> Converged within 0.001 tolerance after 55 MHRM iterations.
+#> mirt version: 1.48.3 
+#> M-step optimizer: NR1 
+#> Latent density type: Gaussian 
+#> Average MH acceptance ratio(s): 0.324 
+#> 
+#> Log-likelihood = -18922.72, SE = 0.024
+#> Estimated parameters: 33 
+#> AIC = 37911.43
+#> BIC = 38096.26; SABIC = 37991.42
+#> G2 (65502) = 8570.33, p = 1
+#> RMSEA = 0, CFI = NaN, TLI = NaN
+summary(simmod.MHRM)
+#>            S1    S2    S3    h2
+#> Item_1  0.635             0.403
+#> Item_2  0.627             0.393
+#> Item_3  0.626             0.392
+#> Item_4  0.650             0.423
+#> Item_5  0.664             0.440
+#> Item_6        0.501       0.251
+#> Item_7        0.550       0.302
+#> Item_8        0.521       0.272
+#> Item_9        0.481       0.231
+#> Item_10       0.480       0.231
+#> Item_11       0.506       0.256
+#> Item_12             0.732 0.536
+#> Item_13             0.694 0.481
+#> Item_14             0.707 0.500
+#> Item_15             0.713 0.508
+#> Item_16             0.749 0.561
+#> 
+#> SS loadings:  2.052 1.542 2.586 
+#> Proportion Var:  0.128 0.096 0.162 
+#> 
+#> Factor correlations: 
+#> 
+#>       S1 S2 S3
+#> S1 1.000      
+#> S2 0.802  1   
+#> S3 0.000  0  1
+anova(simmod, simmod.MHRM) # similar
+#>                  AIC    SABIC       HQ      BIC    logLik     X2 df   p
+#> simmod      37909.75 37989.74 37977.62 38094.58 -18921.88              
+#> simmod.MHRM 37911.43 37991.42 37979.30 38096.26 -18922.72 -1.679  0 NaN
+
+# 1) Must build a suitable grid to integrate over, with focus on the
+# projected dimensions
+customTheta <- pirt_customTheta(simmod.MHRM, project=1)
+head(customTheta)
+#>      [,1]       [,2]       [,3]
+#> [1,]   -6  2.1826923  0.5326231
+#> [2,]   -6 -2.8915264 -2.8418625
+#> [3,]   -6  0.4190204  2.9578631
+#> [4,]   -6 -0.4217999 -0.3343179
+#> [5,]   -6  2.8887470 -1.7362384
+#> [6,]   -6 -2.1854717  1.4160250
+pairs(customTheta)
+
+
+# 2) compute model with filled-in E-table, using previous parameter estimates
+simmod.fill <- mirt(dataset, model, TOL=NaN,
+  pars=mod2values(simmod.MHRM),
+  technical=list(customTheta=customTheta))
+simmod.fill
+#> 
+#> Call:
+#> mirt(data = dataset, model = model, pars = mod2values(simmod.MHRM), 
+#>     TOL = NaN, technical = list(customTheta = customTheta))
+#> 
+#> Full-information item factor analysis with 3 factor(s).
+#> Converged within NaN tolerance after 1 EM iterations.
+#> mirt version: 1.48.3 
+#> M-step optimizer: BFGS 
+#> EM acceleration: Ramsay 
+#> Number of rectangular quadrature: 30500
+#> Latent density type: Gaussian 
+#> 
+#> Log-likelihood = -18922.44
+#> Estimated parameters: 33 
+#> AIC = 37910.88
+#> BIC = 38095.71; SABIC = 37990.86
+#> G2 (65502) = 8570.38, p = 1
+#> RMSEA = 0, CFI = NaN, TLI = NaN
+
+# 3) Use model with filled-in E-table
+pirt2 <- pirt(simmod.fill, project=1)
+coef(pirt2, simplify=TRUE)$items
+#>                  a1           d g u
+#> Item_1   1.41395683 -1.17051768 0 1
+#> Item_2   1.38066543  0.24284712 0 1
+#> Item_3   1.36938043  1.05368863 0 1
+#> Item_4   1.46418105 -2.38989351 0 1
+#> Item_5   1.50158264  0.50800526 0 1
+#> Item_6   0.75113542  0.52708405 0 1
+#> Item_7   0.82175029 -0.55782238 0 1
+#> Item_8   0.77674655 -0.43967959 0 1
+#> Item_9   0.70812323 -0.48731727 0 1
+#> Item_10  0.71454556 -0.91364068 0 1
+#> Item_11  0.75252080 -0.51660024 0 1
+#> Item_12 -0.04701642 -0.67505269 0 1
+#> Item_13 -0.02491837 -0.56257912 0 1
+#> Item_14  0.01192429  0.03406633 0 1
+#> Item_15 -0.01264999  0.62119677 0 1
+#> Item_16 -0.02323022 -0.01612084 0 1
+coef(pirt, simplify=TRUE)$items
+#>                  a1           d g u
+#> Item_1   1.42162493 -1.18148213 0 1
+#> Item_2   1.38514181  0.23536682 0 1
+#> Item_3   1.36349357  1.04445814 0 1
+#> Item_4   1.45943408 -2.39564494 0 1
+#> Item_5   1.48309142  0.49673554 0 1
+#> Item_6   0.76068291  0.52457302 0 1
+#> Item_7   0.83373365 -0.56443215 0 1
+#> Item_8   0.78667478 -0.44529776 0 1
+#> Item_9   0.71374576 -0.49204651 0 1
+#> Item_10  0.72863025 -0.92119048 0 1
+#> Item_11  0.76165345 -0.52217215 0 1
+#> Item_12 -0.04771677 -0.67482519 0 1
+#> Item_13 -0.02466479 -0.56245023 0 1
+#> Item_14  0.01039105  0.03400427 0 1
+#> Item_15 -0.01387582  0.62126662 0 1
+#> Item_16 -0.02397024 -0.01600263 0 1
 
 # }
 

@@ -179,7 +179,7 @@ same quadrature logic found in <code><a href="mirt.html">mirt</a></code></p></dd
 <dt id="arg-quadpts-">quadpts2<a class="anchor" aria-label="anchor" href="#arg-quadpts-"></a></dt>
 <dd><p>number of quadrature points for the nuisance dimension(s). If omitted
 defaults to either quadrature logic found in <code><a href="mirt.html">mirt</a></code> for the nuisance dimensions,
-or to 200 for the quasi-Monte Carlo grids</p></dd>
+or to 500 for the quasi-Monte Carlo grids</p></dd>
 
 
 <dt id="arg-theta-lim">theta_lim<a class="anchor" aria-label="anchor" href="#arg-theta-lim"></a></dt>
@@ -1044,18 +1044,18 @@ Applied Psychological Measurement, 37(1), 41-57.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               a1         d1          d2          d3         d4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.280008  0.1732170 -0.07002767 -0.53417980 -0.9409135</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.315191  0.5998649  0.13587842 -0.32671495 -0.6391106</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.303869  0.6185420  0.15973878 -0.19881025 -0.6559757</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.303869  0.6185420  0.15973877 -0.19881025 -0.6559757</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  1.335326  0.8908705  0.57185737  0.11680519 -0.3175738</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.308973  0.3976045  0.01652285 -0.31250812 -0.7761254</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.181507  0.7863039  0.11927966 -0.25766747 -0.9651147</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.207576  0.1278581 -0.33703930 -0.84513155 -1.4977836</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.181507  0.7863039  0.11927966 -0.25766748 -0.9651147</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.207576  0.1278581 -0.33703930 -0.84513156 -1.4977836</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.273044 -0.8094754 -1.23520319 -1.67926675 -2.3882348</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.243136  0.8794215  0.44426741 -0.05298856 -0.5311225</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.236073  1.0076403  0.29762851 -0.38882876 -0.7632976</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.236073  1.0076403  0.29762851 -0.38882875 -0.7632976</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.259522  1.3305386  0.45062206 -0.37786140 -1.0024057</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 1.185618  1.2155620  0.39767975 -0.23771001 -1.0178430</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 1.253923  0.2774169 -0.33920361 -1.12554158 -1.8571556</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.288643 -0.8867206 -1.61378183 -2.29629709 -3.1447259</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.288643 -0.8867206 -1.61378184 -2.29629710 -3.1447259</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.261319  1.1567007  0.62571208 -0.13584032 -0.7784188</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Logistic approximations (parameters only)</span></span></span>
@@ -1420,7 +1420,7 @@ Applied Psychological Measurement, 37(1), 41-57.</p>
 <span class="r-in"><span><span class="st">COV = S1*S2"</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># quadrature increased to help with estimation stability (less stable due to</span></span></span>
-<span class="r-in"><span><span class="co"># highly correlated traits)</span></span></span>
+<span class="r-in"><span><span class="co"># higher trait correlations)</span></span></span>
 <span class="r-in"><span><span class="va">simmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">model</span>, quadpts<span class="op">=</span><span class="fl">26</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Observed log-likelihood/log-posterior may still be increasing.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>   Final values were: </span>
@@ -1555,6 +1555,139 @@ Applied Psychological Measurement, 37(1), 41-57.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 14         14  1.788 0.668       26   11.049   4.498</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15         15  1.950 0.653       10    2.403   4.901</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 16         16  2.072 0.634        2    0.240   3.596</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#####################</span></span></span>
+<span class="r-in"><span><span class="co">## Using non-quadrature estimators</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">simmod.MHRM</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">model</span>, method<span class="op">=</span><span class="st">'MHRM'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">simmod.MHRM</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt(data = dataset, model = model, method = "MHRM")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 3 factor(s).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 0.001 tolerance after 55 MHRM iterations.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.48.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: NR1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: Gaussian </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Average MH acceptance ratio(s): 0.324 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -18922.72, SE = 0.024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated parameters: 33 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 37911.43</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 38096.26; SABIC = 37991.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G2 (65502) = 8570.33, p = 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> RMSEA = 0, CFI = NaN, TLI = NaN</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">simmod.MHRM</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            S1    S2    S3    h2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.635             0.403</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.627             0.393</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.626             0.392</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.650             0.423</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  0.664             0.440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6        0.501       0.251</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7        0.550       0.302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8        0.521       0.272</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9        0.481       0.231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10       0.480       0.231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11       0.506       0.256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12             0.732 0.536</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13             0.694 0.481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14             0.707 0.500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15             0.713 0.508</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16             0.749 0.561</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SS loadings:  2.052 1.542 2.586 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Proportion Var:  0.128 0.096 0.162 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Factor correlations: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       S1 S2 S3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1 1.000      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S2 0.802  1   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S3 0.000  0  1</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">simmod</span>, <span class="va">simmod.MHRM</span><span class="op">)</span> <span class="co"># similar</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  AIC    SABIC       HQ      BIC    logLik     X2 df   p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> simmod      37909.75 37989.74 37977.62 38094.58 -18921.88              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> simmod.MHRM 37911.43 37991.42 37979.30 38096.26 -18922.72 -1.679  0 NaN</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># 1) Must build a suitable grid to integrate over, with focus on the</span></span></span>
+<span class="r-in"><span><span class="co"># projected dimensions</span></span></span>
+<span class="r-in"><span><span class="va">customTheta</span> <span class="op">&lt;-</span> <span class="fu">pirt_customTheta</span><span class="op">(</span><span class="va">simmod.MHRM</span>, project<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">customTheta</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1]       [,2]       [,3]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   -6  2.1826923  0.5326231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   -6 -2.8915264 -2.8418625</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   -6  0.4190204  2.9578631</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   -6 -0.4217999 -0.3343179</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   -6  2.8887470 -1.7362384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]   -6 -2.1854717  1.4160250</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">customTheta</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="pirt-11.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># 2) compute model with filled-in E-table, using previous parameter estimates</span></span></span>
+<span class="r-in"><span><span class="va">simmod.fill</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">model</span>, TOL<span class="op">=</span><span class="cn">NaN</span>,</span></span>
+<span class="r-in"><span>  pars<span class="op">=</span><span class="fu"><a href="mod2values.html">mod2values</a></span><span class="op">(</span><span class="va">simmod.MHRM</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  technical<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>customTheta<span class="op">=</span><span class="va">customTheta</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">simmod.fill</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt(data = dataset, model = model, pars = mod2values(simmod.MHRM), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     TOL = NaN, technical = list(customTheta = customTheta))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 3 factor(s).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Converged within NaN tolerance after 1 EM iterations.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.48.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: BFGS </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 30500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: Gaussian </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -18922.44</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated parameters: 33 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 37910.88</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 38095.71; SABIC = 37990.86</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G2 (65502) = 8570.38, p = 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> RMSEA = 0, CFI = NaN, TLI = NaN</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># 3) Use model with filled-in E-table</span></span></span>
+<span class="r-in"><span><span class="va">pirt2</span> <span class="op">&lt;-</span> <span class="fu">pirt</span><span class="op">(</span><span class="va">simmod.fill</span>, project<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">pirt2</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  a1           d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1.41395683 -1.17051768 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   1.38066543  0.24284712 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   1.36938043  1.05368863 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   1.46418105 -2.38989351 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   1.50158264  0.50800526 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   0.75113542  0.52708405 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   0.82175029 -0.55782238 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   0.77674655 -0.43967959 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   0.70812323 -0.48731727 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  0.71454556 -0.91364068 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  0.75252080 -0.51660024 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 -0.04701642 -0.67505269 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -0.02491837 -0.56257912 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  0.01192429  0.03406633 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 -0.01264999  0.62119677 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 -0.02323022 -0.01612084 0 1</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">pirt</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  a1           d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1.42162493 -1.18148213 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   1.38514181  0.23536682 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   1.36349357  1.04445814 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   1.45943408 -2.39564494 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   1.48309142  0.49673554 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   0.76068291  0.52457302 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   0.83373365 -0.56443215 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   0.78667478 -0.44529776 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   0.71374576 -0.49204651 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  0.72863025 -0.92119048 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  0.76165345 -0.52217215 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 -0.04771677 -0.67482519 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -0.02466479 -0.56245023 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  0.01039105  0.03400427 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 -0.01387582  0.62126662 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 -0.02397024 -0.01600263 0 1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
