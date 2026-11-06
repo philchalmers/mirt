@@ -304,8 +304,7 @@ setMethod(
                     if(method != 'EAP_general'){
                         if(is.null(custom_theta)){
                             ThetaShort <- Theta <- if(QMC){
-                                QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim,
-                                                random.type=QMC.type)
+                                QMC_quad(npts=quadpts, nfact=nfact, random.type=QMC.type)
                             } else thetaComb(theta,nfact)
                         } else {
                             if(ncol(custom_theta) != object@Model$nfact)

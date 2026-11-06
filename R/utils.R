@@ -2976,7 +2976,7 @@ hasConverged <- function(p0, p1, TOL){
     all(abs(p0 - p1) < TOL)
 }
 
-QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE, random.type = 'Halton',
+QMC_quad <- function(npts, nfact, lim = c(0,1), leap=409, norm=FALSE, random.type = 'Halton',
                      quantile = TRUE){
     ret <- QUnif(npts, min=lim[1], max=lim[2], p=nfact, leap=leap, random.type=random.type)
     if(quantile) ret <- qnorm(ret)
