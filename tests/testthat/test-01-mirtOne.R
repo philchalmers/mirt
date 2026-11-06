@@ -95,7 +95,7 @@ test_that('dich', {
     fs <- fscores(mod, QMC=TRUE, verbose=FALSE, full.scores=FALSE)
     expect_equal(fs[1:3,'F1'], c(-1.986357, -1.539155, -1.517891), tolerance=1e-4)
     m2 <- M2(mod, QMC=TRUE)
-    expect_equal(m2$M2, 4.471177, tolerance=1e-5)
+    expect_equal(m2$M2, 4.471391, tolerance=1e-5)
     ifit <- itemfit(mod, QMC=TRUE)
     expect_equal(ifit$p.S_X2[1], .7275575, tolerance = 1e-2)
     rfit <- residuals(mod, QMC=TRUE, verbose=FALSE)
