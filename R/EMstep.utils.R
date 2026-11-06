@@ -1,3 +1,9 @@
+# log of the marginal pattern likelihoods; uses the underflow-safe values from the
+# C++ E-step when available (very long tests can underflow `expected` to 0)
+logExpected <- function(rlist){
+    if(!is.null(rlist$logexpected)) rlist$logexpected else log(rlist$expected)
+}
+
 Estep <- function(pars, Data, gTheta, prior, Prior, Priorbetween, specific, sitems,
                   itemloc, CUSTOM.IND, dentype, ngroups, rlist, full, omp_threads,
                   Etable = TRUE){
@@ -8,7 +14,7 @@ Estep <- function(pars, Data, gTheta, prior, Prior, Priorbetween, specific, site
                                CUSTOM.IND=CUSTOM.IND, Theta=gTheta[[1L]],
                                wmiss=Data$wmiss, prior=Prior, itemloc=itemloc,
                                full=full, Etable=Etable, omp_threads=omp_threads)
-        LL <- sum(Data$Freq[[1L]] * log(rlist[[1L]]$expected))
+        LL <- sum(Data$Freq[[1L]] * logExpected(rlist[[1L]]))
     } else {
         for(g in seq_len(ngroups)){
             freq <- if(full) 1 else Data$Freq[[g]]
@@ -24,7 +30,7 @@ Estep <- function(pars, Data, gTheta, prior, Prior, Priorbetween, specific, site
                                          prior=Prior[[g]], itemloc=itemloc, full=full, Etable=Etable,
                                          omp_threads=omp_threads)
             }
-            LL <- LL + sum(freq * log(rlist[[g]]$expected), na.rm = TRUE)
+            LL <- LL + sum(freq * logExpected(rlist[[g]]), na.rm = TRUE)
             rlist[[g]]$r1[is.nan(rlist[[g]]$r1)] <- 0
         }
     }
@@ -77,7 +83,8 @@ Estep.mixture <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND
     for(g in seq_len(ngroups))
         retlist[[g]] <- list(r1=tmp$r1[1L:nrows + (g-1)*nrows, ],
                              r1g=tmp$r1g[1L:nrows + (g-1)*nrows],
-                             expected= if(g == 1) tmp$expected else NA)
+                             expected= if(g == 1) tmp$expected else NA,
+                             logexpected= if(g == 1) tmp$logexpected else NA)
     return(retlist)
 }
 

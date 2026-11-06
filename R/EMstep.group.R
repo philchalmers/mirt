@@ -219,7 +219,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                          CUSTOM.IND=CUSTOM.IND, Theta=Theta, wmiss=Data$wmiss,
                                          prior=Prior[[g]], itemloc=itemloc, omp_threads=list$omp_threads)
             }
-            LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected))
+            LL <- LL + sum(Data$Freq[[g]]*logExpected(rlist[[g]]))
         }
         if(any(ANY.PRIOR)){
             if(length(lrPars)){
@@ -248,7 +248,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                rlist=rlist, full=full, lrPars=lrPars, MC=MC)
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             if(is.na(TOL) && !is.nan(TOL)){
-                for(g in seq_len(ngroups)) rlist[[g]]$expected <- 1
+                for(g in seq_len(ngroups)){
+                    rlist[[g]]$expected <- 1
+                    rlist[[g]]$logexpected <- 0
+                }
                 break
             }
             Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,

@@ -3,7 +3,7 @@
 
 void _Estep(vector<double> &, vector<double> &, vector<double> &, const vector<double> &,
     const vector<double> &, const IntegerMatrix &, const NumericMatrix &,
-    const vector<double> &, const bool &);
+    const vector<double> &, const bool &, vector<double> *logexpected = NULL);
 
 void _Estepbfactor(vector<double> &, vector<double> &, vector<double> &, vector<double> &,
     const NumericMatrix &, const NumericMatrix &, const vector<double> &,

@@ -1,5 +1,13 @@
 # Changes in mirt 1.49
 
+- Fixed numerical underflow in the E-step for very long tests (e.g., several
+  hundred to 1000+ items). Response patterns whose marginal likelihood
+  underflowed to 0 at every quadrature node produced `NaN` values for
+  `logLik`, `AIC`, `BIC`, `G2`, and related fit statistics (since 1.42), and were
+  silently excluded from the expected tables used for parameter estimation
+  (all versions). The likelihood is now rescaled on the log metric for such
+  patterns
+
 - Added `QMC.type` argument to various supported functions to allow for 
   randomized Halton sequences for quasi-Monte Carlo integration
 

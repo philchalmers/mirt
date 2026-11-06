@@ -725,19 +725,19 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in seq_len(Data$ngroups)){
             if(g > 1L && opts$dentype == 'mixture') break
             Pl[[g]] <- rlist[[g]]$expected
-            Pltmp <- Pl[[g]]
+            logPltmp <- logExpected(rlist[[g]])
             if(opts$full){
                 rg <- 1
                 G2group[g] <- NaN
             } else {
                 rg <- Data$Freq[[g]]
-                Pltmp <- Pltmp[rg != 0]
+                logPltmp <- logPltmp[rg != 0]
                 rg <- rg[rg != 0]
                 Ng <- sum(rg)
-                G2group[g] <- 2 * sum(rg * log(rg/(Ng*Pltmp)))
+                G2group[g] <- 2 * sum(rg * (log(rg/Ng) - logPltmp))
             }
             G2 <- G2 + G2group[g]
-            logLik <- logLik + sum(rg*log(Pltmp))
+            logLik <- logLik + sum(rg*logPltmp)
         }
     } else if(opts$method %in% c('MHRM', 'SEM')){ #MHRM/SEM/JML estimation
         Theta <- matrix(0, Data$N, nitems)
