@@ -304,7 +304,8 @@ setMethod(
                     if(method != 'EAP_general'){
                         if(is.null(custom_theta)){
                             ThetaShort <- Theta <- if(QMC){
-                                QMC_quad(npts=quadpts, nfact=nfact, random.type=QMC.type)
+                                tmp <- QMC_quad(npts=quadpts, nfact=nfact, random.type=QMC.type)
+                                Theta_meanSigma_shift(tmp, gp$gmeans, gp$gcov)
                             } else thetaComb(theta,nfact)
                         } else {
                             if(ncol(custom_theta) != object@Model$nfact)
@@ -837,8 +838,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         } else {
             nfact <- x@Model$nfact
             ThetaShort <- Theta <- if(QMC){
-                tmp <- QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim,
-                                random.type=QMC.type)
+                tmp <- QMC_quad(npts=quadpts, nfact=nfact, random.type=QMC.type)
                 Theta_meanSigma_shift(tmp, gp$gmeans, gp$gcov)
             } else {
                 theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)

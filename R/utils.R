@@ -523,7 +523,7 @@ updateTheta <- function(npts, nfact, pars, Theta0=NULL, draw=TRUE,
         gp <- ExtractGroupPars(pars[[g]][[pick]])
         theta <- if(draw && method %in% c('QMCEM', 'MCEM')){
             if(method == 'QMCEM'){
-                QMC_quad(npts=npts, nfact=nfact, lim = c(0,1), random.type=QMC.type)
+                QMC_quad(npts=npts, nfact=nfact, random.type=QMC.type)
             } else if(method == 'MCEM') {
                 MC_quad(npts=npts, nfact=nfact, lim = c(0,1))
             }

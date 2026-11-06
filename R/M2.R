@@ -159,8 +159,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
                     Prior <- Prior/sum(Prior)
                 } else {
                     if(QMC){
-                        Theta <- QMC_quad(npts=quadpts, nfact=obj@Model$nfact, lim=theta_lim,
-                                          random.type=QMC.type)
+                        Theta <- QMC_quad(npts=quadpts, nfact=obj@Model$nfact, random.type=QMC.type)
                         Theta <- Theta_meanSigma_shift(Theta, gstructgrouppars$gmeans,
                                                        gstructgrouppars$gcov)
                         Prior <- rep(1/nrow(Theta), nrow(Theta))

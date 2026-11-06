@@ -797,9 +797,9 @@ setMethod(
                 quadpts <- select_quadpts(nfact)
             theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
             if(type != 'Q3'){
-                Theta <- if(QMC)
-                    QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim, random.type=QMC.type)
-                else {
+                Theta <- if(QMC){
+                    QMC_quad(npts=quadpts, nfact=nfact, random.type=QMC.type)
+                } else {
                     if(nfact > 3L)
                         warning('High-dimensional models should use QMC integration instead',
                                 call.=FALSE)
