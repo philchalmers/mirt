@@ -354,16 +354,20 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             }
             if(list$accelerate != 'none' && cycles %% 3 == 0L){
                 # log-likelihood of a candidate parameter vector, NaN if any pattern
-                # likelihood is undefined (e.g., graded intercepts out of order)
+                # likelihood is undefined or exactly zero at every quadrature node
+                # (e.g., graded intercepts out of order). The E-step floors such
+                # patterns at log(DBL_MIN) exactly; genuinely tiny likelihoods keep
+                # their exact (rescaled) log value
                 accelLL <- function(candidate){
                     pars <- reloadPars(longpars=candidate, pars=pars, ngroups=ngroups, J=J)
                     Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
                                    Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                                    ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                    dentype=dentype, rlist=rlist, full=full, omp_threads=list$omp_threads)
-                    expected <- if(dentype == 'mixture') Elist$rlist[[1L]]$expected
-                        else unlist(lapply(Elist$rlist, function(x) x$expected))
-                    if(anyNA(expected)) return(NaN)
+                    rl <- if(dentype == 'mixture') Elist$rlist[1L] else Elist$rlist
+                    logexpected <- unlist(lapply(rl, logExpected))
+                    if(anyNA(logexpected) ||
+                       any(logexpected == log(.Machine$double.xmin))) return(NaN)
                     Elist$LL
                 }
                 if(list$accelerate == 'Ramsay'){
