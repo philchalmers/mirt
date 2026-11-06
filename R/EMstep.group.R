@@ -353,6 +353,19 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 break
             }
             if(list$accelerate != 'none' && cycles %% 3 == 0L){
+                # log-likelihood of a candidate parameter vector, NaN if any pattern
+                # likelihood is undefined (e.g., graded intercepts out of order)
+                accelLL <- function(candidate){
+                    pars <- reloadPars(longpars=candidate, pars=pars, ngroups=ngroups, J=J)
+                    Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
+                                   Priorbetween=Priorbetween, specific=specific, sitems=sitems,
+                                   ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                                   dentype=dentype, rlist=rlist, full=full, omp_threads=list$omp_threads)
+                    expected <- if(dentype == 'mixture') Elist$rlist[[1L]]$expected
+                        else unlist(lapply(Elist$rlist, function(x) x$expected))
+                    if(anyNA(expected)) return(NaN)
+                    Elist$LL
+                }
                 if(list$accelerate == 'Ramsay'){
                     if(Mrate > .01){
                         dX2 <- preMstep.longpars - preMstep.longpars2
@@ -360,28 +373,36 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                         d2X2 <- dX - dX2
                         ratio <- as.vector(sqrt((dX %*% dX) / (d2X2 %*% d2X2)))
                         accel <- 1 - ratio
+                        if(!is.finite(accel)) accel <- 0
                         if(accel < -5) accel <- -5
-                        tmp <- (1 - accel) * longpars + accel * preMstep.longpars
-                        longpars[!latent_longpars] <- tmp[!latent_longpars]
+                        # step back toward the plain EM update if the extrapolation
+                        # gives an invalid model (e.g., NaN log-likelihood)
+                        for(count in 1L:3L){
+                            if(accel == 0) break
+                            tmp <- longpars
+                            tmp[!latent_longpars] <- ((1 - accel) * longpars +
+                                                          accel * preMstep.longpars)[!latent_longpars]
+                            if(is.finite(accelLL(tmp))){
+                                longpars <- tmp
+                                break
+                            }
+                            accel <- accel / 2
+                        }
                     }
                 } else if(list$accelerate == 'squarem'){
                     r <- preMstep.longpars - preMstep.longpars2
                     v <- (longpars - preMstep.longpars) - r
                     ratio <- as.vector(sqrt((r %*% r) / (v %*% v)))
                     accel <- -ratio
-                    if(accel > -1){
+                    if(!is.finite(accel) || accel > -1){
                         accel <- -1
                     } else {
                         count <- 1L
                         while(TRUE){
                             tmp <- preMstep.longpars2 - 2 * accel * r  + accel^2 * v
-                            longpars[!latent_longpars] <- tmp[!latent_longpars]
-                            pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-                            Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
-                                           Priorbetween=Priorbetween, specific=specific, sitems=sitems,
-                                           ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                                           dentype=dentype, rlist=rlist, full=full, omp_threads=list$omp_threads)
-                            if(Elist$LL <= collectLL[cycles]){
+                            cand <- longpars
+                            cand[!latent_longpars] <- tmp[!latent_longpars]
+                            if(!isTRUE(accelLL(cand) > collectLL[cycles])){
                                 accel <- (accel - 1) / 2
                                 count <- count + 1L
                             } else break
