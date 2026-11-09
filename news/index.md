@@ -2,6 +2,12 @@
 
 ## Changes in mirt 1.49
 
+- [`empirical_plot()`](https://philchalmers.github.io/mirt/reference/empirical_plot.md)
+  gains `cor` option to make heatmap version of correlation matrices.
+  Arguments as passed to
+  [`plot_cors()`](https://philchalmers.github.io/mirt/reference/plot_cors.md)
+  as there are too many argument to track in the original function
+
 - Fixed numerical underflow in the E-step for very long tests (e.g.,
   several hundred to 1000+ items). Response patterns whose marginal
   likelihood underflowed to 0 at every quadrature node produced `NaN`
