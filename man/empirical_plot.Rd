@@ -37,6 +37,7 @@ If NULL then empirical test plots will be constructed instead}
      specified then item-level conditional proportions are instead plotted
      against the reduced total scores}
    \item{'hist'}{histogram of total scores}
+   \item{''}{heatmap of correlations. \code{...} arguments are passed to \code{\link{plot_cors}}}
    \item{'bar'}{barplot of total scores}
    \item{'freq'}{item response frequencies (supports \code{which.item})}
    \item{'discrim'}{reduced item-total correlations to visualize discrimination effects}
@@ -97,6 +98,7 @@ data <- key2binary(SAT12,
 
 # test plot
 empirical_plot(data)
+empirical_plot(data, type = 'cor')
 empirical_plot(data, type = 'hist')
 empirical_plot(data, type = 'hist', ts_fun=rowMeans)
 empirical_plot(data, type = 'hist', breaks=20)
@@ -146,6 +148,9 @@ empirical_plot(data2, which.items=30:32, org.data=SAT12, smooth=TRUE)
 #################
 # polytomous response data
 empirical_plot(Science)
+empirical_plot(Science, type = 'cor')
+empirical_plot(cbind(Science,
+   Science + sample(-1:1, prod(dim(Science)), replace=TRUE)), type = 'cor')
 empirical_plot(Science, type = 'hist', breaks=20)
 empirical_plot(Science, type = 'freq')
 empirical_plot(Science, type = 'difficulty')
@@ -177,7 +182,7 @@ Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-
 \doi{10.18637/jss.v048.i06}
 }
 \seealso{
-\code{\link{itemstats}}, \code{\link{itemplot}}, \code{\link{itemGAM}}
+\code{\link{itemstats}}, \code{\link{itemplot}}, \code{\link{itemGAM}}, \code{\link{plot_cors}}
 }
 \keyword{empirical}
 \keyword{plots}

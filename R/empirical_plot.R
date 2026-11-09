@@ -29,6 +29,7 @@
 #'      specified then item-level conditional proportions are instead plotted
 #'      against the reduced total scores}
 #'    \item{'hist'}{histogram of total scores}
+#'    \item{''}{heatmap of correlations. \code{...} arguments are passed to \code{\link{plot_cors}}}
 #'    \item{'bar'}{barplot of total scores}
 #'    \item{'freq'}{item response frequencies (supports \code{which.item})}
 #'    \item{'discrim'}{reduced item-total correlations to visualize discrimination effects}
@@ -56,7 +57,7 @@
 #' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
-#' @seealso \code{\link{itemstats}}, \code{\link{itemplot}}, \code{\link{itemGAM}}
+#' @seealso \code{\link{itemstats}}, \code{\link{itemplot}}, \code{\link{itemGAM}}, \code{\link{plot_cors}}
 #' @examples
 #'
 #' \donttest{
@@ -67,6 +68,7 @@
 #'
 #' # test plot
 #' empirical_plot(data)
+#' empirical_plot(data, type = 'cor')
 #' empirical_plot(data, type = 'hist')
 #' empirical_plot(data, type = 'hist', ts_fun=rowMeans)
 #' empirical_plot(data, type = 'hist', breaks=20)
@@ -116,6 +118,9 @@
 #' #################
 #' # polytomous response data
 #' empirical_plot(Science)
+#' empirical_plot(Science, type = 'cor')
+#' empirical_plot(cbind(Science,
+#'    Science + sample(-1:1, prod(dim(Science)), replace=TRUE)), type = 'cor')
 #' empirical_plot(Science, type = 'hist', breaks=20)
 #' empirical_plot(Science, type = 'freq')
 #' empirical_plot(Science, type = 'difficulty')
@@ -148,13 +153,16 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                                strip.border = list(col = "black")),
                            auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
     stopifnot(is.matrix(data) || is.data.frame(data))
-    if(is.null(which.items) && type %in% c("freq", 'boxplot'))
+    if(is.null(which.items) && type %in% c("freq", 'boxplot', 'cor'))
         which.items <- 1:ncol(data)
-    stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble', 'alpha_rm', 'bar',
+    stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble', 'alpha_rm', 'bar', 'cor',
                           'discrim', 'difficulty', 'discrim_diff', 'freq'))
     if(is.null(which.items))
         stopifnot("Must specify which.items"=type %in%
                       c('prop', 'hist', 'alpha_rm', 'discrim', 'difficulty', 'discrim_diff', 'bar'))
+    if(type == 'cor'){
+        return(plot_cors(subset(data, select=which.items), ...))
+    }
     if(type %in% c('boxplot', 'bubble')) smooth <- FALSE
     if(!(type %in% c('freq')))
         data <- na.omit(as.matrix(data))
@@ -367,4 +375,198 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
         }
     }
     plt
+}
+
+
+#' Correlation matrix plot
+#'
+#' Heatmap version of correlation matrix to visualize bivariate correlations.
+#'
+#' @param r square matrix (correlations, or any matrix with values on a common
+#'              scale), or a data.frame/non-square matrix of raw data, in which
+#'              case \code{cor(r, use = "pairwise.complete.obs")} is computed
+#' @param numbers    print the (rounded) values in the cells
+#' @param colors     if FALSE, a grey scale is used
+#' @param n          number of colour bins
+#' @param main       title
+#' @param zlim       range of the colour scale (values are clamped to it)
+#' @param show.legend draw the colour key
+#' @param labels     variable names (default: dimnames of r)
+#' @param select     indices/names of the variables to show
+#' @param pval       optional matrix of p-values (same dim as r). If supplied, the
+#'              upper triangle shows the p-values as plain text with no colour
+#'              fill, and the lower triangle/diagonal show the coloured
+#'              correlations
+#' @param cuts       p-value cutpoints for stars, e.g. c(.001, .01) -> *** / ** / *
+#'              (a final single * is used for p < .05)
+#' @param stars      optionally draw significance stars after the lower-triangle
+#'             correlations (requires pval; FALSE by default, since the
+#'              p-values themselves are shown in the upper triangle)
+#' @param pdigits    decimals for printed p-values (smaller values print as <.001)
+#' @param scale      if TRUE, text is drawn at size cex for every cell (diagonal
+#'              included) whose |r| >= thresh, and shrinks linearly with |r|
+#'              below thresh
+#' @param thresh     \code{|r|} below which the text starts to shrink
+#' @param min.cex    smallest relative text size (reached as |r| -> 0)
+#' @param fit        if \code{TRUE}, text is shrunk (never enlarged) to fit the drawn cells;
+#'              the size is measured at draw time, so it adapts to the device.
+#' @param cex   A common shrink factor is set from the bulk of the labels (not the
+#'              single widest one), then any label that still overflows its own
+#'              cell is capped individually
+#' @param fill       proportion of a cell width/height the typical label may fill
+#' @param drop.zero  drop the leading zero of the printed values (.45, -.45)
+#' @param upper      draw the upper triangle?
+#' @param diag       draw the diagonal?
+#' @param symmetric  if \code{TRUE} and \code{r} is square, row i is plotted in the same position
+#'              as column i
+#' @param  xaxis       1 = x labels at the bottom, 3 = at the top
+#' @param  xlas       rotation (degrees) of x labels
+#' @param  gr         colour-ramp function, e.g., \code{colorRampPalette(c("red","white","blue"))}
+#' @param  digits     digits shown in cells
+#' @param  alpha      transparency of the cell colours
+#' @param  border     colour of cell borders (NA/"transparent" for none)
+#' @param  ...        passed on to \code{lattice::levelplot()}
+#' @export
+#'
+plot_cors <- function(r, numbers = TRUE, colors = TRUE, n = 51,
+                            main = NULL, zlim = c(-1, 1), show.legend = TRUE,
+                            labels = NULL, select = NULL, pval = NULL,
+                            cuts = c(.001, .01), stars = FALSE, pdigits = 3, scale = TRUE,
+                            cex = 1, thresh = .2, min.cex = .6, drop.zero = TRUE,
+                            fit = TRUE, fill = .9,
+                            upper = TRUE, diag = TRUE,
+                            symmetric = TRUE, xaxis = 1, xlas = 90,
+                            gr = NULL, digits = 2, alpha = .75,
+                            border = "white", ...) {
+    stopifnot(requireNamespace("lattice", quietly = TRUE))
+    if (is.data.frame(r)) r <- as.matrix(r)
+    if (!is.matrix(r)) stop("'r' must be a matrix or data.frame")
+    if (nrow(r) != ncol(r)) r <- stats::cor(r, use = "pairwise.complete.obs")
+
+    ## names
+    if (is.null(labels)) labels <- colnames(r)
+    if (is.null(labels)) labels <- paste0("V", seq_len(ncol(r)))
+    if (is.null(rownames(r))) rownames(r) <- labels
+    colnames(r) <- labels
+    if (!is.null(pval)) { dimnames(pval) <- dimnames(r) }
+
+    ## subset
+    if (!is.null(select)) {
+        r <- r[select, select, drop = FALSE]
+        if (!is.null(pval)) pval <- pval[select, select, drop = FALSE]
+    }
+    p <- ncol(r)
+    nms <- colnames(r)
+
+    ## mask triangles
+    keep <- matrix(TRUE, p, p)
+    if (!upper) keep[upper.tri(keep)] <- FALSE
+    if (!diag)  diag(keep) <- FALSE
+
+    ## long format; row 1 plotted at the top
+    df <- expand.grid(row = seq_len(p), col = seq_len(p))
+    df$z <- as.vector(r)               # row varies fastest = column-major, matching as.vector()
+    df$z[!as.vector(keep)] <- NA
+    ## when p-values are supplied the upper triangle holds p-values: those
+    ## cells get no fill, so they are excluded from the colour variable
+    has.p <- !is.null(pval)
+    is.up <- df$row < df$col
+    is.lo <- df$row > df$col
+    if (has.p) df$z[is.up] <- NA
+    df$zc <- pmin(pmax(df$z, zlim[1]), zlim[2])   # clamp to colour range
+
+    ## p-value matrix, symmetrised (use the other triangle if one is missing)
+    if (has.p) {
+        pm <- pval
+        pm[is.na(pm)] <- t(pm)[is.na(pm)]
+        pv <- as.vector(pm)
+    }
+    if (stars && !has.p) stop("'stars = TRUE' requires 'pval'")
+
+    ## cell text
+    txt <- rep("", nrow(df))
+    if (numbers) {
+        txt <- formatC(df$z, digits = digits, format = "f")
+        ## unit diagonal printed as "1" rather than "1.00" to save space
+        is.unit <- df$row == df$col & !is.na(df$z) & abs(df$z - 1) < 1e-8
+        txt[is.unit] <- "1"
+        ## drop the leading zero (0.45 -> .45, -0.45 -> -.45) to save space
+        if (drop.zero) txt <- sub("^(-?)0\\.", "\\1.", txt)
+    }
+    txt[is.na(df$z)] <- ""
+    if (stars) {                        # stars go on the lower-triangle correlations
+        cuts <- sort(cuts)
+        st <- ifelse(pv < cuts[1], "***",
+                     ifelse(pv < cuts[2], "**",
+                            ifelse(pv < .05,     "*", "")))
+        st[!is.lo | is.na(st)] <- ""
+        txt <- paste0(txt, st)
+    }
+    if (has.p) {                        # p-values in the upper triangle
+        up <- is.up & keep[cbind(df$row, df$col)] & !is.na(pv)
+        ptxt <- ifelse(pv < 10^-pdigits, paste0("<.", strrep("0", pdigits - 1), "1"),
+                       formatC(pv, digits = pdigits, format = "f"))
+        if (drop.zero) ptxt <- sub("^0\\.", ".", ptxt)
+        txt[up] <- ptxt[up]
+    }
+    df$txt <- txt
+    df$cex <- cex
+    if (scale) {
+        ok <- !is.na(df$zc)
+        df$cex[ok] <- cex * pmax(min.cex, pmin(1, abs(df$zc[ok]) / thresh))
+    }
+
+    ## colours
+    if (colors) {
+        if (is.null(gr)) gr <- grDevices::colorRampPalette(c("red", "white", "blue"))
+        cols <- gr(n)
+    } else {
+        cols <- grDevices::gray(seq(0, 1, length.out = n))
+    }
+    cols <- grDevices::adjustcolor(cols, alpha.f = alpha)
+    brks <- seq(zlim[1], zlim[2], length.out = n + 1)
+
+    ## legend
+    ck <- if (show.legend) list(space = "right", width = 1.2, tck = .6) else FALSE
+
+    ## axes: y runs top-to-bottom, so reverse ylim
+    sc <- list(x = list(at = seq_len(p), labels = nms, rot = xlas, tck = 0,
+                        alternating = if (xaxis == 3) 2 else 1),
+               y = list(at = seq_len(p), labels = rownames(r), rot = 0, tck = 0,
+                        alternating = 1))
+
+    lattice::levelplot(
+        zc ~ col * row, data = df,
+        main = main, xlab = NULL, ylab = NULL,
+        at = brks, col.regions = cols, colorkey = ck,
+        scales = sc, xlim = c(.5, p + .5), ylim = c(p + .5, .5),
+        aspect = "iso", border = border,
+        panel = function(x, y, z, subscripts, ...) {
+            lattice::panel.levelplot(x, y, z, subscripts, ...)
+            if (numbers || stars || has.p) {
+                s  <- subscripts[nzchar(df$txt[subscripts])]
+                cx <- df$cex[s]
+                if (fit && length(s)) {
+                    fs <- lattice::trellis.par.get("fontsize")$text
+                    wi <- grid::convertWidth(grid::unit(1, "npc"), "inches", valueOnly = TRUE) / p
+                    hi <- grid::convertHeight(grid::unit(1, "npc"), "inches", valueOnly = TRUE) / p
+                    str <- df$txt[s]
+                    u   <- unique(str)
+                    gp  <- grid::gpar(fontsize = fs)
+                    tw1 <- vapply(u, function(z)
+                        grid::convertWidth(grid::grobWidth(grid::textGrob(z, gp = gp)),
+                                           "inches", valueOnly = TRUE), numeric(1))
+                    th1 <- grid::convertHeight(grid::grobHeight(grid::textGrob("0", gp = gp)),
+                                               "inches", valueOnly = TRUE)
+                    tw  <- tw1[match(str, u)]
+                    ratio <- pmin(fill * wi / tw, fill * hi / th1) / cx
+                    f   <- min(1, stats::quantile(ratio, .1, names = FALSE))
+                    cx  <- pmin(cx * f, 0.98 * wi / tw)
+                }
+                lattice::panel.text(df$col[s], df$row[s], df$txt[s],
+                                    cex = cx, col = "black")
+            }
+        },
+        ...
+    )
 }
