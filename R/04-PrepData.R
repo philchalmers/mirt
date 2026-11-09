@@ -5,6 +5,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
                      spline_args, internal_constraints, monopoly.k, dentype, dcIRT_nphi, item.Q,
                      groupName)
 {
+    org.model <- model
     pick <- sapply(strsplit(model$x[,'OptionalGroups'], ','), \(x) any(x == groupName))
     model$x <- model$x[pick, , drop=FALSE]
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
@@ -84,7 +85,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
         }
     }
     itemloc <- cumsum(c(1L,K))
-    factorNames <- setdiff(model$x[,1L],keywords)
+    factorNames <- setdiff(org.model$x[,1L],keywords)
     nfactNames <- length(factorNames)
     nfact <- sum(!grepl('\\(',factorNames))
     if(nfact > 1L && any(itemtype %in% c('rsm', 'gpcmIRT', 'grsmIRT')))
