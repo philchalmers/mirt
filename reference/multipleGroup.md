@@ -317,7 +317,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group,
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.294  0.045  0.061  0.171  0.000  0.001 
+#>  0.333  0.046  0.062  0.201  0.000  0.001 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the
 #  M-step's, though occasionally less stable
@@ -325,7 +325,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group, optimizer = 'NR',
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.190  0.045  0.070  0.057  0.000  0.000 
+#>  0.197  0.047  0.067  0.061  0.000  0.001 
 
 summary(mod_scalar2)
 #> 
@@ -984,7 +984,7 @@ mod_anchor
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within NaN tolerance after 1 EM iterations.
-#> mirt version: 1.48.3 
+#> mirt version: 1.48.4 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2428,7 +2428,7 @@ mod_mix
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 58 EM iterations.
-#> mirt version: 1.48.3 
+#> mirt version: 1.48.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2894,7 +2894,7 @@ head(pi_hat)
 #> [3,] 1.372135e-214       1
 #> [4,] 1.220535e-224       1
 #> [5,] 2.774206e-126       1
-#> [6,] 8.219653e-210       1
+#> [6,] 8.219654e-210       1
 tail(pi_hat)
 #>           CLASS_1     CLASS_2
 #>  [995,] 0.9932982 0.006701771
@@ -2908,12 +2908,12 @@ tail(pi_hat)
 fs <- fscores(ziGRM.fit)
 head(fs)
 #>          Class_1
-#> [1,]  0.03415732
-#> [2,]  0.77178287
-#> [3,] -0.08031843
-#> [4,] -0.29479164
-#> [5,] -1.27315493
-#> [6,] -0.45721982
+#> [1,]  0.03415731
+#> [2,]  0.77178286
+#> [3,] -0.08031844
+#> [4,] -0.29479165
+#> [5,] -1.27315494
+#> [6,] -0.45721983
 tail(fs)
 #>           Class_1
 #>  [995,] -99.34781

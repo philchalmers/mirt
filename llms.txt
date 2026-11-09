@@ -342,6 +342,9 @@ Google group. Cheers!
   [`plot(`*`<SingleGroupClass>`*`,`*`<missing>`*`)`](https://philchalmers.github.io/mirt/reference/plot-method.md)
   : Plot various test-implied functions from models
 
+- [`plot_cors()`](https://philchalmers.github.io/mirt/reference/plot_cors.md)
+  : Correlation matrix plot
+
 - [`poly2dich()`](https://philchalmers.github.io/mirt/reference/poly2dich.md)
   : Change polytomous items to dichotomous item format
 

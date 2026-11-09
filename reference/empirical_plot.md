@@ -56,6 +56,11 @@ empirical_plot(
 
   :   histogram of total scores
 
+  ”
+
+  :   heatmap of correlations. `...` arguments are passed to
+      [`plot_cors`](https://philchalmers.github.io/mirt/reference/plot_cors.md)
+
   'bar'
 
   :   barplot of total scores
@@ -166,7 +171,8 @@ Package for the R Environment. *Journal of Statistical Software, 48*(6),
 
 [`itemstats`](https://philchalmers.github.io/mirt/reference/itemstats.md),
 [`itemplot`](https://philchalmers.github.io/mirt/reference/itemplot.md),
-[`itemGAM`](https://philchalmers.github.io/mirt/reference/itemGAM.md)
+[`itemGAM`](https://philchalmers.github.io/mirt/reference/itemGAM.md),
+[`plot_cors`](https://philchalmers.github.io/mirt/reference/plot_cors.md)
 
 ## Examples
 
@@ -180,6 +186,8 @@ data <- key2binary(SAT12,
 
 # test plot
 empirical_plot(data)
+
+empirical_plot(data, type = 'cor')
 
 empirical_plot(data, type = 'hist')
 
@@ -256,6 +264,11 @@ empirical_plot(data2, which.items=30:32, org.data=SAT12, smooth=TRUE)
 #################
 # polytomous response data
 empirical_plot(Science)
+
+empirical_plot(Science, type = 'cor')
+
+empirical_plot(cbind(Science,
+   Science + sample(-1:1, prod(dim(Science)), replace=TRUE)), type = 'cor')
 
 empirical_plot(Science, type = 'hist', breaks=20)
 

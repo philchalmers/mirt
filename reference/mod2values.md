@@ -135,7 +135,7 @@ coef(mod3, simplify=TRUE)$items
 #>                a1       d1       d2         d3 ak0 ak1 ak2 ak3 d0
 #> Comfort 1.0278666 4.842467 2.629427 -1.4610757  NA  NA  NA  NA NA
 #> Work    0.8622915 1.735970 2.608453  0.8615093   0   1   2   3  0
-#> Future  2.1388465 4.498623 6.612162  4.8108956   0   1   2   3  0
+#> Future  2.1388465 4.498623 6.612162  4.8108955   0   1   2   3  0
 #> Benefit 0.7208997 2.096130 2.894803  1.7189648   0   1   2   3  0
 extract.mirt(mod3, 'itemtype')
 #> [1] "graded" "gpcm"   "gpcm"   "gpcm"  

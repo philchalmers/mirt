@@ -46,7 +46,7 @@ data <- expand.table(LSAT7)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.48.3 
+#> mirt version: 1.48.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -97,29 +97,29 @@ data <- expand.table(LSAT7)
 #> mirt(data = data, model = 2)
 #> 
 #> Full-information item factor analysis with 2 factor(s).
-#> Converged within 1e-04 tolerance after 436 EM iterations.
-#> mirt version: 1.48.3 
+#> Converged within 1e-04 tolerance after 464 EM iterations.
+#> mirt version: 1.48.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 31
 #> Latent density type: Gaussian 
 #> 
-#> Log-likelihood = -2653.52
+#> Log-likelihood = -2653.519
 #> Estimated parameters: 14 
 #> AIC = 5335.039
-#> BIC = 5403.748; SABIC = 5359.283
-#> G2 (17) = 21.13, p = 0.2205
+#> BIC = 5403.747; SABIC = 5359.283
+#> G2 (17) = 21.13, p = 0.2206
 #> RMSEA = 0.016, CFI = NaN, TLI = NaN
 plinkpars <- read.mirt(mod1)
 plinkpars
 #> An object of class "irt.pars"
 #> Slot "pars":
-#>              a1         a2            
-#> [1,] -2.0071991  0.8703411 2.6479286 0
-#> [2,] -0.8488431 -0.5221152 0.7876390 0
-#> [3,] -2.1529666 -1.8364974 2.4829603 0
-#> [4,] -0.7559009 -0.0280359 0.4847286 0
-#> [5,] -0.7572746  0.0000000 1.8640966 0
+#>              a1          a2            
+#> [1,] -2.0121117  0.87543311 2.6529003 0
+#> [2,] -0.8487458 -0.52087026 0.7874719 0
+#> [3,] -2.1589396 -1.84064554 2.4876303 0
+#> [4,] -0.7554151 -0.02781551 0.4846604 0
+#> [5,] -0.7568599  0.00000000 1.8639107 0
 #> 
 #> Slot "cat":
 #> [1] 2 2 2 2 2
@@ -232,7 +232,7 @@ equate(out)
 #> 3   -1.910192  2 2.023409
 #> 4   -0.999050  3 3.021848
 #> 5    0.048359  4 3.973672
-#> 6   57.411786  5 5.000000
+#> 6   57.433636  5 5.000000
 #> 
 #> $ose
 #> $ose$scores

@@ -1516,7 +1516,7 @@ simmod.MHRM
 #> 
 #> Full-information item factor analysis with 3 factor(s).
 #> Converged within 0.001 tolerance after 55 MHRM iterations.
-#> mirt version: 1.48.3 
+#> mirt version: 1.48.4 
 #> M-step optimizer: NR1 
 #> Latent density type: Gaussian 
 #> Average MH acceptance ratio(s): 0.324 
@@ -1565,12 +1565,12 @@ anova(simmod, simmod.MHRM) # similar
 customTheta <- pirt_customTheta(simmod.MHRM, project=1)
 head(customTheta)
 #>      [,1]       [,2]       [,3]
-#> [1,]   -6 -0.6034774 -2.8579225
-#> [2,]   -6  1.4941788  2.4095672
-#> [3,]   -6 -2.0038680 -0.6576481
-#> [4,]   -6  2.0010148 -1.3078539
-#> [5,]   -6 -1.4970321  1.9870707
-#> [6,]   -6  0.6006242  0.8924204
+#> [1,]   -6  1.1010864  1.3173711
+#> [2,]   -6 -0.1996948 -1.3081433
+#> [3,]   -6  2.3022583 -0.4329718
+#> [4,]   -6 -2.3002808  2.8592093
+#> [5,]   -6  0.2016724 -1.7471007
+#> [6,]   -6 -1.0991089  0.4339692
 pairs(customTheta)
 
 
@@ -1586,39 +1586,39 @@ simmod.fill
 #> 
 #> Full-information item factor analysis with 3 factor(s).
 #> Converged within NaN tolerance after 1 EM iterations.
-#> mirt version: 1.48.3 
+#> mirt version: 1.48.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 30500
 #> Latent density type: Gaussian 
 #> 
-#> Log-likelihood = -18922.77
+#> Log-likelihood = -18922.28
 #> Estimated parameters: 33 
-#> AIC = 37911.53
-#> BIC = 38096.36; SABIC = 37991.52
-#> G2 (65502) = 8571.04, p = 1
+#> AIC = 37910.55
+#> BIC = 38095.38; SABIC = 37990.54
+#> G2 (65502) = 8570.06, p = 1
 #> RMSEA = 0, CFI = NaN, TLI = NaN
 
 # 3) Use model with filled-in E-table
 pirt2 <- pirt(simmod.fill, project=1)
 coef(pirt2, simplify=TRUE)$items
 #>                   a1           d g u
-#> Item_1   1.413841160 -1.17119931 0 1
-#> Item_2   1.380474096  0.24213499 0 1
-#> Item_3   1.369022905  1.05283656 0 1
-#> Item_4   1.464664609 -2.39075413 0 1
-#> Item_5   1.501393951  0.50725039 0 1
-#> Item_6   0.751312531  0.52667391 0 1
-#> Item_7   0.822554457 -0.55835747 0 1
-#> Item_8   0.777337532 -0.44014395 0 1
-#> Item_9   0.708583998 -0.48773196 0 1
-#> Item_10  0.715084258 -0.91410298 0 1
-#> Item_11  0.752881562 -0.51702733 0 1
-#> Item_12 -0.048383973 -0.67505381 0 1
-#> Item_13 -0.025956442 -0.56257736 0 1
-#> Item_14  0.009922718  0.03404968 0 1
-#> Item_15 -0.014947586  0.62120266 0 1
-#> Item_16 -0.025445124 -0.01611926 0 1
+#> Item_1   1.413400464 -1.16986752 0 1
+#> Item_2   1.380615520  0.24319671 0 1
+#> Item_3   1.368738670  1.05362159 0 1
+#> Item_4   1.464251639 -2.38942663 0 1
+#> Item_5   1.501780256  0.50841098 0 1
+#> Item_6   0.752491238  0.52734593 0 1
+#> Item_7   0.823616352 -0.55791215 0 1
+#> Item_8   0.778109925 -0.43966681 0 1
+#> Item_9   0.709438393 -0.48732545 0 1
+#> Item_10  0.715666346 -0.91371375 0 1
+#> Item_11  0.753900280 -0.51661677 0 1
+#> Item_12 -0.048633318 -0.67509181 0 1
+#> Item_13 -0.026174757 -0.56259678 0 1
+#> Item_14  0.009521658  0.03405449 0 1
+#> Item_15 -0.015523280  0.62119294 0 1
+#> Item_16 -0.025699911 -0.01613679 0 1
 coef(pirt, simplify=TRUE)$items
 #>                  a1           d g u
 #> Item_1   1.42162493 -1.18148213 0 1

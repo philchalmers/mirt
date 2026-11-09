@@ -49,7 +49,7 @@ model <- 'F = 1-5
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 12 EM iterations.
-#> mirt version: 1.48.3 
+#> mirt version: 1.48.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -123,7 +123,7 @@ coef(mod2, simplify=TRUE)
 #> F1 0.572
 #> 
 sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
-#> [1] 0.7561298
+#> [1] 0.7561282
 
 # }
 ```
