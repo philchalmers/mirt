@@ -1692,20 +1692,20 @@ plot(idealpt, type = 'trace', facet_items = FALSE)
 mod2 <- mirt(data, 2)
 coef(mod2)
 #> $Item.1
-#>         a1    a2     d g u
-#> par -2.012 0.875 2.653 0 1
+#>         a1   a2     d g u
+#> par -2.007 0.87 2.648 0 1
 #> 
 #> $Item.2
 #>         a1     a2     d g u
-#> par -0.849 -0.521 0.787 0 1
+#> par -0.849 -0.522 0.788 0 1
 #> 
 #> $Item.3
 #>         a1     a2     d g u
-#> par -2.159 -1.841 2.488 0 1
+#> par -2.153 -1.836 2.483 0 1
 #> 
 #> $Item.4
 #>         a1     a2     d g u
-#> par -0.755 -0.028 0.485 0 1
+#> par -0.756 -0.028 0.485 0 1
 #> 
 #> $Item.5
 #>         a1 a2     d g u
@@ -1722,19 +1722,19 @@ summary(mod2, rotate = 'oblimin') #oblimin rotation
 #> Rotated factor loadings: 
 #> 
 #>            F1     F2    h2
-#> Item.1  0.795 -0.011 0.624
-#> Item.2  0.081  0.463 0.255
-#> Item.3 -0.013  0.863 0.735
+#> Item.1  0.794 -0.011 0.623
+#> Item.2  0.080  0.463 0.255
+#> Item.3 -0.013  0.863 0.734
 #> Item.4  0.279  0.193 0.165
-#> Item.5  0.293  0.178 0.165
+#> Item.5  0.293  0.177 0.165
 #> 
-#> Rotated SS loadings:  0.803 1.028 
+#> Rotated SS loadings:  0.801 1.027 
 #> 
 #> Factor correlations: 
 #> 
 #>       F1 F2
 #> F1 1.000   
-#> F2 0.462  1
+#> F2 0.463  1
 residuals(mod2)
 #> LD matrix (lower triangle) and standardized residual correlations (upper triangle)
 #> 
@@ -1744,10 +1744,10 @@ residuals(mod2)
 #> 
 #>        Item.1 Item.2 Item.3 Item.4 Item.5
 #> Item.1        -0.001  0.001  0.002  0.003
-#> Item.2  0.001        -0.001  0.011 -0.018
+#> Item.2  0.001         0.000  0.011 -0.018
 #> Item.3  0.001  0.000        -0.002  0.006
-#> Item.4  0.002  0.113  0.004        -0.001
-#> Item.5  0.008  0.324  0.040  0.001       
+#> Item.4  0.002  0.111  0.004        -0.001
+#> Item.5  0.008  0.325  0.041  0.001       
 plot(mod2)
 
 plot(mod2, rotate = 'oblimin')
@@ -1756,32 +1756,32 @@ plot(mod2, rotate = 'oblimin')
 anova(mod1, mod2) #compare the two models
 #>           AIC    SABIC       HQ      BIC    logLik     X2 df     p
 #> mod1 5337.610 5354.927 5356.263 5386.688 -2658.805                
-#> mod2 5335.039 5359.283 5361.153 5403.747 -2653.519 10.571  4 0.032
+#> mod2 5335.039 5359.283 5361.153 5403.748 -2653.520 10.571  4 0.032
 scoresfull <- fscores(mod2) #factor scores for each response pattern
 head(scoresfull)
 #>             F1        F2
-#> [1,] -1.718859 -1.667784
-#> [2,] -1.718859 -1.667784
-#> [3,] -1.718859 -1.667784
-#> [4,] -1.718859 -1.667784
-#> [5,] -1.718859 -1.667784
-#> [6,] -1.718859 -1.667784
+#> [1,] -1.719274 -1.668055
+#> [2,] -1.719274 -1.668055
+#> [3,] -1.719274 -1.668055
+#> [4,] -1.719274 -1.668055
+#> [5,] -1.719274 -1.668055
+#> [6,] -1.719274 -1.668055
 scorestable <- fscores(mod2, full.scores = FALSE) #save factor score table
 head(scorestable)
 #>      Item.1 Item.2 Item.3 Item.4 Item.5        F1         F2     SE_F1
-#> [1,]      0      0      0      0      0 -1.718859 -1.6677842 0.7042053
-#> [2,]      0      0      0      0      1 -1.422255 -1.4651004 0.6861723
-#> [3,]      0      0      0      1      0 -1.431385 -1.4555640 0.6864133
-#> [4,]      0      0      0      1      1 -1.146684 -1.2706644 0.6820409
-#> [5,]      0      0      1      0      0 -1.478001 -0.5503137 0.6869299
-#> [6,]      0      0      1      0      1 -1.193533 -0.3695501 0.6827360
+#> [1,]      0      0      0      0      0 -1.719274 -1.6680545 0.7045474
+#> [2,]      0      0      0      0      1 -1.421853 -1.4651839 0.6866316
+#> [3,]      0      0      0      1      0 -1.431028 -1.4555325 0.6868679
+#> [4,]      0      0      0      1      1 -1.145435 -1.2703983 0.6826104
+#> [5,]      0      0      1      0      0 -1.477465 -0.5519451 0.6873379
+#> [6,]      0      0      1      0      1 -1.192132 -0.3709519 0.6832859
 #>          SE_F2
-#> [1,] 0.6811298
-#> [2,] 0.6510689
-#> [3,] 0.6498178
-#> [4,] 0.6278820
-#> [5,] 0.6223793
-#> [6,] 0.6411647
+#> [1,] 0.6813387
+#> [2,] 0.6513710
+#> [3,] 0.6501110
+#> [4,] 0.6282706
+#> [5,] 0.6227697
+#> [6,] 0.6414575
 
 # confirmatory (as an example, model is not identified since you need 3 items per factor)
 # Two ways to define a confirmatory model: with mirt.model, or with a string
@@ -1823,7 +1823,7 @@ coef(cmod)
 anova(cmod, mod2)
 #>           AIC    SABIC       HQ      BIC    logLik     X2 df p
 #> cmod 5392.596 5409.913 5411.249 5441.674 -2686.298            
-#> mod2 5335.039 5359.283 5361.153 5403.747 -2653.519 65.558  4 0
+#> mod2 5335.039 5359.283 5361.153 5403.748 -2653.520 65.557  4 0
 # check if identified by computing information matrix
 (cmod <- mirt(data, cmodel, SE = TRUE))
 #> Warning: Could not invert information matrix; model may not be (empirically) identified.
@@ -2173,19 +2173,19 @@ itemplot(nomod, 3)
 #> Number of rectangular quadrature: 61
 #> Latent density type: Gaussian 
 #> 
-#> Log-likelihood = -1624.054
+#> Log-likelihood = -1624.055
 #> Estimated parameters: 20 
-#> AIC = 3288.108
-#> BIC = 3367.533; SABIC = 3304.074
-#> G2 (235) = 243.93, p = 0.3309
+#> AIC = 3288.111
+#> BIC = 3367.536; SABIC = 3304.077
+#> G2 (235) = 243.93, p = 0.3308
 #> RMSEA = 0.01, CFI = NaN, TLI = NaN
 coef(ggum, simplify=TRUE)
 #> $items
 #>            a1     b1    t1    t2     t3
-#> Comfort 1.489 -0.483 3.189 2.633 -0.167
-#> Work    1.190  0.042 2.171 1.427 -0.720
-#> Future  4.163 -0.041 2.167 1.346  0.261
-#> Benefit 1.227 -0.474 2.774 1.496 -0.274
+#> Comfort 1.491 -0.481 3.186 2.630 -0.166
+#> Work    1.190  0.045 2.171 1.427 -0.720
+#> Future  4.160 -0.039 2.167 1.346  0.260
+#> Benefit 1.229 -0.471 2.772 1.495 -0.274
 #> 
 #> $means
 #> F1 
@@ -2352,13 +2352,13 @@ itemstats(data)
 mod1 <- mirt(data, 1)
 extract.mirt(mod1, 'time') #time elapsed for each estimation component
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.331  0.043  0.081  0.188  0.000  0.001 
+#>  0.261  0.030  0.063  0.152  0.000  0.001 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 mod1 <- mirt(data, 1, optimizer = 'NR')
 extract.mirt(mod1, 'time')
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.206  0.031  0.071  0.079  0.000  0.001 
+#>  0.156  0.022  0.051  0.063  0.000  0.001 
 
 mod2 <- mirt(data, 2, optimizer = 'NR')
 # difficulty converging with reduced quadpts, reduce TOL
@@ -2749,75 +2749,75 @@ mod1 <- mirt(dataset, model.1, method = 'MHRM')
 coef(mod1)
 #> $Item_1
 #>        a1 a2      d g u
-#> par 1.444  0 -0.919 0 1
+#> par 2.437  0 -1.278 0 1
 #> 
 #> $Item_2
-#>        a1 a2      d g u
-#> par 0.455  0 -1.537 0 1
+#>       a1 a2      d g u
+#> par 0.42  0 -1.439 0 1
 #> 
 #> $Item_3
-#>        a1 a2    d g u
-#> par 0.895  0 1.38 0 1
+#>        a1 a2     d g u
+#> par 1.021  0 1.496 0 1
 #> 
 #> $Item_4
-#>        a1    a2     d g u
-#> par 1.063 0.521 -0.03 0 1
+#>        a1    a2    d g u
+#> par 0.888 0.698 0.02 0 1
 #> 
 #> $Item_5
-#>     a1    a2    d1    d2   d3
-#> par  0 1.239 2.906 1.909 -0.5
+#>     a1    a2    d1    d2     d3
+#> par  0 1.508 2.976 1.946 -0.512
 #> 
 #> $Item_6
-#>     a1    a2    d1    d2    d3
-#> par  0 0.469 2.438 1.062 -0.99
+#>     a1    a2    d1    d2     d3
+#> par  0 0.508 2.431 0.962 -0.979
 #> 
 #> $Item_7
-#>     a1    a2    d1     d2
-#> par  0 0.926 1.983 -0.004
+#>     a1    a2    d1    d2
+#> par  0 1.082 2.087 0.044
 #> 
 #> $Item_8
 #>     a1    a2     d g u
-#> par  0 0.848 0.997 0 1
+#> par  0 1.014 0.985 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-#> par      0      0      1  0.517      1
+#> par      0      0      1  0.327      1
 #> 
 summary(mod1)
 #>           F1    F2    h2
-#> Item_1 0.647       0.419
-#> Item_2 0.258       0.067
-#> Item_3 0.466       0.217
-#> Item_4 0.513 0.251 0.326
-#> Item_5       0.588 0.346
-#> Item_6       0.266 0.071
-#> Item_7       0.478 0.229
-#> Item_8       0.446 0.199
+#> Item_1 0.820       0.672
+#> Item_2 0.240       0.057
+#> Item_3 0.515       0.265
+#> Item_4 0.435 0.342 0.306
+#> Item_5       0.663 0.440
+#> Item_6       0.286 0.082
+#> Item_7       0.537 0.288
+#> Item_8       0.512 0.262
 #> 
-#> SS loadings:  0.965 0.908 
-#> Proportion Var:  0.121 0.113 
+#> SS loadings:  1.184 1.188 
+#> Proportion Var:  0.148 0.148 
 #> 
 #> Factor correlations: 
 #> 
 #>       F1 F2
 #> F1 1.000   
-#> F2 0.517  1
+#> F2 0.327  1
 residuals(mod1)
 #> LD matrix (lower triangle) and standardized residual correlations (upper triangle)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.056  -0.020   0.005   0.004   0.033   0.079 
+#>  -0.054  -0.021  -0.007  -0.001   0.024   0.049 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1         0.007 -0.004 -0.009  0.041  0.063  0.029 -0.052
-#> Item_2  0.085         0.007 -0.010  0.023 -0.047 -0.010  0.003
-#> Item_3  0.025  0.108         0.015 -0.038  0.047 -0.019 -0.013
-#> Item_4  0.163  0.216  0.463         0.034  0.032  0.013 -0.037
-#> Item_5  3.301  1.069  2.918  2.322        -0.033 -0.023  0.079
-#> Item_6  8.059  4.412  4.381  2.078  6.496        -0.056  0.037
-#> Item_7  1.631  0.212  0.703  0.363  2.059 12.438         0.037
-#> Item_8  5.372  0.014  0.341  2.752 12.638  2.682  2.681       
+#> Item_1         0.004 -0.010 -0.006  0.040  0.027  0.016 -0.017
+#> Item_2  0.038         0.003 -0.011  0.031  0.026 -0.008 -0.031
+#> Item_3  0.211  0.013         0.013 -0.054 -0.046 -0.017 -0.027
+#> Item_4  0.062  0.221  0.340        -0.022  0.023  0.025 -0.021
+#> Item_5  3.134  1.946  5.879  0.938         0.033 -0.024  0.023
+#> Item_6  1.478  1.395  4.222  1.090  6.646        -0.032 -0.021
+#> Item_7  0.494  0.129  0.550  1.212  2.278  3.984         0.049
+#> Item_8  0.609  1.940  1.464  0.889  1.034  0.865  4.774       
 
 #####
 # bifactor
@@ -2829,36 +2829,36 @@ model.3 <- '
 mod3 <- mirt(dataset,model.3, method = 'MHRM')
 coef(mod3)
 #> $Item_1
-#>        a1    a2 a3      d g u
-#> par 1.055 0.734  0 -0.876 0 1
+#>       a1    a2 a3      d g u
+#> par 0.99 1.429  0 -1.047 0 1
 #> 
 #> $Item_2
 #>        a1    a2 a3      d g u
-#> par 0.233 0.524  0 -1.573 0 1
+#> par 0.181 0.391  0 -1.442 0 1
 #> 
 #> $Item_3
 #>        a1    a2 a3     d g u
-#> par 0.664 0.657  0 1.395 0 1
+#> par 0.412 1.137  0 1.584 0 1
 #> 
 #> $Item_4
-#>        a1    a2 a3      d g u
-#> par 1.421 0.524  0 -0.032 0 1
+#>        a1    a2 a3    d g u
+#> par 1.495 0.722  0 0.02 0 1
 #> 
 #> $Item_5
-#>       a1 a2    a3    d1    d2     d3
-#> par 0.94  0 0.602 2.807 1.838 -0.482
+#>        a1 a2    a3    d1    d2     d3
+#> par 1.134  0 1.107 3.038 1.991 -0.518
 #> 
 #> $Item_6
-#>        a1 a2    a3   d1    d2    d3
-#> par 0.417  0 0.225 2.44 1.064 -0.99
+#>        a1 a2    a3   d1    d2     d3
+#> par 0.412  0 0.332 2.44 0.967 -0.982
 #> 
 #> $Item_7
-#>        a1 a2    a3    d1     d2
-#> par 0.734  0 0.575 1.984 -0.004
+#>        a1 a2    a3    d1    d2
+#> par 0.828  0 0.639 2.063 0.047
 #> 
 #> $Item_8
-#>        a1 a2    a3    d g u
-#> par 0.478  0 1.345 1.19 0 1
+#>        a1 a2    a3     d g u
+#> par 0.642  0 0.874 1.008 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33
@@ -2866,17 +2866,17 @@ coef(mod3)
 #> 
 summary(mod3)
 #>            G    F1    F2    h2
-#> Item_1 0.495 0.344       0.363
-#> Item_2 0.130 0.292       0.102
-#> Item_3 0.342 0.338       0.231
-#> Item_4 0.624 0.230       0.442
-#> Item_5 0.462       0.296 0.301
-#> Item_6 0.236       0.128 0.072
-#> Item_7 0.378       0.296 0.231
-#> Item_8 0.215       0.605 0.413
+#> Item_1 0.407 0.587       0.511
+#> Item_2 0.103 0.223       0.060
+#> Item_3 0.197 0.545       0.335
+#> Item_4 0.629 0.304       0.488
+#> Item_5 0.488       0.476 0.464
+#> Item_6 0.231       0.186 0.088
+#> Item_7 0.414       0.320 0.274
+#> Item_8 0.318       0.433 0.289
 #> 
-#> SS loadings:  1.226 0.371 0.558 
-#> Proportion Var:  0.153 0.046 0.07 
+#> SS loadings:  1.175 0.783 0.551 
+#> Proportion Var:  0.147 0.098 0.069 
 #> 
 #> Factor correlations: 
 #> 
@@ -2889,21 +2889,21 @@ residuals(mod3)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.056  -0.029  -0.004  -0.002   0.017   0.079 
+#>  -0.045  -0.022  -0.007  -0.001   0.018   0.055 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1         0.007  0.007 -0.007 -0.035  0.050 -0.028 -0.026
-#> Item_2  0.100        -0.004 -0.006  0.029 -0.045 -0.004  0.018
-#> Item_3  0.091  0.032         0.010 -0.044  0.043 -0.021  0.007
-#> Item_4  0.097  0.078  0.193         0.033 -0.032  0.012  0.016
-#> Item_5  2.500  1.655  3.899  2.164        -0.031 -0.019  0.079
-#> Item_6  5.067  4.025  3.641  2.073  5.841        -0.056 -0.037
-#> Item_7  1.614  0.027  0.898  0.304  1.423 12.427         0.018
-#> Item_8  1.331  0.663  0.102  0.533 12.495  2.678  0.630       
+#> Item_1         0.015  0.003 -0.007  0.035  0.017 -0.021 -0.013
+#> Item_2  0.445        -0.007 -0.014  0.032  0.026 -0.008 -0.027
+#> Item_3  0.018  0.094         0.003  0.055 -0.045  0.017 -0.014
+#> Item_4  0.106  0.384  0.017        -0.021  0.020  0.019  0.004
+#> Item_5  2.422  1.991  6.004  0.910        -0.034 -0.023 -0.026
+#> Item_6  0.559  1.379  4.104  0.823  6.761        -0.032 -0.022
+#> Item_7  0.872  0.131  0.570  0.749  2.099  4.145         0.050
+#> Item_8  0.327  1.486  0.411  0.028  1.351  0.971  5.042       
 anova(mod1,mod3)
-#>           AIC    SABIC       HQ      BIC    logLik     X2 df     p
-#> mod1 24888.37 24944.12 24935.67 25017.19 -12421.18                
-#> mod3 24885.93 24956.22 24945.57 25048.36 -12413.97 14.436  6 0.025
+#>           AIC    SABIC       HQ      BIC    logLik     X2 df   p
+#> mod1 24892.54 24948.29 24939.84 25021.36 -12423.27              
+#> mod3 24906.59 24976.88 24966.23 25069.01 -12424.29 -2.044  6 NaN
 
 #####
 # polynomial/combinations
@@ -3112,7 +3112,7 @@ print(mod)
 #>     solnp_args = list(eqfun = eqfun, eqB = 0, LB = LB), sv = sv)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
-#> Converged within 1e-04 tolerance after 34 EM iterations.
+#> Converged within 1e-04 tolerance after 35 EM iterations.
 #> mirt version: 1.48.4 
 #> M-step optimizer: solnp 
 #> EM acceleration: Ramsay 
@@ -3121,8 +3121,8 @@ print(mod)
 #> 
 #> Log-likelihood = -2466.943
 #> Estimated parameters: 7 
-#> AIC = 4947.887
-#> BIC = 4982.241; SABIC = 4960.009
+#> AIC = 4947.886
+#> BIC = 4982.24; SABIC = 4960.008
 #> G2 (25) = 21.81, p = 0.6467
 #> RMSEA = 0, CFI = NaN, TLI = NaN
 coef(mod)
@@ -3152,9 +3152,9 @@ coef(mod)
 #> 
 (ds <- sapply(coef(mod)[1:5], function(x) x[,'d']))
 #>     Item_1     Item_2     Item_3     Item_4     Item_5 
-#>  1.2529337 -0.4754395 -1.2327089 -0.1681680  0.6233827 
+#>  1.2529330 -0.4754351 -1.2327545 -0.1681543  0.6234109 
 sum(ds)
-#> [1] 4.746203e-15
+#> [1] 4.857226e-15
 
 # same likelihood location as: mirt(dat, 1, itemtype = 'Rasch')
 
@@ -3809,19 +3809,19 @@ coef(dav, simplify=TRUE)
 #> F1  1
 #> 
 #> $Davidian_phis
-#> [1]  1.289  0.086 -0.444  1.245
+#> [1]  1.289  0.086 -0.443  1.245
 #> 
 
 fs <- fscores(dav) # assume normal prior
 fs2 <- fscores(dav, use_dentype_estimate=TRUE) # use Davidian estimated prior shape
 head(cbind(fs, fs2))
-#>               F1           F1
-#> [1,]  2.66816339  3.599626266
-#> [2,]  0.14646530  0.070480859
-#> [3,]  0.06799819  0.004015247
-#> [4,] -0.41578752 -0.426765175
-#> [5,]  0.67024833  0.559794543
-#> [6,]  0.45474709  0.353802738
+#>              F1           F1
+#> [1,]  2.6681968  3.599659967
+#> [2,]  0.1464891  0.070497483
+#> [3,]  0.0680185  0.004029272
+#> [4,] -0.4157811 -0.426760750
+#> [5,]  0.6702831  0.559825442
+#> [6,]  0.4547753  0.353824009
 
 itemfit(dav) # assume normal prior
 #> Error: Only X2, G2, PV_Q1, PV_Q1*, infit, X2*, and X2*_df can be computed with missing data.
@@ -5032,10 +5032,10 @@ coef(mod, simplify=TRUE)
 #> Item_16  0  1  0.623 0 1    NA     NA
 #> Item_17  0  1 -0.286 0 1    NA     NA
 #> Item_18  0  1 -2.592 0 1    NA     NA
-#> Item_19  1  1     NA 0 1 2.869  0.013
-#> Item_20  1  1     NA 0 1 3.715  0.832
+#> Item_19  1  1     NA 0 1 2.870  0.013
+#> Item_20  1  1     NA 0 1 3.716  0.832
 #> Item_21  1  1     NA 0 1 3.238  1.900
-#> Item_22  1  1     NA 0 1 4.411 -0.175
+#> Item_22  1  1     NA 0 1 4.412 -0.175
 #> Item_23  1  1     NA 0 1 3.538  0.866
 #> Item_24  1  1     NA 0 1 2.850  1.890
 #> Item_25  1  1     NA 0 1 1.197 -0.137
@@ -5056,36 +5056,36 @@ coef(mod, simplify=TRUE)
 #> 
 data.frame(est=coef(mod, simplify=TRUE)$items, pop=data.frame(a=as, d=ds))
 #>         est.a1 est.a2       est.d est.g est.u    est.d1      est.d2 pop.a.1
-#> Item_1       1      0  1.31302535     0     1        NA          NA       1
-#> Item_2       1      0 -0.56332978     0     1        NA          NA       1
-#> Item_3       1      0  0.30307730     0     1        NA          NA       1
-#> Item_4       1      0  0.66013005     0     1        NA          NA       1
-#> Item_5       1      0  0.39263538     0     1        NA          NA       1
-#> Item_6       1      0 -0.10532116     0     1        NA          NA       1
-#> Item_7       1      0  1.40424007     0     1        NA          NA       1
-#> Item_8       1      0 -0.14745369     0     1        NA          NA       1
-#> Item_9       1      0  2.01304066     0     1        NA          NA       1
-#> Item_10      0      1 -0.14051153     0     1        NA          NA       1
-#> Item_11      0      1  1.22727001     0     1        NA          NA       0
-#> Item_12      0      1  2.35002518     0     1        NA          NA       0
-#> Item_13      0      1 -1.42946122     0     1        NA          NA       0
-#> Item_14      0      1 -0.19284343     0     1        NA          NA       0
-#> Item_15      0      1 -0.09795637     0     1        NA          NA       0
-#> Item_16      0      1  0.62282814     0     1        NA          NA       0
-#> Item_17      0      1 -0.28629565     0     1        NA          NA       0
-#> Item_18      0      1 -2.59215685     0     1        NA          NA       0
-#> Item_19      1      1          NA     0     1 2.8693522  0.01319573       1
-#> Item_20      1      1          NA     0     1 3.7153631  0.83158035       1
-#> Item_21      1      1          NA     0     1 3.2380859  1.90023678       1
-#> Item_22      1      1          NA     0     1 4.4108591 -0.17463153       1
-#> Item_23      1      1          NA     0     1 3.5379186  0.86645105       1
-#> Item_24      1      1          NA     0     1 2.8503239  1.88963559       1
-#> Item_25      1      1          NA     0     1 1.1969907 -0.13667369       1
-#> Item_26      1      1          NA     0     1 1.0376296  0.97510678       1
-#> Item_27      1      1          NA     0     1 1.0632309  1.81847865       1
-#> Item_28      1      1          NA     0     1 0.9701956 -0.13756753       1
-#> Item_29      1      1          NA     0     1 0.9015571  1.00979663       1
-#> Item_30      1      1          NA     0     1 1.0147785  1.91408534       1
+#> Item_1       1      0  1.31302745     0     1        NA          NA       1
+#> Item_2       1      0 -0.56332983     0     1        NA          NA       1
+#> Item_3       1      0  0.30308006     0     1        NA          NA       1
+#> Item_4       1      0  0.66013376     0     1        NA          NA       1
+#> Item_5       1      0  0.39263842     0     1        NA          NA       1
+#> Item_6       1      0 -0.10531978     0     1        NA          NA       1
+#> Item_7       1      0  1.40424151     0     1        NA          NA       1
+#> Item_8       1      0 -0.14745245     0     1        NA          NA       1
+#> Item_9       1      0  2.01304210     0     1        NA          NA       1
+#> Item_10      0      1 -0.14051521     0     1        NA          NA       1
+#> Item_11      0      1  1.22726229     0     1        NA          NA       0
+#> Item_12      0      1  2.35001452     0     1        NA          NA       0
+#> Item_13      0      1 -1.42946165     0     1        NA          NA       0
+#> Item_14      0      1 -0.19284692     0     1        NA          NA       0
+#> Item_15      0      1 -0.09796021     0     1        NA          NA       0
+#> Item_16      0      1  0.62282172     0     1        NA          NA       0
+#> Item_17      0      1 -0.28629879     0     1        NA          NA       0
+#> Item_18      0      1 -2.59215413     0     1        NA          NA       0
+#> Item_19      1      1          NA     0     1 2.8696010  0.01315105       1
+#> Item_20      1      1          NA     0     1 3.7157417  0.83152980       1
+#> Item_21      1      1          NA     0     1 3.2381813  1.90019557       1
+#> Item_22      1      1          NA     0     1 4.4117886 -0.17467036       1
+#> Item_23      1      1          NA     0     1 3.5381487  0.86641278       1
+#> Item_24      1      1          NA     0     1 2.8503840  1.88959875       1
+#> Item_25      1      1          NA     0     1 1.1970784 -0.13672450       1
+#> Item_26      1      1          NA     0     1 1.0376782  0.97505066       1
+#> Item_27      1      1          NA     0     1 1.0632624  1.81841586       1
+#> Item_28      1      1          NA     0     1 0.9702887 -0.13762837       1
+#> Item_29      1      1          NA     0     1 0.9016123  1.00972867       1
+#> Item_30      1      1          NA     0     1 1.0148124  1.91401317       1
 #>         pop.a.2 pop.d.d1    pop.d.d2
 #> Item_1        0       NA  1.37095845
 #> Item_2        0       NA -0.56469817

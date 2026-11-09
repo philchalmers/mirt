@@ -279,8 +279,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -2465.25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimated parameters: 17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 4964.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 5047.932; SABIC = 4993.939</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 4964.499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 5047.931; SABIC = 4993.938</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> G2 (14) = 18.42, p = 0.1882, RMSEA = 0.018</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_1</span>
@@ -355,7 +355,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod2</span>, <span class="va">mod3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           AIC    SABIC       HQ      BIC    logLik    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod2 4956.816 4975.865 4977.335 5010.802 -2467.408               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod3 4964.500 4993.939 4996.210 5047.932 -2465.250 4.316  6 0.634</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod3 4964.499 4993.938 4996.209 5047.931 -2465.250 4.317  6 0.634</span>
 <span class="r-in"><span><span class="fu"><a href="M2.html">M2</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          M2 df    p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stats 4.604  4 0.33 0.012       0    0.051 0.021 0.973 0.989</span>
@@ -380,28 +380,28 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Comfort</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2 category_3 category_4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.018      0.095      0.766      0.121</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.000      0.051      0.474      0.475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.021      0.097      0.773      0.109</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.000      0.059      0.534      0.407</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Work</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2 category_3 category_4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.115      0.329      0.520      0.036</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.013      0.065      0.537      0.385</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.125      0.339      0.504      0.033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.022      0.115      0.559      0.304</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Future</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2 category_3 category_4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.051      0.262      0.619      0.068</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.001      0.000      0.340      0.659</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.059      0.304      0.637      0.001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.001      0.000      0.381      0.617</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Benefit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2 category_3 category_4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.072      0.323      0.516      0.089</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.011      0.097      0.437      0.455</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.074      0.339      0.508      0.079</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.022      0.127      0.468      0.382</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Class.Probability</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           F1 F2  prob</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_1  1  0 0.701</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_2  0  1 0.299</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_1  1  0 0.604</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_2  0  1 0.396</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="mdirt-4.png" alt="" width="700" height="433"></span>
@@ -418,7 +418,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]      0      0      1      0      0 0.94030147 0.05969853</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]      0      0      1      0      1 0.82016986 0.17983014</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]      0      0      1      1      0 0.81359256 0.18640744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]      0      0      1      1      1 0.55826671 0.44173329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]      0      0      1      1      1 0.55826672 0.44173328</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]      0      1      0      0      0 0.95646627 0.04353373</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [10,]      0      1      0      0      1 0.86416411 0.13583589</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11,]      0      1      0      1      1 0.63805843 0.36194157</span>
@@ -426,7 +426,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13,]      0      1      1      1      0 0.53111944 0.46888056</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [14,]      0      1      1      1      1 0.24698538 0.75301462</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [15,]      1      0      0      0      0 0.94648118 0.05351882</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16,]      1      0      0      0      1 0.83662439 0.16337561</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16,]      1      0      0      0      1 0.83662440 0.16337560</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [17,]      1      0      0      1      0 0.83052457 0.16947543</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [18,]      1      0      0      1      1 0.58660671 0.41339329</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [19,]      1      0      1      0      0 0.76692257 0.23307743</span>
@@ -572,10 +572,10 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: discrete</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -9429.721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -9429.724</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimated parameters: 103 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 19065.44</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 19518.33; SABIC = 19191.33</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 19065.45</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 19518.33; SABIC = 19191.34</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> G2 (4294967192) = 11189.72, p = 1, RMSEA = 0</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod_discrete</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.1</span>
@@ -606,7 +606,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 0]      0.929      0.071</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.338      0.662</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.870      0.130</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.271      0.729</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.270      0.730</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1]      0.829      0.171</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 1]      0.159      0.841</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 1]      0.713      0.287</span>
@@ -619,14 +619,14 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.609      0.391</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.428      0.572</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1]      0.802      0.198</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 1]      0.178      0.822</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 1]      0.177      0.823</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 1]      0.538      0.462</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          category_1 category_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 0]      0.837      0.163</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.262      0.738</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.263      0.737</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.647      0.353</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.137      0.863</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1]      0.449      0.551</span>
@@ -651,7 +651,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.283      0.717</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.563      0.437</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.088      0.912</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1]      0.241      0.759</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1]      0.240      0.760</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 1]      0.037      0.963</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 1]      0.111      0.889</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -660,10 +660,10 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 0]      0.866      0.134</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.572      0.428</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.896      0.104</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.897      0.103</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.422      0.578</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1]      0.826      0.174</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 1]      0.494      0.506</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 1]      0.495      0.505</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 1]      0.864      0.136</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.9</span>
@@ -769,7 +769,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span>          category_1 category_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 0]      0.977      0.023</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.218      0.782</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.217      0.783</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.922      0.078</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.090      0.910</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1]      0.808      0.192</span>
@@ -780,12 +780,12 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span>          category_1 category_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 0]      0.830      0.170</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.292      0.708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.291      0.709</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.668      0.332</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.200      0.800</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1]      0.550      0.450</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 1]      0.093      0.907</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 1]      0.335      0.665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 1]      0.334      0.666</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          category_1 category_2</span>
@@ -814,7 +814,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 0]      0.997      0.003</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.001      0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.210      0.790</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.209      0.791</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.000      1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1]      0.055      0.945</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 1]      0.000      1.000</span>
@@ -826,7 +826,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 0]      0.864      0.136</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.284      0.716</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.717      0.283</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.422      0.578</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1]      0.823      0.177</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 1]      0.225      0.775</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 1]      0.649      0.351</span>
@@ -913,7 +913,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 0]      0.977      0.023</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 0]      0.024      0.976</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.510      0.490</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0]      0.509      0.491</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1]      0.005      0.995</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1]      0.166      0.834</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1 1]      0.000      1.000</span>
@@ -953,7 +953,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> mdirt(data = dat, model = model, customTheta = diag(3))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent class model with 3 classes and 3 profiles.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 364 EM iterations.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 343 EM iterations.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.48.4 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: nlminb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay</span>
@@ -962,7 +962,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -12771.08</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimated parameters: 5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 25552.15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 25574.14; SABIC = 25558.26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 25574.14; SABIC = 25558.27</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> G2 (4294967290) = 17872.43, p = 1, RMSEA = 0</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod_located</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.1</span>
@@ -1159,8 +1159,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Class.Probability</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           C1 C2 C3  prob</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_1  1  0  0 0.339</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_2  0  1  0 0.497</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_1  1  0  0 0.338</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_2  0  1  0 0.498</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Profile_3  0  0  1 0.164</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
@@ -1371,25 +1371,25 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">DINO</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             a1     a2    a3    a4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  -0.742 -1.825 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  -0.401 -1.133 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  -0.547 -3.156 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   0.580 -2.109 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  -0.045 -1.616 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  -2.821  0.000 2.662 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  -0.742 -1.826 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  -0.401 -1.134 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  -0.548 -3.165 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   0.580 -2.111 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  -0.045 -1.617 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  -2.819  0.000 2.661 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  -1.188  0.000 1.458 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  -1.155  0.000 1.055 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  -1.583  0.000 1.122 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 -1.737  0.000 1.429 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 -0.939  1.164 1.164 1.164</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 -1.959  1.579 1.579 1.579</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -2.089  0.915 0.915 0.915</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 -3.724  1.850 1.850 1.850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  -1.154  0.000 1.055 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  -1.583  0.000 1.121 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 -1.737  0.000 1.428 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 -0.938  1.164 1.164 1.164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 -1.958  1.578 1.578 1.578</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -2.088  0.915 0.915 0.915</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 -3.721  1.847 1.847 1.847</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 -1.131  1.075 1.075 1.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group.intercepts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        c1    c2    c3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 2.017 1.078 2.937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 2.021 1.081 2.941</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">DINO</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_1</span>
@@ -1423,9 +1423,9 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             category_1 category_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 0 0]       0.511      0.489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0 0]       0.840      0.160</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 0 0]       0.841      0.159</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0 1 0]       0.511      0.489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 1 -1]      0.840      0.160</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 1 1 -1]      0.841      0.159</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             category_1 category_2</span>
@@ -1506,7 +1506,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="M2.html">M2</a></span><span class="op">(</span><span class="va">DINO</span><span class="op">)</span> <span class="co">#doesn't fit as well, because not the generating model</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            M2 df p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 146.488 87 0 0.026   0.019    0.033 0.041 0.784 0.821</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stats 146.487 87 0 0.026   0.019    0.033 0.041 0.784 0.821</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## C-RUM (analogous to MIRT model)</span></span></span>
 <span class="r-in"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="thetaComb.html">thetaComb</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -1682,42 +1682,42 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             a1     a2     a3    a4     a5    a6    a7   a8    a9  a10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1  -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2  -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3  -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4  -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5  -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.6  -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.7  -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.8  -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.9  -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.10 -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.11 -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.12 -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.13 -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.14 -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.15 -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.16 -0.929 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.17  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.18  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.19  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.20  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.21  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.22  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.23  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.24  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.25  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.26  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.27  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.28  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.29  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.30  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.31  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.32  0.000  0.000  0.000  0.00  0.000 0.308 0.447 1.39 1.397 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1  -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2  -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3  -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4  -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5  -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.6  -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.7  -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.8  -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.9  -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.10 -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.11 -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.12 -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.13 -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.14 -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.15 -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.16 -0.928 -0.682 -0.573 -0.54 -0.366 0.000 0.000 0.00 0.000 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.17  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.18  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.19  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.20  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.21  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.22  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.23  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.24  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.25  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.26  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.27  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.28  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.29  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.30  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.31  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.32  0.000  0.000  0.000  0.00  0.000 0.308 0.446 1.39 1.396 1.42</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group.intercepts</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         c1     c2    c3    c4    c5   c6    c7    c8   c9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par -2.737 -1.478 0.138 1.487 2.186 2.89 2.312 2.147 1.11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         c1     c2    c3    c4    c5    c6    c7    c8    c9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par -2.738 -1.479 0.135 1.486 2.185 2.887 2.314 2.145 1.113</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.1</span>
@@ -1935,7 +1935,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -1948,7 +1948,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -1961,7 +1961,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -1974,7 +1974,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -1987,7 +1987,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2000,7 +2000,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2013,7 +2013,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2026,7 +2026,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2039,7 +2039,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2052,7 +2052,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2065,7 +2065,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2078,7 +2078,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2091,7 +2091,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2104,7 +2104,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2117,7 +2117,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2130,7 +2130,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 1 0 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 1 0 0 0 0 0 0]      0.500      0.500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 1 0 0 0 0 0]      0.500      0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.423      0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 1 0 0 0 0]      0.424      0.576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802</span>
@@ -2142,9 +2142,9 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Profile_2   0  1  0  0  0  0  0  0  0   0 0.004</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Profile_3   0  0  1  0  0  0  0  0  0   0 0.021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Profile_4   0  0  0  1  0  0  0  0  0   0 0.080</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_5   0  0  0  0  1  0  0  0  0   0 0.160</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_6   0  0  0  0  0  1  0  0  0   0 0.325</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_7   0  0  0  0  0  0  1  0  0   0 0.182</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_5   0  0  0  0  1  0  0  0  0   0 0.161</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_6   0  0  0  0  0  1  0  0  0   0 0.324</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_7   0  0  0  0  0  0  1  0  0   0 0.183</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Profile_8   0  0  0  0  0  0  0  1  0   0 0.154</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Profile_9   0  0  0  0  0  0  0  0  1   0 0.055</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Profile_10  0  0  0  0  0  0  0  0  0   1 0.018</span>
@@ -2166,83 +2166,83 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             a1     a2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1  -1.462 -0.239</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2  -0.522  1.905</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3  -1.639 -0.087</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4  -1.181  0.113</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5  -0.149  1.966</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.6  -2.913 -1.120</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.7   0.469  2.107</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.8  -1.833 -0.732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1  -1.462 -0.238</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2  -0.522  1.906</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3  -1.638 -0.087</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4  -1.181  0.114</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5  -0.148  1.966</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.6  -2.913 -1.119</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.7   0.469  2.108</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.8  -1.833 -0.731</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.9   1.888  2.722</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.10 -0.972  0.380</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.11  4.482  9.736</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.10 -0.972  0.381</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.11  4.484  9.773</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.12 -0.381 -0.305</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.13  0.008  1.820</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.13  0.008  1.821</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.14  0.411  2.339</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.15  0.737  3.357</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.15  0.737  3.361</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.16 -0.997  0.141</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.17  2.648  4.629</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.18 -1.589  0.582</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.19 -0.415  1.056</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.20  1.253  4.568</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.18 -1.588  0.582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.19 -0.414  1.057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.20  1.254  4.563</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.21  1.959  3.169</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.22  1.965  9.170</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.23 -1.633 -0.394</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.24  0.270  2.349</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.25 -1.225  0.328</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.26 -0.974  1.196</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.27  1.151  9.489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.28 -0.478  1.176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.22  1.965  9.538</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.23 -1.633 -0.393</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.24  0.271  2.350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.25 -1.224  0.328</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.26 -0.973  1.197</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.27  1.152  9.565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.28 -0.478  1.177</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.29 -1.235  0.071</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.30 -0.514  0.150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.31  0.761  9.499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.31  0.761  9.575</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.32 -1.380 -1.742</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group.intercepts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        c1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.417</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             a1     a2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.1  -1.384 -0.426</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2  -0.490  1.720</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3  -1.885 -0.062</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4  -0.826  0.228</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5   0.001  1.267</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.6  -2.386 -0.601</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.7   0.857  2.667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.8  -1.887 -0.942</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.9   1.627  2.611</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.10 -1.047  0.943</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.11  3.082  9.620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2  -0.489  1.721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3  -1.885 -0.061</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4  -0.826  0.229</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5   0.001  1.268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.6  -2.386 -0.600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.7   0.857  2.670</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.8  -1.887 -0.941</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.9   1.628  2.611</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.10 -1.046  0.943</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.11  3.082  9.677</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.12 -0.487 -0.109</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.13  0.251  1.767</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.14  0.380  2.385</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.13  0.251  1.768</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.14  0.381  2.385</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.15  1.233  2.787</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.16 -0.740  0.606</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.17  2.958  9.571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.18 -1.969  0.782</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.19 -0.235  1.065</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.20  1.454  5.456</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.21  2.271  2.769</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.22  2.280  6.792</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.16 -0.740  0.607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.17  2.959  9.636</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.18 -1.968  0.783</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.19 -0.234  1.067</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.20  1.454  5.488</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.21  2.272  2.769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.22  2.281  6.757</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.23 -1.107  0.202</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.24  0.553  2.565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.24  0.553  2.568</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.25 -0.869  0.045</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.26 -1.273  1.388</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.27  1.381  3.527</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.28 -0.607  1.313</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.29 -1.391  0.200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.30 -0.476  0.112</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.31  1.208  4.733</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.32 -2.027 -1.482</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.26 -1.271  1.389</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.27  1.381  3.530</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.28 -0.606  1.313</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.29 -1.390  0.201</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.30 -0.476  0.113</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.31  1.209  4.732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.32 -2.027 -1.481</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group.intercepts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        c1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.417</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
@@ -2255,7 +2255,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.628      0.372</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.130      0.870</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.129      0.871</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
@@ -2265,7 +2265,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.765      0.235</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.472      0.528</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.471      0.529</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
@@ -2274,7 +2274,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.948      0.052</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.949      0.051</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.754      0.246</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.7</span>
@@ -2289,7 +2289,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.132      0.868</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.131      0.869</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.062      0.938</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.10</span>
@@ -2335,7 +2335,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.830      0.170</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.359      0.641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.358      0.642</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
@@ -2399,7 +2399,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.319      0.681</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.318      0.682</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.000      1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.32</span>
@@ -2409,8 +2409,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Class.Probability</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           A1 A2  prob</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_1  1  0 0.602</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_2  0  1 0.398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_1  1  0 0.603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_2  0  1 0.397</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G2</span>
@@ -2427,11 +2427,11 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.868      0.132</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.516      0.484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.515      0.485</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.696      0.304</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.695      0.305</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.443      0.557</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.5</span>
@@ -2501,7 +2501,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.878      0.122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.877      0.123</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.314      0.686</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.19</span>
@@ -2516,7 +2516,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.21</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.094      0.906</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.093      0.907</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.059      0.941</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.22</span>
@@ -2526,7 +2526,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.23</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.752      0.248</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.751      0.249</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.450      0.550</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.24</span>
@@ -2536,7 +2536,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.705      0.295</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.704      0.296</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.489      0.511</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.26</span>
@@ -2547,7 +2547,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.27</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P[1 0]      0.201      0.799</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.029      0.971</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P[0 1]      0.028      0.972</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2</span>
@@ -2576,8 +2576,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Class.Probability</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           A1 A2  prob</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_1  1  0 0.602</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_2  0  1 0.398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_1  1  0 0.603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Profile_2  0  1 0.397</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
