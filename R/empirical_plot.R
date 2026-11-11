@@ -328,7 +328,48 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop', group=NULL,
                                        },
                                        main = if(is.null(main)) "Reduced Item-Total Correlation" else main,
                                        xlab = 'Item', ylab='Correlation',
-                                       scales = list(x = list(rot = 90)), ...)
+                                       scales = list(x = list(rot = 90)),
+                                       auto.key=TRUE, ...)
+                return(plt)
+            }
+            if(type == 'difficulty'){
+                if(sort){
+                    ord <- order(is[[1]]$mean)
+                    lvls <- as.character(is[[1]]$item[ord])
+                    is <- lapply(is, \(x){
+                        x <- x[ord, ]
+                        x$item <- factor(as.character(x$item), levels=lvls)
+                        x
+                    })
+                }
+                grouplvl <- rep(names(is), each=nrow(is[[1]]))
+                isbind <- do.call(rbind, is)
+                isbind$group <- grouplvl
+                plt <- lattice::xyplot(mean ~ item, isbind, type = 'b', lty = 'dashed',
+                                       pch = 16, group=group,
+                                       main = if(is.null(main)) "Item Difficulty" else main,
+                                       xlab = 'Item', ylab='Mean',
+                                       scales = list(x = list(rot = 90)),
+                                       auto.key=TRUE, ...)
+                return(plt)
+            }
+            if(type == 'discrim_diff'){
+                grouplvl <- rep(names(is), each=nrow(is[[1]]))
+                isbind <- do.call(rbind, is)
+                isbind$group <- grouplvl
+                browser()
+                plt <- lattice::xyplot(cor_if_rm ~ mean | group, isbind,
+                                       pch = 16,
+                                       panel = function(x, y, subscripts, ...) {
+                                           panel.xyplot(x, y, ...)
+                                           panel.text(x, y, labels = is$item[subscripts],
+                                                      pos = 3, offset = 0.8, cex = 0.75, col = "black")
+                                           panel.abline(h = discrim.cut, col='red', lty=2)
+                                           panel.abline(h = 0, col='black', lty=1)
+                                       },
+                                       main = if(is.null(main)) "Difficulty by Discrimination" else main,
+                                       xlab = 'Mean', ylab='Reduced item-total correlation',
+                                       auto.key=TRUE, ...)
                 return(plt)
             }
 
