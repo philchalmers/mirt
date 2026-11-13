@@ -14,6 +14,8 @@
 #' @aliases empirical_plot
 #' @param data a \code{data.frame} or \code{matrix} of item responses (see \code{\link{mirt}}
 #'   for typical input)
+#' @param group (optional) grouping variable to be paired with \code{data} input to create comparisons
+#'   across discrete population subsets
 #' @param org.data identical to \code{data}, but contains the "unscored" response options (e.g.,
 #'   the original coding in a multiple-choice test). Used in various item-level plots for
 #'   diagnostic purposes, such as in distractor analyses. This will also automatically add
@@ -29,7 +31,9 @@
 #'      specified then item-level conditional proportions are instead plotted
 #'      against the reduced total scores}
 #'    \item{'hist'}{histogram of total scores}
-#'    \item{''}{heatmap of correlations. \code{...} arguments are passed to \code{\link{plot_cors}}}
+#'    \item{'cor'}{heatmap of correlations. \code{...} arguments are passed to \code{\link{plot_cors}}}
+#'    \item{'cordiff'}{heatmap of correlations differences (limited to cases when \code{group} has exactly
+#'      two levels). \code{...} arguments are passed to \code{\link{plot_cors}}}
 #'    \item{'bar'}{barplot of total scores}
 #'    \item{'freq'}{item response frequencies (supports \code{which.item})}
 #'    \item{'discrim'}{reduced item-total correlations to visualize discrimination effects}
@@ -50,6 +54,7 @@
 #' @param discrim.cut horizontal cut-off line to use when \code{type = 'discrim'}. Default
 #'   is .2 (to omit, use \code{NA})
 #' @param ts_fun similar to the same argument in \code{\link{itemstats}}
+#' @param devAskNewPage for plots that return multiple graphics, should there be user prompts?
 #' @param ... additional arguments to be passed to \code{\link[lattice]{lattice}} and \code{coef()}
 #' @keywords empirical plots
 #' @export empirical_plot
@@ -144,23 +149,83 @@
 #' empirical_plot(Science, type = 'freq')
 #'
 #'
+#' #####################
+#' # Using the group input
+#'
+#' # single factor
+#' set.seed(12345)
+#' a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+#' d <- matrix(rnorm(15,0,.7),ncol=1)
+#' itemtype <- rep('2PL', nrow(a))
+#' N <- 1000
+#' dataset1 <- simdata(a, d, N, itemtype)
+#' dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
+#' data <- rbind(dataset1, dataset2)
+#' group <- c(rep('D1', N), rep('D2', N))
+#'
+#' # test plot
+#' empirical_plot(data, group=group)
+#' empirical_plot(data, type = 'cor', group=group)
+#'
+#' # this is likely more useful
+#' empirical_plot(data, type = 'cordiff', group=group)
+#'
+#' empirical_plot(data, type = 'hist', group=group)
+#' empirical_plot(data, type = 'hist', ts_fun=rowMeans, group=group)
+#' empirical_plot(data, type = 'hist', breaks=20, group=group)
+#' empirical_plot(data, type = 'bar', group=group)
+#' empirical_plot(data, type = 'discrim', group=group)
+#' empirical_plot(data, type = 'discrim', sort=TRUE, group=group)
+#' empirical_plot(data, type = 'difficulty', group=group)
+#' empirical_plot(data, type = 'difficulty', sort=TRUE, group=group)
+#' empirical_plot(data, type = 'discrim_diff', group=group)
+#' empirical_plot(data, type = 'alpha_rm', group=group)
+#' empirical_plot(data, type = 'freq', group=group)
+#'
 #' }
-empirical_plot <- function(data, which.items = NULL, type = 'prop',
+empirical_plot <- function(data, which.items = NULL, type = 'prop', group=NULL,
                            smooth = FALSE, sort=FALSE, formula = resp ~ s(TS, k = 5),
                            org.data = NULL, ts_fun = rowSums,
                            discrim.cut = .2, main = NULL, par.strip.text = list(cex = 0.7),
+                           devAskNewPage = interactive(),
                            par.settings = list(strip.background = list(col = '#9ECAE1'),
                                                strip.border = list(col = "black")),
                            auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
     stopifnot(is.matrix(data) || is.data.frame(data))
-    if(is.null(which.items) && type %in% c("freq", 'boxplot', 'cor'))
+    if(is.null(which.items) && type %in% c("freq", 'boxplot', 'cor', 'cordiff'))
         which.items <- 1:ncol(data)
-    stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble', 'alpha_rm', 'bar', 'cor',
+    stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble', 'alpha_rm', 'bar', 'cor', 'cordiff',
                           'discrim', 'difficulty', 'discrim_diff', 'freq'))
     if(is.null(which.items))
         stopifnot("Must specify which.items"=type %in%
                       c('prop', 'hist', 'alpha_rm', 'discrim', 'difficulty', 'discrim_diff', 'bar'))
-    if(type == 'cor'){
+    if(type == 'cor' || type == 'cordiff'){
+        if(!is.null(group)){
+            if(!is.factor(group)) group <- factor(group)
+            ugroups <- unique(group)
+            ngroups <- length(unique(group))
+            ret <- vector('list', ngroups)
+            names(ret) <- ugroups
+            if(type == 'cordiff'){
+                stopifnot("cordiff only supported when there are two groups in group"=ngroups == 2)
+                R1 <- cor(subset(data, group == ugroups[1], select=which.items), use = 'pairwise.complete')
+                R2 <- cor(subset(data, group == ugroups[2], select=which.items), use = 'pairwise.complete')
+                ret <- plot_cors(R1 - R2,
+                                 main = sprintf('Difference between %s and %s',
+                                                ugroups[1], ugroups[2]), ...)
+                return(ret)
+            } else {
+                on.exit(devAskNewPage(options("device.ask.default")[[1]]), add=TRUE)
+                devAskNewPage(devAskNewPage)
+                for(i in 1:ngroups){
+                    ret[[i]] <- plot_cors(subset(data, group == ugroups[i],
+                                                select=which.items),
+                                          main = paste0('group: ', ugroups[i]), ...)
+                    print(ret[[i]])
+                }
+            }
+            return(invisible(ret))
+        }
         return(plot_cors(subset(data, select=which.items), ...))
     }
     if(type %in% c('boxplot', 'bubble')) smooth <- FALSE
@@ -183,91 +248,215 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
         key <- key[which.items]
     }
     TS <- ts_fun(data)
-    ord <- order(TS)
-    data <- data[ord,]
-    org.data <- org.data[ord,]
-    TS <- TS[ord]
+    if(is.null(group)){
+        ord <- order(TS)
+        data <- data[ord,]
+        org.data <- org.data[ord,]
+        TS <- TS[ord]
+    }
     tab <- table(TS)
     if(type %in% c('discrim', 'difficulty', 'discrim_diff', 'freq', 'alpha_rm')){
-        isummary <- itemstats(data, ts_fun=ts_fun, itemfreq = 'proportions')
-        is <- isummary$itemstats
-        is$item <- factor(rownames(is), levels=colnames(data))
-        if(type == 'discrim'){
-            if(sort){
-                is <- is[order(is$cor_if_rm),]
-                is$item <- factor(as.character(is$item), levels=as.character(is$item))
+        isummary <- itemstats(data, ts_fun=ts_fun, itemfreq = 'proportions', group=group)
+        if(is.null(group)){
+            is <- isummary$itemstats
+            is$item <- factor(rownames(is), levels=colnames(data))
+            if(type == 'discrim'){
+                if(sort){
+                    is <- is[order(is$cor_if_rm),]
+                    is$item <- factor(as.character(is$item), levels=as.character(is$item))
+                }
+                plt <- lattice::xyplot(cor_if_rm ~ item, is,
+                                       pch = 16,
+                                       panel = function(x, y, ...) {
+                                           panel.xyplot(x, y, type = 'b', lty = 'dashed', ...)
+                                           panel.abline(h = discrim.cut, col='red', lty=2)
+                                           panel.abline(h = 0, col='black', lty=1)
+                                       },
+                                       main = if(is.null(main)) "Reduced Item-Total Correlation" else main,
+                                       xlab = 'Item', ylab='Correlation',
+                                       scales = list(x = list(rot = 90)), ...)
+                return(plt)
             }
-            plt <- lattice::xyplot(cor_if_rm ~ item, is,
-                                   pch = 16,
-                                   panel = function(x, y, ...) {
-                                       panel.xyplot(x, y, ...)
-                                       panel.abline(h = discrim.cut, col='red', lty=2)
-                                       panel.abline(h = 0, col='black', lty=1)
-                                   },
-                                   main = if(is.null(main)) "Reduced Item-Total Correlation" else main,
-                                   xlab = 'Item', ylab='Correlation',
-                                   scales = list(x = list(rot = 90)), ...)
-            return(plt)
-        }
-        if(type == 'difficulty'){
-            if(sort){
-                is <- is[order(is$mean),]
-                is$item <- factor(as.character(is$item), levels=as.character(is$item))
+            if(type == 'difficulty'){
+                if(sort){
+                    is <- is[order(is$mean),]
+                    is$item <- factor(as.character(is$item), levels=as.character(is$item))
+                }
+                plt <- lattice::xyplot(mean ~ item, is, type = 'b', lty = 'dashed',
+                                       pch = 16,
+                                       main = if(is.null(main)) "Item Difficulty" else main,
+                                       xlab = 'Item', ylab='Mean',
+                                       scales = list(x = list(rot = 90)), ...)
+                return(plt)
             }
-            plt <- lattice::xyplot(mean ~ item, is,
-                                   pch = 16,
-                                   main = if(is.null(main)) "Item Difficulty" else main,
-                                   xlab = 'Item', ylab='Mean',
-                                   scales = list(x = list(rot = 90)), ...)
-            return(plt)
-        }
-        if(type == 'discrim_diff'){
-            plt <- lattice::xyplot(cor_if_rm ~ mean, is,
-                                   pch = 16,
-                                   panel = function(x, y, subscripts, ...) {
-                                       panel.xyplot(x, y, ...)
-                                       panel.text(x, y, labels = is$item[subscripts],
-                                                  pos = 3, offset = 0.8, cex = 0.75, col = "black")
-                                       panel.abline(h = discrim.cut, col='red', lty=2)
-                                       panel.abline(h = 0, col='black', lty=1)
-                                   },
-                                   main = if(is.null(main)) "Difficulty by Discrimination" else main,
-                                   xlab = 'Mean', ylab='Reduced item-total correlation', ...)
-            return(plt)
-        }
-        if(type == 'freq'){
-            Freq <- cbind(item=is$item, isummary$proportions * isummary$overall$N)[which.items,]
-            mlt <- reshape(Freq, varying=list(which(colnames(Freq) != 'item')),
-                           direction='long', v.names='freq', timevar = 'cat',
-                           times=colnames(isummary$proportions))
-            mlt$cat[is.na(mlt$cat)] <- '<NA>'
-            mlt$cat <- factor(mlt$cat)
-            col <- rep('#9ECAE1', length(levels(mlt$cat)))
-            if(any(mlt$cat == '<NA>')) col[length(col)] <- 'red'
-            plt <- lattice::barchart(freq ~ cat|item, mlt, horizontal = FALSE,
-                                     ylab = 'Frequency', xlab = 'Category', col = col,
-                              main = if(is.null(main)) "Item Response Frequency" else main, ...)
-            return(plt)
-        }
-        if(type == 'alpha_rm'){
-            if(sort){
-                is <- is[order(is$alpha_if_rm),]
-                is$item <- factor(as.character(is$item), levels=as.character(is$item))
+            if(type == 'discrim_diff'){
+                plt <- lattice::xyplot(cor_if_rm ~ mean, is,
+                                       pch = 16,
+                                       panel = function(x, y, subscripts, ...) {
+                                           panel.xyplot(x, y, ...)
+                                           panel.text(x, y, labels = is$item[subscripts],
+                                                      pos = 3, offset = 0.8, cex = 0.75, col = "black")
+                                           panel.abline(h = discrim.cut, col='red', lty=2)
+                                           panel.abline(h = 0, col='black', lty=1)
+                                       },
+                                       main = if(is.null(main)) "Difficulty by Discrimination" else main,
+                                       xlab = 'Mean', ylab='Reduced item-total correlation', ...)
+                return(plt)
             }
-            plt <- lattice::xyplot(alpha_if_rm ~ item, is,
-                                   pch = 16,
-                                   panel = function(x, y, ...) {
-                                       panel.xyplot(x, y, ...)
-                                       panel.abline(h = isummary$overall$alpha, col='red', lty=2)
-                                   },
-                                   main = if(is.null(main)) "Alpha if Item Removed" else main,
-                                   xlab = 'Item', ylab=expression(alpha),
-                                   ylim = c(min(is$alpha_if_rm) - .05, max(is$alpha_if_rm) + .05),
-                                   scales = list(x = list(rot = 90)), ...)
-            return(plt)
+            if(type == 'freq'){
+                Freq <- cbind(item=is$item, isummary$proportions * isummary$overall$N)[which.items,]
+                mlt <- reshape(Freq, varying=list(which(colnames(Freq) != 'item')),
+                               direction='long', v.names='freq', timevar = 'cat',
+                               times=colnames(isummary$proportions))
+                mlt$cat[is.na(mlt$cat)] <- '<NA>'
+                mlt$cat <- factor(mlt$cat)
+                col <- rep('#9ECAE1', length(levels(mlt$cat)))
+                if(any(mlt$cat == '<NA>')) col[length(col)] <- 'red'
+                plt <- lattice::barchart(freq ~ cat|item, mlt, horizontal = FALSE,
+                                         ylab = 'Frequency', xlab = 'Category', col = col,
+                                  main = if(is.null(main)) "Item Response Frequency" else main, ...)
+                return(plt)
+            }
+            if(type == 'alpha_rm'){
+                if(sort){
+                    is <- is[order(is$alpha_if_rm),]
+                    is$item <- factor(as.character(is$item), levels=as.character(is$item))
+                }
+                plt <- lattice::xyplot(alpha_if_rm ~ item, is,
+                                       pch = 16,
+                                       panel = function(x, y, ...) {
+                                           panel.xyplot(x, y, type = 'b', lty = 'dashed', ...)
+                                           panel.abline(h = isummary$overall$alpha, lty=2)
+                                       },
+                                       main = if(is.null(main)) "Alpha if Item Removed" else main,
+                                       xlab = 'Item', ylab=expression(alpha),
+                                       ylim = c(min(is$alpha_if_rm) - .05, max(is$alpha_if_rm) + .05),
+                                       scales = list(x = list(rot = 90)), ...)
+                return(plt)
+            }
+        } else { # multiple-group
+            is <- lapply(isummary, \(x) x$itemstats)
+            is <- lapply(is, \(x){
+                x$item <- factor(rownames(x), levels=colnames(data))
+                x
+            })
+            if(type == 'discrim'){
+                if(sort){
+                    ord <- order(is[[1]]$cor_if_rm)
+                    lvls <- as.character(is[[1]]$item[ord])
+                    is <- lapply(is, \(x){
+                        x <- x[ord, ]
+                        x$item <- factor(as.character(x$item), levels=lvls)
+                        x
+                    })
+                }
+                grouplvl <- rep(names(is), each=nrow(is[[1]]))
+                isbind <- do.call(rbind, is)
+                isbind$group <- grouplvl
+                plt <- lattice::xyplot(cor_if_rm ~ item, isbind, group=group,
+                                       pch = 16,
+                                       panel = function(x, y, ...) {
+                                           panel.xyplot(x, y, type = 'b', lty = 'dashed', ...)
+                                           panel.abline(h = discrim.cut, col='red', lty=2)
+                                           panel.abline(h = 0, col='black', lty=1)
+                                       },
+                                       main = if(is.null(main)) "Reduced Item-Total Correlation" else main,
+                                       xlab = 'Item', ylab='Correlation',
+                                       scales = list(x = list(rot = 90)),
+                                       auto.key=TRUE, ...)
+                return(plt)
+            }
+            if(type == 'difficulty'){
+                if(sort){
+                    ord <- order(is[[1]]$mean)
+                    lvls <- as.character(is[[1]]$item[ord])
+                    is <- lapply(is, \(x){
+                        x <- x[ord, ]
+                        x$item <- factor(as.character(x$item), levels=lvls)
+                        x
+                    })
+                }
+                grouplvl <- rep(names(is), each=nrow(is[[1]]))
+                isbind <- do.call(rbind, is)
+                isbind$group <- grouplvl
+                plt <- lattice::xyplot(mean ~ item, isbind, type = 'b', lty = 'dashed',
+                                       pch = 16, group=group,
+                                       main = if(is.null(main)) "Item Difficulty" else main,
+                                       xlab = 'Item', ylab='Mean',
+                                       scales = list(x = list(rot = 90)),
+                                       auto.key=TRUE, ...)
+                return(plt)
+            }
+            if(type == 'discrim_diff'){
+                grouplvl <- rep(names(is), each=nrow(is[[1]]))
+                isbind <- do.call(rbind, is)
+                isbind$group <- grouplvl
+                plt <- lattice::xyplot(cor_if_rm ~ mean|group, isbind,
+                                       pch = 16, group=isbind$group,
+                                       panel = function(x, y, subscripts, groups, ...) {
+                                           panel.xyplot(x, y, subscripts=subscripts, group=groups, ...)
+                                           panel.text(x, y, labels = isbind$item[subscripts],
+                                                      pos = 3, offset = 0.8, cex = 0.75, col = "black")
+                                           panel.abline(h = discrim.cut, col='red', lty=2)
+                                           panel.abline(h = 0, col='black', lty=1)
+                                       },
+                                       main = if(is.null(main)) "Difficulty by Discrimination" else main,
+                                       xlab = 'Mean', ylab='Reduced item-total correlation',
+                                       auto.key=TRUE, ...)
+                return(plt)
+            }
+            if(type == 'alpha_rm'){
+                if(sort){
+                    ord <- order(is[[1]]$alpha_if_rm)
+                    lvls <- as.character(is[[1]]$item[ord])
+                    is <- lapply(is, \(x){
+                        x <- x[ord, ]
+                        x$item <- factor(as.character(x$item), levels=lvls)
+                        x
+                    })
+                }
+                grouplvl <- rep(names(is), each=nrow(is[[1]]))
+                isbind <- do.call(rbind, is)
+                isbind$group <- grouplvl
+                tpar <- trellis.par.get()
+                plt <- lattice::xyplot(alpha_if_rm ~ item, isbind, group=group,
+                                       pch = 16,
+                                       panel = function(x, y, groups, ...) {
+                                           panel.xyplot(x, y, type = 'b', lty = 'dashed', group=groups, ...)
+                                           alphas <- sapply(isummary, \(x) x$overall$alpha)
+                                           panel.abline(h = alphas,
+                                                        col=tpar$superpose.symbol$col[1:length(unique(group))], lty=2)
+                                       },
+                                       main = if(is.null(main)) "Alpha if Item Removed" else main,
+                                       xlab = 'Item', ylab=expression(alpha),
+                                       ylim = c(min(isbind$alpha_if_rm) - .05, max(isbind$alpha_if_rm) + .05),
+                                       scales = list(x = list(rot = 90)), ...)
+                return(plt)
+            }
+            if(type == 'freq'){
+                ngroups <- length(unique(group))
+                Freq <- do.call(rbind, lapply(1:ngroups, \(i){
+                    cbind(item=is[[i]]$item,
+                                  isummary[[i]]$proportions * isummary[[i]]$overall$N,
+                          group=names(is)[i])[which.items,]
+                }))
+                mlt <- reshape(Freq, varying=list(which(colnames(Freq) != c('item', 'group'))),
+                               direction='long', v.names='freq', timevar = 'cat',
+                               times=colnames(isummary[[1]]$proportions))
+                mlt$cat[is.na(mlt$cat)] <- '<NA>'
+                mlt$cat <- factor(mlt$cat)
+                plt <- lattice::barchart(freq ~ cat|item, mlt, horizontal = FALSE, group=group,
+                                         ylab = 'Frequency', xlab = 'Category',
+                                         main = if(is.null(main)) "Item Response Frequency" else main,
+                                         auto.key=TRUE, ...)
+                return(plt)
+            }
+
         }
     }
     if(type == 'bubble'){
+        if(!is.null(group))
+            stop('type = \'bubble\' not supported for multiple group inputs', call.=FALSE)
         stopifnot("which.items must be of length two"=length(which.items) == 2)
         dat.sub <- as.data.frame(data[,which.items, drop=FALSE])
         colnames(dat.sub) <- c('x', 'y')
@@ -288,24 +477,76 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
         return(plt)
     }
     if(is.null(which.items)){
-        if(type == 'prop'){
-            prop <- cumsum(tab) / nrow(data)
-            df <- data.frame(TS=as.integer(names(tab)), P=prop)
-            plt <- lattice::xyplot(P ~ TS, df, type = 'b',
-                                   main = if(is.null(main)) 'Cumulative Composite Score' else main,
-                                   xlab = 'Composite Score', ylab = 'Cumulative Proportion',
-                                   ylim = c(-.1, 1.1), ...)
-        } else if(type == 'hist'){
-            plt <- lattice::histogram(TS,
-                                      main = if(is.null(main)) 'Composite Scores' else main,
-                                      xlab = 'Composite Score', ylab = 'Frequency', type = 'count', ...)
-        } else if(type == 'bar'){
-            plt <- lattice::barchart(table(TS), horizontal = FALSE,
-                                     main = if(is.null(main)) 'Composite Scores' else main,
-                                     xlab = 'Composite Score', ylab = 'Frequency', ...)
+        if(is.null(group)){
+            if(type == 'prop'){
+                prop <- cumsum(tab) / nrow(data)
+                df <- data.frame(TS=as.integer(names(tab)), P=prop)
+                plt <- lattice::xyplot(P ~ TS, df, type = 'b',
+                                       main = if(is.null(main)) 'Cumulative Composite Score' else main,
+                                       xlab = 'Composite Score', ylab = 'Cumulative Proportion',
+                                       ylim = c(-.1, 1.1), ...)
+            } else if(type == 'hist'){
+                plt <- lattice::histogram(TS,
+                                          main = if(is.null(main)) 'Composite Scores' else main,
+                                          xlab = 'Composite Score', ylab = 'Frequency', type = 'count', ...)
+            } else if(type == 'bar'){
+                plt <- lattice::barchart(table(TS), horizontal = FALSE,
+                                         main = if(is.null(main)) 'Composite Scores' else main,
+                                         xlab = 'Composite Score', ylab = 'Frequency', ...)
+            }
+        } else { # multiple-group
+            lvls <- levels(factor(group))
+            if(type == 'prop'){
+                df <- lapply(lvls, \(x){
+                    pick <- group == x
+                    tab <- table(TS[pick])
+                    prop <- cumsum(tab) / sum(pick)
+                    data.frame(TS=as.integer(names(tab)), P=prop, group=x)
+                })
+                df <- do.call(rbind, df)
+                plt <- lattice::xyplot(P ~ TS, df, type = 'b', group=group,
+                                       main = if(is.null(main)) 'Cumulative Composite Score' else main,
+                                       xlab = 'Composite Score', ylab = 'Cumulative Proportion',
+                                       ylim = c(-.1, 1.1), auto.key=TRUE, ...)
+            } else if(type == 'hist'){
+                df <- data.frame(TS, group)
+                plt <- lattice::histogram( ~ TS|group, df,
+                                          main = if(is.null(main)) 'Composite Scores' else main,
+                                          xlab = 'Composite Score', ylab = 'Frequency', type = 'count', ...)
+            } else if(type == 'bar'){
+                tabs <- lapply(lvls, \(x){
+                    pick <- group == x
+                    data.frame(table(TS[pick]), group=x)
+                })
+                df <- do.call(rbind, tabs)
+                plt <- lattice::barchart(Freq ~ Var1 | group, df, horizontal = FALSE,
+                                         main = if(is.null(main)) 'Composite Scores' else main,
+                                         xlab = 'Composite Score', ylab = 'Frequency', ...)
+            }
+
         }
     } else {
         stopifnot(all(which.items >= 1L & which.items <= ncol(data)))
+        if(!is.null(group)){
+            on.exit(devAskNewPage(options("device.ask.default")[[1]]), add=TRUE)
+            devAskNewPage(devAskNewPage)
+            ugroups <- unique(group)
+            ngroups <- length(unique(group))
+            ret <- vector('list', ngroups)
+            names(ret) <- ugroups
+            for(i in 1:ngroups){
+                pick <- group == ugroups[i]
+                ret[[i]] <- empirical_plot(subset(data, pick),
+                                      main = paste0('group: ', ugroups[i]),
+                                      which.items=which.items, type=type, group=NULL,
+                                      smooth=smooth, sort=sort, formula=formula,
+                                      org.data=subset(org.data, pick), ts_fun=ts_fun, discrim.cut=discrim.cut,
+                                      par.strip.text =par.strip.text, devAskNewPage=FALSE,
+                                      par.settings=par.settings, auto.key=auto.key, ...)
+                print(ret[[i]])
+            }
+            return(invisible(ret))
+        }
         pltdat <- vector('list', length(which.items))
         nms <- colnames(data)
         for(i in 1:length(which.items)){

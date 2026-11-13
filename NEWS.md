@@ -1,5 +1,8 @@
 # Changes in mirt 1.49
 
+- `empirical_plot()` gains a `group` argument to provide condition graphical
+  support for a variety of plots
+
 - `empirical_plot()` gains `cor` option to make heatmap version of correlation
   matrices. Arguments as passed to `plot_cors()` as there are too many 
   argument to track in the original function
