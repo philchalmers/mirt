@@ -17,6 +17,7 @@ empirical_plot(
   discrim.cut = 0.2,
   main = NULL,
   par.strip.text = list(cex = 0.7),
+  devAskNewPage = interactive(),
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
     "black")),
   auto.key = list(space = "right", points = FALSE, lines = TRUE),
@@ -74,6 +75,8 @@ is .2 (to omit, use \code{NA})}
 \item{main}{the main title for the plot. If NULL an internal default will be used}
 
 \item{par.strip.text}{plotting argument passed to \code{\link[lattice]{lattice}}}
+
+\item{devAskNewPage}{for plots that return multiple graphics, should there be user prompts?}
 
 \item{par.settings}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
@@ -200,7 +203,6 @@ empirical_plot(data, type = 'cor', group=group)
 
 # this is likely more useful
 empirical_plot(data, type = 'cordiff', group=group)
-
 
 empirical_plot(data, type = 'hist', group=group)
 empirical_plot(data, type = 'hist', ts_fun=rowMeans, group=group)

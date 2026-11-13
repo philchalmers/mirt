@@ -54,6 +54,7 @@
 #' @param discrim.cut horizontal cut-off line to use when \code{type = 'discrim'}. Default
 #'   is .2 (to omit, use \code{NA})
 #' @param ts_fun similar to the same argument in \code{\link{itemstats}}
+#' @param devAskNewPage for plots that return multiple graphics, should there be user prompts?
 #' @param ... additional arguments to be passed to \code{\link[lattice]{lattice}} and \code{coef()}
 #' @keywords empirical plots
 #' @export empirical_plot
@@ -186,6 +187,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop', group=NULL,
                            smooth = FALSE, sort=FALSE, formula = resp ~ s(TS, k = 5),
                            org.data = NULL, ts_fun = rowSums,
                            discrim.cut = .2, main = NULL, par.strip.text = list(cex = 0.7),
+                           devAskNewPage = interactive(),
                            par.settings = list(strip.background = list(col = '#9ECAE1'),
                                                strip.border = list(col = "black")),
                            auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
@@ -199,6 +201,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop', group=NULL,
                       c('prop', 'hist', 'alpha_rm', 'discrim', 'difficulty', 'discrim_diff', 'bar'))
     if(type == 'cor' || type == 'cordiff'){
         if(!is.null(group)){
+            if(!is.factor(group)) group <- factor(group)
             ugroups <- unique(group)
             ngroups <- length(unique(group))
             ret <- vector('list', ngroups)
@@ -210,13 +213,18 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop', group=NULL,
                 ret <- plot_cors(R1 - R2,
                                  main = sprintf('Difference between %s and %s',
                                                 ugroups[1], ugroups[2]), ...)
+                return(ret)
             } else {
-                for(i in 1:ngroups)
+                on.exit(devAskNewPage(options("device.ask.default")[[1]]), add=TRUE)
+                devAskNewPage(devAskNewPage)
+                for(i in 1:ngroups){
                     ret[[i]] <- plot_cors(subset(data, group == ugroups[i],
                                                 select=which.items),
                                           main = paste0('group: ', ugroups[i]), ...)
+                    print(ret[[i]])
+                }
             }
-            return(ret)
+            return(invisible(ret))
         }
         return(plot_cors(subset(data, select=which.items), ...))
     }
@@ -447,6 +455,8 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop', group=NULL,
         }
     }
     if(type == 'bubble'){
+        if(!is.null(group))
+            stop('type = \'bubble\' not supported for multiple group inputs', call.=FALSE)
         stopifnot("which.items must be of length two"=length(which.items) == 2)
         dat.sub <- as.data.frame(data[,which.items, drop=FALSE])
         colnames(dat.sub) <- c('x', 'y')
@@ -467,24 +477,76 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop', group=NULL,
         return(plt)
     }
     if(is.null(which.items)){
-        if(type == 'prop'){
-            prop <- cumsum(tab) / nrow(data)
-            df <- data.frame(TS=as.integer(names(tab)), P=prop)
-            plt <- lattice::xyplot(P ~ TS, df, type = 'b',
-                                   main = if(is.null(main)) 'Cumulative Composite Score' else main,
-                                   xlab = 'Composite Score', ylab = 'Cumulative Proportion',
-                                   ylim = c(-.1, 1.1), ...)
-        } else if(type == 'hist'){
-            plt <- lattice::histogram(TS,
-                                      main = if(is.null(main)) 'Composite Scores' else main,
-                                      xlab = 'Composite Score', ylab = 'Frequency', type = 'count', ...)
-        } else if(type == 'bar'){
-            plt <- lattice::barchart(table(TS), horizontal = FALSE,
-                                     main = if(is.null(main)) 'Composite Scores' else main,
-                                     xlab = 'Composite Score', ylab = 'Frequency', ...)
+        if(is.null(group)){
+            if(type == 'prop'){
+                prop <- cumsum(tab) / nrow(data)
+                df <- data.frame(TS=as.integer(names(tab)), P=prop)
+                plt <- lattice::xyplot(P ~ TS, df, type = 'b',
+                                       main = if(is.null(main)) 'Cumulative Composite Score' else main,
+                                       xlab = 'Composite Score', ylab = 'Cumulative Proportion',
+                                       ylim = c(-.1, 1.1), ...)
+            } else if(type == 'hist'){
+                plt <- lattice::histogram(TS,
+                                          main = if(is.null(main)) 'Composite Scores' else main,
+                                          xlab = 'Composite Score', ylab = 'Frequency', type = 'count', ...)
+            } else if(type == 'bar'){
+                plt <- lattice::barchart(table(TS), horizontal = FALSE,
+                                         main = if(is.null(main)) 'Composite Scores' else main,
+                                         xlab = 'Composite Score', ylab = 'Frequency', ...)
+            }
+        } else { # multiple-group
+            lvls <- levels(factor(group))
+            if(type == 'prop'){
+                df <- lapply(lvls, \(x){
+                    pick <- group == x
+                    tab <- table(TS[pick])
+                    prop <- cumsum(tab) / sum(pick)
+                    data.frame(TS=as.integer(names(tab)), P=prop, group=x)
+                })
+                df <- do.call(rbind, df)
+                plt <- lattice::xyplot(P ~ TS, df, type = 'b', group=group,
+                                       main = if(is.null(main)) 'Cumulative Composite Score' else main,
+                                       xlab = 'Composite Score', ylab = 'Cumulative Proportion',
+                                       ylim = c(-.1, 1.1), auto.key=TRUE, ...)
+            } else if(type == 'hist'){
+                df <- data.frame(TS, group)
+                plt <- lattice::histogram( ~ TS|group, df,
+                                          main = if(is.null(main)) 'Composite Scores' else main,
+                                          xlab = 'Composite Score', ylab = 'Frequency', type = 'count', ...)
+            } else if(type == 'bar'){
+                tabs <- lapply(lvls, \(x){
+                    pick <- group == x
+                    data.frame(table(TS[pick]), group=x)
+                })
+                df <- do.call(rbind, tabs)
+                plt <- lattice::barchart(Freq ~ Var1 | group, df, horizontal = FALSE,
+                                         main = if(is.null(main)) 'Composite Scores' else main,
+                                         xlab = 'Composite Score', ylab = 'Frequency', ...)
+            }
+
         }
     } else {
         stopifnot(all(which.items >= 1L & which.items <= ncol(data)))
+        if(!is.null(group)){
+            on.exit(devAskNewPage(options("device.ask.default")[[1]]), add=TRUE)
+            devAskNewPage(devAskNewPage)
+            ugroups <- unique(group)
+            ngroups <- length(unique(group))
+            ret <- vector('list', ngroups)
+            names(ret) <- ugroups
+            for(i in 1:ngroups){
+                pick <- group == ugroups[i]
+                ret[[i]] <- empirical_plot(subset(data, pick),
+                                      main = paste0('group: ', ugroups[i]),
+                                      which.items=which.items, type=type, group=NULL,
+                                      smooth=smooth, sort=sort, formula=formula,
+                                      org.data=subset(org.data, pick), ts_fun=ts_fun, discrim.cut=discrim.cut,
+                                      par.strip.text =par.strip.text, devAskNewPage=FALSE,
+                                      par.settings=par.settings, auto.key=auto.key, ...)
+                print(ret[[i]])
+            }
+            return(invisible(ret))
+        }
         pltdat <- vector('list', length(which.items))
         nms <- colnames(data)
         for(i in 1:length(which.items)){

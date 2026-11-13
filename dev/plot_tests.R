@@ -34,6 +34,12 @@ empirical_plot(data, type = 'freq', group=group)
 empirical_plot(data)
 empirical_plot(data, group=group)
 
+empirical_plot(data, which.items=1:6)
+empirical_plot(data, which.items=1:6, group=group)
+
+empirical_plot(data, which.items=1:6, type='boxplot')
+empirical_plot(data, which.items=1:6, group=group, type='boxplot')
+
 empirical_plot(data, type = 'cor')
 empirical_plot(data, type = 'cor', group=group)
 empirical_plot(data, type = 'cordiff', group=group)
