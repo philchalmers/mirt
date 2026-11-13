@@ -25,7 +25,7 @@ of the PIRT estimates (and potentially their delta-method SEs) are returned."></
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.48.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.48.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1567,7 +1567,7 @@ Applied Psychological Measurement, 37(1), 41-57.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 3 factor(s).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 0.001 tolerance after 55 MHRM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.48.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.48.5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: NR1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: Gaussian </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Average MH acceptance ratio(s): 0.324 </span>
@@ -1616,12 +1616,12 @@ Applied Psychological Measurement, 37(1), 41-57.</p>
 <span class="r-in"><span><span class="va">customTheta</span> <span class="op">&lt;-</span> <span class="fu">pirt_customTheta</span><span class="op">(</span><span class="va">simmod.MHRM</span>, project<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">customTheta</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1]       [,2]       [,3]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   -6 -1.2882787  0.3849571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   -6  0.3875025 -2.9895285</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   -6 -2.8644506  2.5879750</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   -6  2.8630885 -0.7042061</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   -6 -0.3888646 -2.1061265</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]   -6  1.2869166  1.4905813</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   -6  1.0868322  2.3504986</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   -6 -0.1905116 -2.9663739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   -6  2.3114415  0.6275905</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   -6 -2.3086757  1.2284135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   -6  0.1932775 -2.0665110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]   -6 -1.0840663 -0.5027250</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">customTheta</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="pirt-11.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -1637,39 +1637,39 @@ Applied Psychological Measurement, 37(1), 41-57.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 3 factor(s).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within NaN tolerance after 1 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.48.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.48.5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: BFGS </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 30500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: Gaussian </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -18922.65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -18922.56</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimated parameters: 33 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 37911.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 38096.13; SABIC = 37991.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G2 (65502) = 8570.8, p = 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 37911.13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 38095.96; SABIC = 37991.11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G2 (65502) = 8570.63, p = 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> RMSEA = 0, CFI = NaN, TLI = NaN</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 3) Use model with filled-in E-table</span></span></span>
 <span class="r-in"><span><span class="va">pirt2</span> <span class="op">&lt;-</span> <span class="fu">pirt</span><span class="op">(</span><span class="va">simmod.fill</span>, project<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">pirt2</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  a1           d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1.41374088 -1.16956186 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   1.38135181  0.24354948 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   1.36959033  1.05407983 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   1.46401612 -2.38922981 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   1.50224604  0.50874440 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   0.75175701  0.52738992 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   0.82187782 -0.55749027 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   0.77696354 -0.43938764 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   0.70856517 -0.48709472 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  0.71438264 -0.91331457 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  0.75261967 -0.51630820 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 -0.04804007 -0.67508617 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -0.02567201 -0.56259487 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  0.01039545  0.03406118 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 -0.01443780  0.62119119 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 -0.02480902 -0.01613554 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   a1           d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1.413375174 -1.17118637 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   1.380179106  0.24227551 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   1.368993555  1.05302748 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   1.464361132 -2.39089540 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   1.501423290  0.50748370 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   0.751309216  0.52672809 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   0.822032939 -0.55828346 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   0.776908186 -0.44009066 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   0.708222292 -0.48768614 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  0.714606493 -0.91401270 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  0.752549501 -0.51698392 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 -0.048728990 -0.67506280 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -0.026445844 -0.56258400 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  0.009341398  0.03404625 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 -0.015389992  0.62120209 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 -0.026016548 -0.01612407 0 1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">pirt</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  a1           d g u</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1.42162493 -1.18148213 0 1</span>

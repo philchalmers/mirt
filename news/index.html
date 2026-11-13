@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.48.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.48.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.49" id="changes-in-mirt-149">Changes in mirt 1.49<a class="anchor" aria-label="anchor" href="#changes-in-mirt-149"></a></h2>
-<ul><li><p><code><a href="../reference/empirical_plot.html">empirical_plot()</a></code> gains <code>cor</code> option to make heatmap version of correlation matrices. Arguments as passed to <code><a href="../reference/plot_cors.html">plot_cors()</a></code> as there are too many argument to track in the original function</p></li>
+<ul><li><p><code><a href="../reference/empirical_plot.html">empirical_plot()</a></code> gains a <code>group</code> argument to provide condition graphical support for a variety of plots</p></li>
+<li><p><code><a href="../reference/empirical_plot.html">empirical_plot()</a></code> gains <code>cor</code> option to make heatmap version of correlation matrices. Arguments as passed to <code><a href="../reference/plot_cors.html">plot_cors()</a></code> as there are too many argument to track in the original function</p></li>
 <li><p>Fixed numerical underflow in the E-step for very long tests (e.g., several hundred to 1000+ items). Response patterns whose marginal likelihood underflowed to 0 at every quadrature node produced <code>NaN</code> values for <code>logLik</code>, <code>AIC</code>, <code>BIC</code>, <code>G2</code>, and related fit statistics (since 1.42), and were silently excluded from the expected tables used for parameter estimation (all versions). The likelihood is now rescaled on the log metric for such patterns</p></li>
 <li><p><code>fscores(method = 'EAP')</code> (including bifactor/two-tier models and latent class classification) now normalises the posterior weights on the log scale, so respondents whose likelihood underflows on long tests receive valid EAP estimates instead of <code>NaN</code> with the warning “Unable to compute normalization constant”</p></li>
 <li><p>Added <code>QMC.type</code> argument to various supported functions to allow for randomized Halton sequences for quasi-Monte Carlo integration</p></li>

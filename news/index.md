@@ -3,6 +3,10 @@
 ## Changes in mirt 1.49
 
 - [`empirical_plot()`](https://philchalmers.github.io/mirt/reference/empirical_plot.md)
+  gains a `group` argument to provide condition graphical support for a
+  variety of plots
+
+- [`empirical_plot()`](https://philchalmers.github.io/mirt/reference/empirical_plot.md)
   gains `cor` option to make heatmap version of correlation matrices.
   Arguments as passed to
   [`plot_cors()`](https://philchalmers.github.io/mirt/reference/plot_cors.md)

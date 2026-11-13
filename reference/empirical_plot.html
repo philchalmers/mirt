@@ -15,7 +15,7 @@ item plots are requested then the total score will be formed without the item of
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.48.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.48.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,7 @@ item plots are requested then the total score will be formed without the item of
 <span>  <span class="va">data</span>,</span>
 <span>  which.items <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"prop"</span>,</span>
+<span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  smooth <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  sort <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  formula <span class="op">=</span> <span class="va">resp</span> <span class="op">~</span> <span class="fu">s</span><span class="op">(</span><span class="va">TS</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
@@ -67,6 +68,7 @@ item plots are requested then the total score will be formed without the item of
 <span>  discrim.cut <span class="op">=</span> <span class="fl">0.2</span>,</span>
 <span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  par.strip.text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cex <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span>,</span>
+<span>  devAskNewPage <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  par.settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>strip.background <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"#9ECAE1"</span><span class="op">)</span>, strip.border <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span></span>
 <span>    <span class="st">"black"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  auto.key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>space <span class="op">=</span> <span class="st">"right"</span>, points <span class="op">=</span> <span class="cn">FALSE</span>, lines <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
@@ -99,8 +101,12 @@ If NULL then empirical test plots will be constructed instead</p></dd>
    <dt>'hist'</dt>
 <dd><p>histogram of total scores</p></dd>
 
-   <dt>”</dt>
+   <dt>'cor'</dt>
 <dd><p>heatmap of correlations. <code>...</code> arguments are passed to <code><a href="plot_cors.html">plot_cors</a></code></p></dd>
+
+   <dt>'cordiff'</dt>
+<dd><p>heatmap of correlations differences (limited to cases when <code>group</code> has exactly
+     two levels). <code>...</code> arguments are passed to <code><a href="plot_cors.html">plot_cors</a></code></p></dd>
 
    <dt>'bar'</dt>
 <dd><p>barplot of total scores</p></dd>
@@ -129,6 +135,11 @@ If NULL then empirical test plots will be constructed instead</p></dd>
 
 
 </dl></dd>
+
+
+<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
+<dd><p>(optional) grouping variable to be paired with <code>data</code> input to create comparisons
+across discrete population subsets</p></dd>
 
 
 <dt id="arg-smooth">smooth<a class="anchor" aria-label="anchor" href="#arg-smooth"></a></dt>
@@ -165,6 +176,10 @@ is .2 (to omit, use <code>NA</code>)</p></dd>
 
 <dt id="arg-par-strip-text">par.strip.text<a class="anchor" aria-label="anchor" href="#arg-par-strip-text"></a></dt>
 <dd><p>plotting argument passed to <code><a href="https://rdrr.io/pkg/lattice/man/Lattice.html" class="external-link">lattice</a></code></p></dd>
+
+
+<dt id="arg-devasknewpage">devAskNewPage<a class="anchor" aria-label="anchor" href="#arg-devasknewpage"></a></dt>
+<dd><p>for plots that return multiple graphics, should there be user prompts?</p></dd>
 
 
 <dt id="arg-par-settings">par.settings<a class="anchor" aria-label="anchor" href="#arg-par-settings"></a></dt>
@@ -325,6 +340,54 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'freq'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-42.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#####################</span></span></span>
+<span class="r-in"><span><span class="co"># Using the group input</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># single factor</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">15</span>,<span class="fl">1</span>,<span class="fl">.3</span><span class="op">)</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">15</span>,<span class="fl">0</span>,<span class="fl">.7</span><span class="op">)</span>,ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">itemtype</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'2PL'</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span></span>
+<span class="r-in"><span><span class="va">dataset1</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="va">N</span>, <span class="va">itemtype</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dataset2</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="va">N</span>, <span class="va">itemtype</span>, mu <span class="op">=</span> <span class="fl">.1</span>, sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dataset1</span>, <span class="va">dataset2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'D1'</span>, <span class="va">N</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'D2'</span>, <span class="va">N</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># test plot</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-43.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'cor'</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-44.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="empirical_plot-45.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># this is likely more useful</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'cordiff'</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-46.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'hist'</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-47.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'hist'</span>, ts_fun<span class="op">=</span><span class="va">rowMeans</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-48.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'hist'</span>, breaks<span class="op">=</span><span class="fl">20</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-49.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'bar'</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-50.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'discrim'</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-51.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'discrim'</span>, sort<span class="op">=</span><span class="cn">TRUE</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-52.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'difficulty'</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-53.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'difficulty'</span>, sort<span class="op">=</span><span class="cn">TRUE</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-54.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'discrim_diff'</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-55.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'alpha_rm'</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-56.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, type <span class="op">=</span> <span class="st">'freq'</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-57.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

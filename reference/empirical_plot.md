@@ -13,6 +13,7 @@ empirical_plot(
   data,
   which.items = NULL,
   type = "prop",
+  group = NULL,
   smooth = FALSE,
   sort = FALSE,
   formula = resp ~ s(TS, k = 5),
@@ -21,6 +22,7 @@ empirical_plot(
   discrim.cut = 0.2,
   main = NULL,
   par.strip.text = list(cex = 0.7),
+  devAskNewPage = interactive(),
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
     "black")),
   auto.key = list(space = "right", points = FALSE, lines = TRUE),
@@ -56,9 +58,15 @@ empirical_plot(
 
   :   histogram of total scores
 
-  ”
+  'cor'
 
   :   heatmap of correlations. `...` arguments are passed to
+      [`plot_cors`](https://philchalmers.github.io/mirt/reference/plot_cors.md)
+
+  'cordiff'
+
+  :   heatmap of correlations differences (limited to cases when `group`
+      has exactly two levels). `...` arguments are passed to
       [`plot_cors`](https://philchalmers.github.io/mirt/reference/plot_cors.md)
 
   'bar'
@@ -95,6 +103,11 @@ empirical_plot(
 
   :   bivariate frequency bubble plots (requires that `which.items` is
       exactly of length two)
+
+- group:
+
+  (optional) grouping variable to be paired with `data` input to create
+  comparisons across discrete population subsets
 
 - smooth:
 
@@ -136,6 +149,10 @@ empirical_plot(
 
   plotting argument passed to
   [`lattice`](https://rdrr.io/pkg/lattice/man/Lattice.html)
+
+- devAskNewPage:
+
+  for plots that return multiple graphics, should there be user prompts?
 
 - par.settings:
 
@@ -302,6 +319,54 @@ Science[1:3, 1] <- NA
 Science[6:8, 2] <- NA
 empirical_plot(Science, type = 'freq')
 
+
+
+#####################
+# Using the group input
+
+# single factor
+set.seed(12345)
+a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+d <- matrix(rnorm(15,0,.7),ncol=1)
+itemtype <- rep('2PL', nrow(a))
+N <- 1000
+dataset1 <- simdata(a, d, N, itemtype)
+dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
+data <- rbind(dataset1, dataset2)
+group <- c(rep('D1', N), rep('D2', N))
+
+# test plot
+empirical_plot(data, group=group)
+
+empirical_plot(data, type = 'cor', group=group)
+
+
+
+# this is likely more useful
+empirical_plot(data, type = 'cordiff', group=group)
+
+
+empirical_plot(data, type = 'hist', group=group)
+
+empirical_plot(data, type = 'hist', ts_fun=rowMeans, group=group)
+
+empirical_plot(data, type = 'hist', breaks=20, group=group)
+
+empirical_plot(data, type = 'bar', group=group)
+
+empirical_plot(data, type = 'discrim', group=group)
+
+empirical_plot(data, type = 'discrim', sort=TRUE, group=group)
+
+empirical_plot(data, type = 'difficulty', group=group)
+
+empirical_plot(data, type = 'difficulty', sort=TRUE, group=group)
+
+empirical_plot(data, type = 'discrim_diff', group=group)
+
+empirical_plot(data, type = 'alpha_rm', group=group)
+
+empirical_plot(data, type = 'freq', group=group)
 
 
 # }

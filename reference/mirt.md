@@ -1412,7 +1412,7 @@ itemstats(data)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -1477,7 +1477,7 @@ plot(mod1, type = 'trace')
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -1500,7 +1500,7 @@ plot(mod1, type = 'trace')
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-05 tolerance after 74 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: none 
 #> Number of rectangular quadrature: 61
@@ -1560,7 +1560,7 @@ coef(mod2)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -1607,7 +1607,7 @@ plot(mod2, MI=200) #expected total score with 95% confidence intervals
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 43 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -1833,7 +1833,7 @@ anova(cmod, mod2)
 #> 
 #> Full-information item factor analysis with 2 factor(s).
 #> Converged within 1e-04 tolerance after 125 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 31
@@ -1935,7 +1935,7 @@ values #note that slopes are numbered 1,5,9,13, or index with values$parnum[valu
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 15 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -1979,7 +1979,7 @@ model <- 'F = 1-4
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 15 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2076,7 +2076,7 @@ anova(pmod1, pmod2)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 50 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2119,7 +2119,7 @@ coef(gpcmod)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 71 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2167,7 +2167,7 @@ itemplot(nomod, 3)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2210,7 +2210,7 @@ plot(ggum, type = 'itemscore')
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 53 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2352,13 +2352,13 @@ itemstats(data)
 mod1 <- mirt(data, 1)
 extract.mirt(mod1, 'time') #time elapsed for each estimation component
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.261  0.030  0.063  0.152  0.000  0.001 
+#>  0.309  0.074  0.075  0.136  0.000  0.001 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 mod1 <- mirt(data, 1, optimizer = 'NR')
 extract.mirt(mod1, 'time')
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.156  0.022  0.051  0.063  0.000  0.001 
+#>  0.265  0.043  0.079  0.119  0.000  0.001 
 
 mod2 <- mirt(data, 2, optimizer = 'NR')
 # difficulty converging with reduced quadpts, reduce TOL
@@ -2695,7 +2695,7 @@ fulldata <- expand.table(LSAT7)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 0.001 tolerance after 73 MHRM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: NR1 
 #> Latent density type: Gaussian 
 #> Average MH acceptance ratio(s): 0.4 
@@ -2749,75 +2749,75 @@ mod1 <- mirt(dataset, model.1, method = 'MHRM')
 coef(mod1)
 #> $Item_1
 #>        a1 a2      d g u
-#> par 2.437  0 -1.278 0 1
+#> par 1.258  0 -0.982 0 1
 #> 
 #> $Item_2
-#>       a1 a2      d g u
-#> par 0.42  0 -1.439 0 1
+#>        a1 a2      d g u
+#> par 0.251  0 -1.553 0 1
 #> 
 #> $Item_3
 #>        a1 a2     d g u
-#> par 1.021  0 1.496 0 1
+#> par 1.026  0 1.441 0 1
 #> 
 #> $Item_4
-#>        a1    a2    d g u
-#> par 0.888 0.698 0.02 0 1
+#>       a1   a2      d g u
+#> par 0.89 0.49 -0.055 0 1
 #> 
 #> $Item_5
 #>     a1    a2    d1    d2     d3
-#> par  0 1.508 2.976 1.946 -0.512
+#> par  0 1.379 2.783 1.881 -0.572
 #> 
 #> $Item_6
 #>     a1    a2    d1    d2     d3
-#> par  0 0.508 2.431 0.962 -0.979
+#> par  0 0.534 2.542 0.963 -1.011
 #> 
 #> $Item_7
-#>     a1    a2    d1    d2
-#> par  0 1.082 2.087 0.044
+#>     a1    a2    d1     d2
+#> par  0 0.908 1.783 -0.087
 #> 
 #> $Item_8
 #>     a1    a2     d g u
-#> par  0 1.014 0.985 0 1
+#> par  0 1.105 0.914 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-#> par      0      0      1  0.327      1
+#> par      0      0      1  0.381      1
 #> 
 summary(mod1)
 #>           F1    F2    h2
-#> Item_1 0.820       0.672
-#> Item_2 0.240       0.057
-#> Item_3 0.515       0.265
-#> Item_4 0.435 0.342 0.306
-#> Item_5       0.663 0.440
-#> Item_6       0.286 0.082
-#> Item_7       0.537 0.288
-#> Item_8       0.512 0.262
+#> Item_1 0.594       0.353
+#> Item_2 0.146       0.021
+#> Item_3 0.516       0.267
+#> Item_4 0.449 0.247 0.263
+#> Item_5       0.629 0.396
+#> Item_6       0.299 0.090
+#> Item_7       0.471 0.222
+#> Item_8       0.545 0.297
 #> 
-#> SS loadings:  1.184 1.188 
-#> Proportion Var:  0.148 0.148 
+#> SS loadings:  0.843 1.065 
+#> Proportion Var:  0.105 0.133 
 #> 
 #> Factor correlations: 
 #> 
 #>       F1 F2
 #> F1 1.000   
-#> F2 0.327  1
+#> F2 0.381  1
 residuals(mod1)
 #> LD matrix (lower triangle) and standardized residual correlations (upper triangle)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.054  -0.021  -0.007  -0.001   0.024   0.049 
+#>  -0.055  -0.020  -0.005  -0.002   0.026   0.059 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1         0.004 -0.010 -0.006  0.040  0.027  0.016 -0.017
-#> Item_2  0.038         0.003 -0.011  0.031  0.026 -0.008 -0.031
-#> Item_3  0.211  0.013         0.013 -0.054 -0.046 -0.017 -0.027
-#> Item_4  0.062  0.221  0.340        -0.022  0.023  0.025 -0.021
-#> Item_5  3.134  1.946  5.879  0.938         0.033 -0.024  0.023
-#> Item_6  1.478  1.395  4.222  1.090  6.646        -0.032 -0.021
-#> Item_7  0.494  0.129  0.550  1.212  2.278  3.984         0.049
-#> Item_8  0.609  1.940  1.464  0.889  1.034  0.865  4.774       
+#> Item_1         0.021 -0.011 -0.002  0.029  0.023  0.025 -0.016
+#> Item_2  0.900        -0.005 -0.010 -0.055 -0.041 -0.025 -0.002
+#> Item_3  0.229  0.052        -0.002 -0.019  0.035 -0.018 -0.017
+#> Item_4  0.010  0.215  0.010         0.030  0.035 -0.027 -0.004
+#> Item_5  1.638  6.036  0.714  1.782        -0.041  0.031  0.034
+#> Item_6  1.041  3.313  2.485  2.403 10.004        -0.027  0.059
+#> Item_7  1.235  1.272  0.633  1.413  3.839  2.988        -0.052
+#> Item_8  0.502  0.007  0.598  0.040  2.379  7.034  5.368       
 
 #####
 # bifactor
@@ -2829,36 +2829,36 @@ model.3 <- '
 mod3 <- mirt(dataset,model.3, method = 'MHRM')
 coef(mod3)
 #> $Item_1
-#>       a1    a2 a3      d g u
-#> par 0.99 1.429  0 -1.047 0 1
+#>        a1    a2 a3      d g u
+#> par 0.775 1.239  0 -1.044 0 1
 #> 
 #> $Item_2
 #>        a1    a2 a3      d g u
-#> par 0.181 0.391  0 -1.442 0 1
+#> par 0.022 0.332  0 -1.568 0 1
 #> 
 #> $Item_3
 #>        a1    a2 a3     d g u
-#> par 0.412 1.137  0 1.584 0 1
+#> par 0.547 0.662  0 1.381 0 1
 #> 
 #> $Item_4
-#>        a1    a2 a3    d g u
-#> par 1.495 0.722  0 0.02 0 1
+#>        a1    a2 a3      d g u
+#> par 1.527 0.374  0 -0.053 0 1
 #> 
 #> $Item_5
-#>        a1 a2    a3    d1    d2     d3
-#> par 1.134  0 1.107 3.038 1.991 -0.518
+#>       a1 a2    a3   d1    d2    d3
+#> par 0.88  0 1.096 2.81 1.901 -0.57
 #> 
 #> $Item_6
-#>        a1 a2    a3   d1    d2     d3
-#> par 0.412  0 0.332 2.44 0.967 -0.982
+#>        a1 a2    a3    d1    d2     d3
+#> par 0.419  0 0.294 2.536 0.961 -1.003
 #> 
 #> $Item_7
-#>        a1 a2    a3    d1    d2
-#> par 0.828  0 0.639 2.063 0.047
+#>       a1 a2    a3    d1     d2
+#> par 0.56  0 0.715 1.788 -0.082
 #> 
 #> $Item_8
 #>        a1 a2    a3     d g u
-#> par 0.642  0 0.874 1.008 0 1
+#> par 0.664  0 0.936 0.931 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33
@@ -2866,17 +2866,17 @@ coef(mod3)
 #> 
 summary(mod3)
 #>            G    F1    F2    h2
-#> Item_1 0.407 0.587       0.511
-#> Item_2 0.103 0.223       0.060
-#> Item_3 0.197 0.545       0.335
-#> Item_4 0.629 0.304       0.488
-#> Item_5 0.488       0.476 0.464
-#> Item_6 0.231       0.186 0.088
-#> Item_7 0.414       0.320 0.274
-#> Item_8 0.318       0.433 0.289
+#> Item_1 0.345 0.552       0.424
+#> Item_2 0.012 0.191       0.037
+#> Item_3 0.287 0.347       0.203
+#> Item_4 0.659 0.161       0.460
+#> Item_5 0.399       0.497 0.405
+#> Item_6 0.236       0.165 0.083
+#> Item_7 0.290       0.371 0.222
+#> Item_8 0.323       0.456 0.313
 #> 
-#> SS loadings:  1.175 0.783 0.551 
-#> Proportion Var:  0.147 0.098 0.069 
+#> SS loadings:  1.039 0.488 0.619 
+#> Proportion Var:  0.13 0.061 0.077 
 #> 
 #> Factor correlations: 
 #> 
@@ -2889,21 +2889,21 @@ residuals(mod3)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.045  -0.022  -0.007  -0.001   0.018   0.055 
+#>  -0.052  -0.019   0.000   0.000   0.027   0.062 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1         0.015  0.003 -0.007  0.035  0.017 -0.021 -0.013
-#> Item_2  0.445        -0.007 -0.014  0.032  0.026 -0.008 -0.027
-#> Item_3  0.018  0.094         0.003  0.055 -0.045  0.017 -0.014
-#> Item_4  0.106  0.384  0.017        -0.021  0.020  0.019  0.004
-#> Item_5  2.422  1.991  6.004  0.910        -0.034 -0.023 -0.026
-#> Item_6  0.559  1.379  4.104  0.823  6.761        -0.032 -0.022
-#> Item_7  0.872  0.131  0.570  0.749  2.099  4.145         0.050
-#> Item_8  0.327  1.486  0.411  0.028  1.351  0.971  5.042       
+#> Item_1         0.010 -0.003 -0.005  0.029  0.015  0.028 -0.009
+#> Item_2  0.183        -0.004  0.010 -0.049 -0.037  0.026  0.012
+#> Item_3  0.020  0.027         0.015 -0.017  0.031 -0.014 -0.010
+#> Item_4  0.050  0.207  0.423         0.030 -0.033 -0.027  0.004
+#> Item_5  1.665  4.767  0.564  1.770        -0.040  0.031 -0.034
+#> Item_6  0.459  2.801  1.871  2.241  9.380         0.028  0.062
+#> Item_7  1.515  1.397  0.413  1.429  3.846  3.147        -0.052
+#> Item_8  0.154  0.267  0.186  0.031  2.282  7.598  5.478       
 anova(mod1,mod3)
-#>           AIC    SABIC       HQ      BIC    logLik     X2 df   p
-#> mod1 24892.54 24948.29 24939.84 25021.36 -12423.27              
-#> mod3 24906.59 24976.88 24966.23 25069.01 -12424.29 -2.044  6 NaN
+#>           AIC    SABIC       HQ      BIC    logLik    X2 df     p
+#> mod1 25081.40 25137.15 25128.71 25210.22 -12517.70               
+#> mod3 25089.42 25159.71 25149.06 25251.84 -12515.71 3.989  6 0.678
 
 #####
 # polynomial/combinations
@@ -2928,7 +2928,7 @@ model.combo <- '
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2988,7 +2988,7 @@ summary(mod.quad)
 #> 
 #> Full-information item factor analysis with 2 factor(s).
 #> Converged within 1e-04 tolerance after 22 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 31
@@ -3113,7 +3113,7 @@ print(mod)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 35 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: solnp 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -3889,7 +3889,7 @@ mod2PL
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -3918,7 +3918,7 @@ mod2PL_asym
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 220 EM iterations.
-#> mirt version: 1.48.4 
+#> mirt version: 1.48.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
