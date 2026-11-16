@@ -577,7 +577,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     nestpars <- nestpars - nconstr
     if(opts$dentype == 'EH') nestpars <- nestpars + (opts$quadpts - 1L) * Data$ngroups
     else if(opts$dentype == 'EHW') nestpars <- nestpars + (opts$quadpts - 3L) * Data$ngroups
-    if(df <= nestpars)
+    if(df <= nestpars && is.null(opts$technical$PIRT))
         stop('Too few degrees of freedom. There are only ', df, ' degrees of freedom but ',
              nestpars, ' parameters were freely estimated.', call.=FALSE)
     df <- df - nestpars
@@ -1056,7 +1056,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     BIC <- (-2) * logLik + tmp*log(N)
     SABIC <- (-2) * logLik + tmp*log((N+2)/24)
     HQ <- (-2) * logLik + 2*tmp*log(log(N))
-    p.G2 <- 1 - pchisq(G2,df)
+    p.G2 <- ifelse(df > 0, 1 - pchisq(G2,df), NaN)
     RMSEA.G2 <- rmsea(X2=G2, df=df, N=N)
     null.mod <- unclass(new('SingleGroupClass'))
     TLI.G2 <- CFI.G2 <- NaN

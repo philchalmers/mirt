@@ -423,32 +423,32 @@ pirt <- function(mod, model=1, project=1,
         if(ngroups == 1){
             ret <- mirt(dat, model=model, itemtype=itemtype, optimizer='nlminb',
                         SE=SE, SE.type=SE.type, invariance=invariance,
-                        technical=list(customTheta=customTheta,
+                        technical=list(customTheta=customTheta, PIRT=TRUE,
                                        fixedEtable=fixedEtable), verbose=FALSE, ...)
         } else {
             if(any(c('free_all_means',  'free_all_vars') %in% invariance)){
                 tmpmod <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'),
                                         itemtype=itemtype, optimizer='nlminb', SE=FALSE, invariance=invariance,
-                                        technical=list(customTheta=customTheta,
+                                        technical=list(customTheta=customTheta, PIRT=TRUE,
                                                        fixedEtable=fixedEtable, warn=FALSE),
                                         verbose=FALSE, ignore_invariance_warn=TRUE, ...)
                 sv <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'), pars='values',
                                     itemtype=itemtype, optimizer='nlminb', SE=SE, invariance=old_invariance,
-                                    technical=list(customTheta=customTheta,
+                                    technical=list(customTheta=customTheta, PIRT=TRUE,
                                                    fixedEtable=fixedEtable, warn=FALSE),
                                     verbose=FALSE, ignore_invariance_warn=TRUE, ...)
                 sv$value <- mod2values(tmpmod)$value
                 ret <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'), pars=sv,
                                      itemtype=itemtype, optimizer='nlminb', SE=SE, SE.type=SE.type,
                                      invariance=old_invariance,
-                                     technical=list(customTheta=customTheta,
+                                     technical=list(customTheta=customTheta, PIRT=TRUE,
                                                     fixedEtable=fixedEtable, warn=FALSE),
                                      verbose=FALSE, ignore_invariance_warn=TRUE, ...)
             } else {
                 ret <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'),
                                      itemtype=itemtype, optimizer='nlminb', SE=SE, SE.type=SE.type,
                                      invariance=invariance,
-                                     technical=list(customTheta=customTheta,
+                                     technical=list(customTheta=customTheta, PIRT=TRUE,
                                                     fixedEtable=fixedEtable, warn=FALSE),
                                      verbose=FALSE, ignore_invariance_warn=TRUE, ...)
             }
