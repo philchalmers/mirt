@@ -589,6 +589,8 @@ multipleGroup <- function(data, model = 1, group, itemtype = NULL,
 {
     Call <- match.call()
     dots <- list(...)
+    ignore_invariance_warn <-
+        ifelse(is.null(dots$ignore_invariance_warn), FALSE, dots$ignore_invariance_warn)
     if(nruns > 1) GenRandomPars <- TRUE
     mixed.design <- make.mixed.design(item.formula=item.formula,
                                       itemdesign=itemdesign, data=data)
@@ -613,7 +615,7 @@ multipleGroup <- function(data, model = 1, group, itemtype = NULL,
             if(any(model$x[,1L] == 'CONSTRAINB'))
                 warn <- FALSE
         }
-        if(warn)
+        if(warn && !ignore_invariance_warn)
             stop('Model is not identified without further constraints (may require additional
                  anchoring items).', call.=FALSE)
     }
