@@ -430,26 +430,26 @@ pirt <- function(mod, model=1, project=1,
                 tmpmod <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'),
                                         itemtype=itemtype, optimizer='nlminb', SE=FALSE, invariance=invariance,
                                         technical=list(customTheta=customTheta, PIRT=TRUE,
-                                                       fixedEtable=fixedEtable, warn=FALSE),
+                                                       fixedEtable=fixedEtable),
                                         verbose=FALSE, ignore_invariance_warn=TRUE, ...)
                 sv <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'), pars='values',
                                     itemtype=itemtype, optimizer='nlminb', SE=SE, invariance=old_invariance,
                                     technical=list(customTheta=customTheta, PIRT=TRUE,
-                                                   fixedEtable=fixedEtable, warn=FALSE),
+                                                   fixedEtable=fixedEtable),
                                     verbose=FALSE, ignore_invariance_warn=TRUE, ...)
                 sv$value <- mod2values(tmpmod)$value
                 ret <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'), pars=sv,
                                      itemtype=itemtype, optimizer='nlminb', SE=SE, SE.type=SE.type,
                                      invariance=old_invariance,
                                      technical=list(customTheta=customTheta, PIRT=TRUE,
-                                                    fixedEtable=fixedEtable, warn=FALSE),
+                                                    fixedEtable=fixedEtable),
                                      verbose=FALSE, ignore_invariance_warn=TRUE, ...)
             } else {
                 ret <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'),
                                      itemtype=itemtype, optimizer='nlminb', SE=SE, SE.type=SE.type,
                                      invariance=invariance,
                                      technical=list(customTheta=customTheta, PIRT=TRUE,
-                                                    fixedEtable=fixedEtable, warn=FALSE),
+                                                    fixedEtable=fixedEtable),
                                      verbose=FALSE, ignore_invariance_warn=TRUE, ...)
             }
         }
