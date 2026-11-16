@@ -670,13 +670,19 @@ namemax <- \(slp) names(slp)[which.max(slp)]
 shortform <- c(namemax(slopes[1:5]),
                namemax(slopes[6:10]), namemax(slopes[11:15]))
 pirt_short <- pirt(mod, shortform=shortform)
-#> Error: Too few degrees of freedom. There are only 7 degrees of freedom but 8 parameters were freely estimated.
 coef(pirt_short, simplify=TRUE)$items
-#> Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'coef': object 'pirt_short' not found
+#>               a1          d g u
+#> Item_1  1.373519 -0.7865537 0 1
+#> Item_9  1.258892  0.6686419 0 1
+#> Item_14 1.267997 -0.9550822 0 1
 
 # EAP-sum for short form
 fscores(pirt_short, method='EAPsum', full.scores=FALSE)
-#> Error: object 'pirt_short' not found
+#>   Sum.Scores     F1 SE_F1 observed expected std.res
+#> 0          0 -0.902 0.768     2440 2458.444   0.372
+#> 1          1 -0.198 0.722     3491 3431.715   1.012
+#> 2          2  0.468 0.710     2609 2670.153   1.183
+#> 3          3  1.147 0.738     1460 1439.688   0.535
 
 ###########################
 # same example, but with polytomous data
@@ -1558,13 +1564,13 @@ anova(simmod, simmod.MHRM) # similar
 # projected dimensions
 customTheta <- pirt_customTheta(simmod.MHRM, project=1)
 head(customTheta)
-#>      [,1]      [,2]       [,3]
-#> [1,]   -6  2.845344 -2.8017181
-#> [2,]   -6 -2.228875  2.4904629
-#> [3,]   -6  1.257453 -0.3764781
-#> [4,]   -6 -1.259148 -1.0019925
-#> [5,]   -6  2.227180  2.2627537
-#> [6,]   -6 -2.847039  0.7483505
+#>      [,1]       [,2]       [,3]
+#> [1,]   -6  1.4197067  0.4108093
+#> [2,]   -6 -0.6310745 -2.1900137
+#> [3,]   -6  2.6325974  2.8772016
+#> [4,]   -6 -2.6320511  0.1940741
+#> [5,]   -6  0.6316208 -2.4259534
+#> [6,]   -6 -1.4191605  2.0020302
 pairs(customTheta)
 
 
@@ -1586,33 +1592,33 @@ simmod.fill
 #> Number of rectangular quadrature: 30500
 #> Latent density type: Gaussian 
 #> 
-#> Log-likelihood = -18922.71
+#> Log-likelihood = -18922.55
 #> Estimated parameters: 33 
-#> AIC = 37911.43
-#> BIC = 38096.26; SABIC = 37991.41
-#> G2 (65502) = 8570.93, p = 1
+#> AIC = 37911.1
+#> BIC = 38095.93; SABIC = 37991.09
+#> G2 (65502) = 8570.61, p = 1
 #> RMSEA = 0, CFI = NaN, TLI = NaN
 
 # 3) Use model with filled-in E-table
 pirt2 <- pirt(simmod.fill, project=1)
 coef(pirt2, simplify=TRUE)$items
 #>                  a1           d g u
-#> Item_1   1.41414324 -1.17093861 0 1
-#> Item_2   1.38046452  0.24240296 0 1
-#> Item_3   1.36914477  1.05314880 0 1
-#> Item_4   1.46509102 -2.39055410 0 1
-#> Item_5   1.50148552  0.50752198 0 1
-#> Item_6   0.75176175  0.52693984 0 1
-#> Item_7   0.82231090 -0.55810044 0 1
-#> Item_8   0.77703895 -0.43990070 0 1
-#> Item_9   0.70853451 -0.48753162 0 1
-#> Item_10  0.71501067 -0.91388127 0 1
-#> Item_11  0.75274991 -0.51680516 0 1
-#> Item_12 -0.04775602 -0.67505625 0 1
-#> Item_13 -0.02532217 -0.56257789 0 1
-#> Item_14  0.01057526  0.03405596 0 1
-#> Item_15 -0.01420447  0.62119838 0 1
-#> Item_16 -0.02458671 -0.01612301 0 1
+#> Item_1   1.41412411 -1.16999431 0 1
+#> Item_2   1.38018376  0.24335242 0 1
+#> Item_3   1.36882774  1.05395061 0 1
+#> Item_4   1.46497996 -2.38949972 0 1
+#> Item_5   1.50167848  0.50862633 0 1
+#> Item_6   0.75190167  0.52742784 0 1
+#> Item_7   0.82264010 -0.55760940 0 1
+#> Item_8   0.77774501 -0.43947578 0 1
+#> Item_9   0.70881418 -0.48710562 0 1
+#> Item_10  0.71526525 -0.91347187 0 1
+#> Item_11  0.75308640 -0.51635891 0 1
+#> Item_12 -0.04892268 -0.67510925 0 1
+#> Item_13 -0.02667399 -0.56260998 0 1
+#> Item_14  0.00927320  0.03405492 0 1
+#> Item_15 -0.01562808  0.62118840 0 1
+#> Item_16 -0.02623232 -0.01614707 0 1
 coef(pirt, simplify=TRUE)$items
 #>                  a1           d g u
 #> Item_1   1.42162278 -1.18148069 0 1

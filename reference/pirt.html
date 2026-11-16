@@ -721,13 +721,19 @@ Applied Psychological Measurement, 37(1), 41-57.</p>
 <span class="r-in"><span><span class="va">shortform</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">namemax</span><span class="op">(</span><span class="va">slopes</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>               <span class="fu">namemax</span><span class="op">(</span><span class="va">slopes</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span>, <span class="fu">namemax</span><span class="op">(</span><span class="va">slopes</span><span class="op">[</span><span class="fl">11</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pirt_short</span> <span class="op">&lt;-</span> <span class="fu">pirt</span><span class="op">(</span><span class="va">mod</span>, shortform<span class="op">=</span><span class="va">shortform</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Too few degrees of freedom. There are only 7 degrees of freedom but 8 parameters were freely estimated.</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">pirt_short</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'coef': object 'pirt_short' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               a1          d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.373519 -0.7865537 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.258892  0.6686419 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.267997 -0.9550822 0 1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># EAP-sum for short form</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">pirt_short</span>, method<span class="op">=</span><span class="st">'EAPsum'</span>, full.scores<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'pirt_short' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Sum.Scores     F1 SE_F1 observed expected std.res</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0          0 -0.902 0.768     2440 2458.444   0.372</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          1 -0.198 0.722     3491 3431.715   1.012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2          2  0.468 0.710     2609 2670.153   1.183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          3  1.147 0.738     1460 1439.688   0.535</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">###########################</span></span></span>
 <span class="r-in"><span><span class="co"># same example, but with polytomous data</span></span></span>
@@ -1609,13 +1615,13 @@ Applied Psychological Measurement, 37(1), 41-57.</p>
 <span class="r-in"><span><span class="co"># projected dimensions</span></span></span>
 <span class="r-in"><span><span class="va">customTheta</span> <span class="op">&lt;-</span> <span class="fu">pirt_customTheta</span><span class="op">(</span><span class="va">simmod.MHRM</span>, project<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">customTheta</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1]      [,2]       [,3]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   -6  2.845344 -2.8017181</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   -6 -2.228875  2.4904629</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   -6  1.257453 -0.3764781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   -6 -1.259148 -1.0019925</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   -6  2.227180  2.2627537</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]   -6 -2.847039  0.7483505</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1]       [,2]       [,3]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   -6  1.4197067  0.4108093</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   -6 -0.6310745 -2.1900137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   -6  2.6325974  2.8772016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   -6 -2.6320511  0.1940741</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   -6  0.6316208 -2.4259534</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]   -6 -1.4191605  2.0020302</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">customTheta</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="pirt-11.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -1637,33 +1643,33 @@ Applied Psychological Measurement, 37(1), 41-57.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 30500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: Gaussian </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -18922.71</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -18922.55</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimated parameters: 33 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 37911.43</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 38096.26; SABIC = 37991.41</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G2 (65502) = 8570.93, p = 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 37911.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 38095.93; SABIC = 37991.09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G2 (65502) = 8570.61, p = 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> RMSEA = 0, CFI = NaN, TLI = NaN</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 3) Use model with filled-in E-table</span></span></span>
 <span class="r-in"><span><span class="va">pirt2</span> <span class="op">&lt;-</span> <span class="fu">pirt</span><span class="op">(</span><span class="va">simmod.fill</span>, project<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">pirt2</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  a1           d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1.41414324 -1.17093861 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   1.38046452  0.24240296 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   1.36914477  1.05314880 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   1.46509102 -2.39055410 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   1.50148552  0.50752198 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   0.75176175  0.52693984 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   0.82231090 -0.55810044 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   0.77703895 -0.43990070 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   0.70853451 -0.48753162 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  0.71501067 -0.91388127 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  0.75274991 -0.51680516 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 -0.04775602 -0.67505625 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -0.02532217 -0.56257789 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  0.01057526  0.03405596 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 -0.01420447  0.62119838 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 -0.02458671 -0.01612301 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1.41412411 -1.16999431 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   1.38018376  0.24335242 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   1.36882774  1.05395061 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   1.46497996 -2.38949972 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   1.50167848  0.50862633 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   0.75190167  0.52742784 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   0.82264010 -0.55760940 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   0.77774501 -0.43947578 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   0.70881418 -0.48710562 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  0.71526525 -0.91347187 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  0.75308640 -0.51635891 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 -0.04892268 -0.67510925 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -0.02667399 -0.56260998 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  0.00927320  0.03405492 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 -0.01562808  0.62118840 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 -0.02623232 -0.01614707 0 1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">pirt</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  a1           d g u</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1.42162278 -1.18148069 0 1</span>
