@@ -11,7 +11,7 @@ pirt(
   project = 1,
   itemtype = extract.mirt(mod, "itemtype"),
   estimator = "MML",
-  invariance = "",
+  invariance = c("free_means", "free_vars"),
   SE = TRUE,
   SE.type = "sandwich",
   IRTpars = FALSE,

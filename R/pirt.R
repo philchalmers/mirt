@@ -360,7 +360,7 @@
 #'
 pirt <- function(mod, model=1, project=1,
                  itemtype = extract.mirt(mod, 'itemtype'),
-                 estimator = 'MML', invariance='',
+                 estimator = 'MML', invariance=c('free_means', 'free_vars'),
                  SE=TRUE, SE.type = 'sandwich',
                  IRTpars = FALSE, shortform = NULL, ...){
 
@@ -415,17 +415,17 @@ pirt <- function(mod, model=1, project=1,
             if(mean(cors > 0) > .5)
                 customTheta <- customTheta[nrow(customTheta):1, ,drop=FALSE]
         }
+        old_invariance <- invariance
+        if(any(c('free_means', 'free_mean') %in% invariance))
+            invariance[invariance %in% c('free_means', 'free_mean')] <- 'free_all_means'
+        if(any(c('free_vars', 'free_var') %in% invariance))
+            invariance[invariance %in% c('free_vars', 'free_var')] <- 'free_all_vars'
         if(ngroups == 1){
             ret <- mirt(dat, model=model, itemtype=itemtype, optimizer='nlminb',
-                        SE=SE, SE.type=SE.type,
+                        SE=SE, SE.type=SE.type, invariance=invariance,
                         technical=list(customTheta=customTheta,
                                        fixedEtable=fixedEtable), verbose=FALSE, ...)
         } else {
-            old_invariance <- invariance
-            if(any(c('free_means', 'free_mean') %in% invariance))
-                invariance[invariance %in% c('free_means', 'free_mean')] <- 'free_all_means'
-            if(any(c('free_vars', 'free_var') %in% invariance))
-                invariance[invariance %in% c('free_vars', 'free_var')] <- 'free_all_vars'
             if(any(c('free_all_means',  'free_all_vars') %in% invariance)){
                 tmpmod <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'),
                                         itemtype=itemtype, optimizer='nlminb', SE=FALSE, invariance=invariance,
