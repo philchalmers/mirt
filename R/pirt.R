@@ -422,7 +422,7 @@ pirt <- function(mod, model=1, project=1,
             invariance[invariance %in% c('free_vars', 'free_var')] <- 'free_all_vars'
         if(ngroups == 1){
             ret <- mirt(dat, model=model, itemtype=itemtype, optimizer='nlminb',
-                        SE=SE, SE.type=SE.type, invariance=invariance,
+                        SE=SE, SE.type=SE.type, #invariance=invariance,
                         technical=list(customTheta=customTheta, PIRT=TRUE,
                                        fixedEtable=fixedEtable), verbose=FALSE, ...)
         } else {
