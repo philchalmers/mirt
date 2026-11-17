@@ -76,7 +76,7 @@ of the PIRT estimates (and potentially their delta-method SEs) are returned.</p>
 <span>  project <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  itemtype <span class="op">=</span> <span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod</span>, <span class="st">"itemtype"</span><span class="op">)</span>,</span>
 <span>  estimator <span class="op">=</span> <span class="st">"MML"</span>,</span>
-<span>  invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"free_means"</span>, <span class="st">"free_vars"</span><span class="op">)</span>,</span>
+<span>  invariance <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  SE <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  SE.type <span class="op">=</span> <span class="st">"sandwich"</span>,</span>
 <span>  IRTpars <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -1616,12 +1616,12 @@ Applied Psychological Measurement, 37(1), 41-57.</p>
 <span class="r-in"><span><span class="va">customTheta</span> <span class="op">&lt;-</span> <span class="fu">pirt_customTheta</span><span class="op">(</span><span class="va">simmod.MHRM</span>, project<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">customTheta</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1]        [,2]        [,3]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   -6  1.84233120 -0.92808753</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   -6 -2.45845005  1.69742687</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   -6  0.05522182 -2.76073500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   -6 -0.05317661 -0.05291607</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   -6  2.46049526  2.60003318</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]   -6 -1.84028599 -1.87733308</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   -6 -1.85651530  0.84173327</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   -6  2.46770345 -1.86608566</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   -6 -0.09284342  2.58933273</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   -6  0.09172689 -0.06087304</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   -6 -2.46881999 -2.76594848</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]   -6  1.85539876  1.69495687</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">customTheta</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="pirt-11.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -1643,33 +1643,33 @@ Applied Psychological Measurement, 37(1), 41-57.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 30500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: Gaussian </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -18922.73</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -18922.75</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimated parameters: 33 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 37911.45</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 38096.28; SABIC = 37991.44</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G2 (65502) = 8570.96, p = 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 37911.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 38096.33; SABIC = 37991.49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G2 (65502) = 8571.01, p = 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> RMSEA = 0, CFI = NaN, TLI = NaN</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 3) Use model with filled-in E-table</span></span></span>
 <span class="r-in"><span><span class="va">pirt2</span> <span class="op">&lt;-</span> <span class="fu">pirt</span><span class="op">(</span><span class="va">simmod.fill</span>, project<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">pirt2</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  a1           d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1.41341161 -1.16989479 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   1.38056085  0.24325993 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   1.36879828  1.05393423 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   1.46428357 -2.38951583 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   1.50166346  0.50849321 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   0.75139720  0.52733747 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   0.82236881 -0.55767513 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   0.77689051 -0.43946779 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   0.70873942 -0.48718684 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  0.71467945 -0.91346201 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  0.75270564 -0.51640415 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 -0.04751065 -0.67507572 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -0.02504260 -0.56258748 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  0.01059452  0.03406227 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 -0.01448893  0.62119082 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 -0.02451433 -0.01613426 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   a1           d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1.414080574 -1.16993771 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   1.381358643  0.24315156 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   1.369715287  1.05363094 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   1.465542441 -2.39000438 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   1.502760511  0.50839033 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   0.751679335  0.52714529 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   0.822338727 -0.55770367 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   0.777152217 -0.43955530 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   0.708425988 -0.48720080 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  0.714684212 -0.91346058 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  0.752998974 -0.51649067 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 -0.049129265 -0.67509790 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -0.026770908 -0.56260307 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  0.008958632  0.03405126 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 -0.016030141  0.62119289 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 -0.026614180 -0.01614014 0 1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">pirt</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  a1           d g u</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1.42162493 -1.18148213 0 1</span>
