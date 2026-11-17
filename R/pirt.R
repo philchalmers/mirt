@@ -360,7 +360,7 @@
 #'
 pirt <- function(mod, model=1, project=1,
                  itemtype = extract.mirt(mod, 'itemtype'),
-                 estimator = 'MML', invariance=c('free_means', 'free_vars'),
+                 estimator = 'MML', invariance="",
                  SE=TRUE, SE.type = 'sandwich',
                  IRTpars = FALSE, shortform = NULL, ...){
 
