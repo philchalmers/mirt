@@ -611,6 +611,9 @@ setMethod(
             aknum[[i]] <- t(ak[i,] * t(num))
             eak[[i]] <- e*ak[i,]
         }
+        # Slope column: d/da_i of sum_j e_j P_j (quotient rule); the second term
+        # requires the normalized sum rowSums(Theta[,i] * aknum[[i]]) / den.
+        # Verified by symbolic differentiation (sympy).
         for(i in seq_len(nfact)){
             for(j in 2L:ncat)
                 dp[,i] <- dp[,i] + eak[[i]][j]*Theta[,i]*P[,j] -
