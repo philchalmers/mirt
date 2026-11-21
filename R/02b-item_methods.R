@@ -614,7 +614,7 @@ setMethod(
         for(i in seq_len(nfact)){
             for(j in 2L:ncat)
                 dp[,i] <- dp[,i] + eak[[i]][j]*Theta[,i]*P[,j] -
-                    e[j]*P[,j]*rowSums(Theta[,i] * aknum[[i]])
+                    e[j]*P[,j]*rowSums(Theta[,i] * aknum[[i]]) / den
         }
         for(j in seq_len(x@ncat)){
             dp[,nfact + ncat + j] <- e[j] * P[,j] - e[j] * P[,j]^2 -
