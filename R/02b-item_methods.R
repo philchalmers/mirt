@@ -158,6 +158,9 @@ setMethod(
         g <- antilogit(x@par[parlength - 1L])
         u <- antilogit(x@par[parlength])
         P <- ProbTrace(x, Theta)
+        # Derivatives of P1 = g + (u-g)*sigma, sigma = plogis(a.Theta + d), w.r.t.
+        # (a, d, logit g, logit u); verified by symbolic differentiation (sympy):
+        # (Theta*W, W, (1-sigma)*g*(1-g), sigma*u*(1-u)), W = (u-g)*sigma*(1-sigma).
         sigma <- (P[, 2L] - g) / (u - g)
         W <- (u - g) * sigma * (1 - sigma)
         ret <- cbind(Theta * W, W, (1 - sigma) * g * (1 - g), sigma * u * (1 - u))
