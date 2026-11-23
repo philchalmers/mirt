@@ -154,9 +154,13 @@ setMethod(
     f = "dP",
     signature = signature(x = 'dich', Theta = 'matrix'),
     definition = function(x, Theta){
+        parlength <- length(x@par)
+        g <- antilogit(x@par[parlength - 1L])
+        u <- antilogit(x@par[parlength])
         P <- ProbTrace(x, Theta)
-        PQ <- apply(P, 1L, prod)
-        ret <- cbind(Theta * PQ, PQ, P)
+        sigma <- (P[, 2L] - g) / (u - g)
+        W <- (u - g) * sigma * (1 - sigma)
+        ret <- cbind(Theta * W, W, (1 - sigma) * g * (1 - g), sigma * u * (1 - u))
         ret
     }
 )
@@ -607,7 +611,7 @@ setMethod(
         for(i in seq_len(nfact)){
             for(j in 2L:ncat)
                 dp[,i] <- dp[,i] + eak[[i]][j]*Theta[,i]*P[,j] -
-                    e[j]*P[,j]*rowSums(Theta[,i] * aknum[[i]])
+                    e[j]*P[,j]*rowSums(Theta[,i] * aknum[[i]]) / den
         }
         for(j in seq_len(x@ncat)){
             dp[,nfact + ncat + j] <- e[j] * P[,j] - e[j] * P[,j]^2 -
