@@ -35,9 +35,6 @@
 #' @param SE logical; compute the ACOV matrix to obtain standard errors
 #'   (SE)?
 #'
-#' @param SE.type type of ACOV estimator (defaults to sandwich as this is generally the
-#'   most appropriate)
-#'
 #' @param project which dimension to project to in the stored E-table. Default
 #'   projects all dimensions to the first dimension (\code{project = 1}),
 #'   as this is the assumed primary dimension in, for instance, \code{bfactor()}
@@ -361,8 +358,7 @@
 pirt <- function(mod, model=1, project=1,
                  itemtype = extract.mirt(mod, 'itemtype'),
                  estimator = 'MML', invariance="",
-                 SE=TRUE, SE.type = 'sandwich',
-                 IRTpars = FALSE, shortform = NULL, ...){
+                 SE=TRUE, IRTpars = FALSE, shortform = NULL, ...){
 
     if(estimator == 'MML' && extract.mirt(mod, 'method') != 'EM')
         stop('Supplied model must have been calibrated using the EM method', call.=FALSE)
@@ -421,8 +417,7 @@ pirt <- function(mod, model=1, project=1,
         if(any(c('free_vars', 'free_var') %in% invariance))
             invariance[invariance %in% c('free_vars', 'free_var')] <- 'free_all_vars'
         if(ngroups == 1){
-            ret <- mirt(dat, model=model, itemtype=itemtype, optimizer='nlminb',
-                        SE=SE, SE.type=SE.type, #invariance=invariance,
+            ret <- mirt(dat, model=model, itemtype=itemtype, optimizer='nlminb', SE=SE,
                         technical=list(customTheta=customTheta, PIRT=TRUE,
                                        fixedEtable=fixedEtable), verbose=FALSE, ...)
         } else {
@@ -439,14 +434,14 @@ pirt <- function(mod, model=1, project=1,
                                     verbose=FALSE, ignore_invariance_warn=TRUE, ...)
                 sv$value <- mod2values(tmpmod)$value
                 ret <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'), pars=sv,
-                                     itemtype=itemtype, optimizer='nlminb', SE=SE, SE.type=SE.type,
+                                     itemtype=itemtype, optimizer='nlminb', SE=SE,
                                      invariance=old_invariance,
                                      technical=list(customTheta=customTheta, PIRT=TRUE,
                                                     fixedEtable=fixedEtable),
                                      verbose=FALSE, ignore_invariance_warn=TRUE, ...)
             } else {
                 ret <- multipleGroup(dat, model=model, group=extract.mirt(mod, 'group'),
-                                     itemtype=itemtype, optimizer='nlminb', SE=SE, SE.type=SE.type,
+                                     itemtype=itemtype, optimizer='nlminb', SE=SE,
                                      invariance=invariance,
                                      technical=list(customTheta=customTheta, PIRT=TRUE,
                                                     fixedEtable=fixedEtable),

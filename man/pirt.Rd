@@ -13,7 +13,6 @@ pirt(
   estimator = "MML",
   invariance = "",
   SE = TRUE,
-  SE.type = "sandwich",
   IRTpars = FALSE,
   shortform = NULL,
   ...
@@ -65,9 +64,6 @@ scale and location of the reference group, which is done silently internally whe
 
 \item{SE}{logical; compute the ACOV matrix to obtain standard errors
 (SE)?}
-
-\item{SE.type}{type of ACOV estimator (defaults to sandwich as this is generally the
-most appropriate)}
 
 \item{IRTpars}{logical; report classical IRT parameterization and SEs?
 Only used when \code{FAapprox = TRUE}}
